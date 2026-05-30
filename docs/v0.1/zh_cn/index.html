@@ -1,0 +1,704 @@
+
+<!DOCTYPE html>
+
+
+<html lang="zh-cn" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>MuduDB 文档 &#8212; MuduDB v0.1</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=eb49b5eb" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="_static/documentation_options.js?v=585cbfb4"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'index';</script>
+    <script src="_static/doc-switcher.js?v=437d132c"></script>
+    <link rel="icon" href="_static/favicon.svg"/>
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="搜索" href="search.html" />
+    <link rel="next" title="前言" href="preface/index.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="zh-cn"/>
+  <meta name="docsearch:version" content="v0.1" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">跳转至主要内容</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>回到顶部</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="版本警告"></aside>
+</div>
+<aside class="bd-header-announcement" aria-label="Announcement">
+  <div class="bd-header-announcement__content"><div class="mududb-announcement" data-current-version="v0.1" data-current-language="zh_cn"><span class="mududb-announcement-title">MuduDB documentation</span><label class="mududb-doc-switch-group"><span class="mududb-doc-switch-label">Version</span><select class="mududb-doc-switcher" data-switch-kind="version"><option value="v0.1" data-language="zh_cn" selected>v0.1</option></select></label><label class="mududb-doc-switch-group"><span class="mududb-doc-switch-label">Language</span><select class="mududb-doc-switcher" data-switch-kind="language"><option value="en" data-version="v0.1">English</option><option value="zh_cn" data-version="v0.1" selected>简体中文</option></select></label></div></div>
+</aside>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="网页导航">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="#">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/mudu_logo.png" class="logo__image only-light" alt="MuduDB v0.1 - Home"/>
+    <img src="_static/mudu_logo.png" class="logo__image only-dark pst-js-only" alt="MuduDB v0.1 - Home"/>
+  
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="preface/index.html">
+    前言
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="tutorial/index.html">
+    教程
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="sql-language/index.html">
+    SQL 语言
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="administration/index.html">
+    管理
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="programming/index.html">
+    编程
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="internal/index.html">
+    内部架构
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="reference/index.html">
+    参考
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="亮色"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="暗色"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scuptio/mududb" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="当前页面">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="preface/index.html">
+    前言
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="tutorial/index.html">
+    教程
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="sql-language/index.html">
+    SQL 语言
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="administration/index.html">
+    管理
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="programming/index.html">
+    编程
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="internal/index.html">
+    内部架构
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="reference/index.html">
+    参考
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="亮色"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="暗色"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scuptio/mududb" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1 current active">
+                <a class="reference internal" href="#">
+                    MuduDB 文档
+                </a>
+            </li>
+        </ul>
+        <ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="preface/index.html">前言</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="preface/overview.html">概览</a></li>
+<li class="toctree-l2"><a class="reference internal" href="preface/data-model.html">数据模型</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="preface/release-notes/index.html">发行说明</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="preface/release-notes/v0.1.html">v0.1</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="tutorial/index.html">教程</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="tutorial/getting-started/index.html">入门</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="tutorial/getting-started/install.html">安装</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorial/getting-started/first-session.html">首次会话</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="tutorial/tutorials/index.html">教程</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="tutorial/tutorials/sql-crud.html">SQL CRUD 教程</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorial/tutorials/wallet.html">Wallet 示例</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="sql-language/index.html">SQL 语言</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="sql-language/ddl/index.html">数据定义</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="sql-language/ddl/columns.html">列</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sql-language/ddl/create-table.html">创建表</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sql-language/ddl/primary-key.html">主键</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sql-language/ddl/drop-table.html">删除表</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="sql-language/dml/index.html">数据操作</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="sql-language/dml/insert.html">插入</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sql-language/dml/update.html">更新</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sql-language/dml/delete.html">删除</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="sql-language/query.html">查询</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="sql-language/data_types/index.html">数据类型</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="sql-language/data_types/integer.html">整数类型</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sql-language/data_types/floating-point.html">浮点类型</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sql-language/data_types/fixed-point.html">定点类型</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sql-language/data_types/string.html">字符串类型</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sql-language/data_types/temporal.html">时间类型</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sql-language/data_types/other.html">其他类型</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="administration/index.html">管理</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="administration/client.html">客户端</a></li>
+<li class="toctree-l2"><a class="reference internal" href="administration/server.html">服务器管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="administration/configuration.html">配置参考</a></li>
+<li class="toctree-l2"><a class="reference internal" href="administration/packages.html">应用程序包</a></li>
+<li class="toctree-l2"><a class="reference internal" href="administration/toolchain.html">工具链</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="programming/index.html">编程</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="programming/mudu_procedure.html">Mudu 过程</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="programming/syscalls.html">系统调用</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="programming/syscalls/open.html">open</a></li>
+<li class="toctree-l3"><a class="reference internal" href="programming/syscalls/close.html">close</a></li>
+<li class="toctree-l3"><a class="reference internal" href="programming/syscalls/read.html">read</a></li>
+<li class="toctree-l3"><a class="reference internal" href="programming/syscalls/write.html">write</a></li>
+<li class="toctree-l3"><a class="reference internal" href="programming/syscalls/range-scan.html">range-scan</a></li>
+<li class="toctree-l3"><a class="reference internal" href="programming/syscalls/batch.html">batch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="programming/syscalls/command.html">command</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="internal/index.html">内部架构</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="internal/kernel.html">内核</a></li>
+<li class="toctree-l2"><a class="reference internal" href="internal/adapter.html">适配器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="internal/procedure-runtime.html">过程运行时</a></li>
+<li class="toctree-l2"><a class="reference internal" href="internal/wasm.html">WebAssembly 集成</a></li>
+<li class="toctree-l2"><a class="reference internal" href="internal/partitioning.html">分区与工作线程映射</a></li>
+<li class="toctree-l2"><a class="reference internal" href="internal/per_core_worker.html">每核心工作线程模型</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="reference/index.html">参考</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item"><nav class="sidebar-indices-items" aria-labelledby="pst-indices-navigation-heading-2">
+  <p id="pst-indices-navigation-heading-2" class="sidebar-indices-items__title" role="heading" aria-level="1">分类</p>
+  <ul class="indices-link">
+        <li class="toctree-l1">
+          <a class="reference internal"
+             href="genindex.html"
+             accesskey="I">总索引</a>
+        </li>
+  </ul>
+</nav></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item"><button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>MuduDB 文档</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> 目录 </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">文档</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">版本与语言</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="mududb">
+<h1>MuduDB 文档<a class="headerlink" href="#mududb" title="Link to this heading">#</a></h1>
+<div class="mududb-hero docutils">
+<p>MuduDB 是一个面向过程、数据本地执行的数据库系统。它将应用程序过程以 WebAssembly 组件的形式部署在数据库运行时内部，从而使事务、调度、数据访问和业务逻辑保持在同一受控边界内。</p>
+</div>
+<div class="mududb-badges">
+  <span class="mududb-badge">版本 v0.1</span>
+  <span class="mududb-badge">简体中文</span>
+  <span class="mududb-badge">版本化文档</span>
+</div>
+<section id="id1">
+<h2>文档<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
+<p>本文档按章节组织，遵循从入门到内部的循序渐进路径。</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="preface/index.html">前言</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="preface/overview.html">概览</a></li>
+<li class="toctree-l2"><a class="reference internal" href="preface/data-model.html">数据模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="preface/release-notes/index.html">发行说明</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/index.html">教程</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/getting-started/index.html">入门</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/tutorials/index.html">教程</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="sql-language/index.html">SQL 语言</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="sql-language/ddl/index.html">数据定义</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sql-language/dml/index.html">数据操作</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sql-language/query.html">查询</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sql-language/data_types/index.html">数据类型</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="administration/index.html">管理</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="administration/client.html">客户端</a></li>
+<li class="toctree-l2"><a class="reference internal" href="administration/server.html">服务器管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="administration/configuration.html">配置参考</a></li>
+<li class="toctree-l2"><a class="reference internal" href="administration/packages.html">应用程序包</a></li>
+<li class="toctree-l2"><a class="reference internal" href="administration/toolchain.html">工具链</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="programming/index.html">编程</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="programming/mudu_procedure.html">Mudu 过程</a></li>
+<li class="toctree-l2"><a class="reference internal" href="programming/syscalls.html">系统调用</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="internal/index.html">内部架构</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="internal/kernel.html">内核</a></li>
+<li class="toctree-l2"><a class="reference internal" href="internal/adapter.html">适配器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="internal/procedure-runtime.html">过程运行时</a></li>
+<li class="toctree-l2"><a class="reference internal" href="internal/wasm.html">WebAssembly 集成</a></li>
+<li class="toctree-l2"><a class="reference internal" href="internal/partitioning.html">分区与工作线程映射</a></li>
+<li class="toctree-l2"><a class="reference internal" href="internal/per_core_worker.html">每核心工作线程模型</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="reference/index.html">参考</a></li>
+</ul>
+</div>
+</section>
+<section id="id2">
+<h2>版本与语言<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
+<p>本页面属于 <code class="docutils literal notranslate"><span class="pre">v0.1</span></code> 简体中文文档集。后续数据库版本应在 <code class="docutils literal notranslate"><span class="pre">source/versions/&lt;version&gt;/en</span></code> 下维护独立的英文文档。</p>
+<ul class="simple">
+<li><p>English: <a href="../en/index.html">v0.1 English Documentation</a></p></li>
+</ul>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="right-next"
+       href="preface/index.html"
+       title="下一页">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">下一页</p>
+        <p class="prev-next-title">前言</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> 目录
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">文档</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">版本与语言</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+作者： MuduDB contributors
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026, MuduDB contributors.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

@@ -1,0 +1,804 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Partitioning and Worker Mapping &#8212; MuduDB v0.1</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=eb49b5eb" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=bf5e005e"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'internal/partitioning';</script>
+    <script src="../_static/doc-switcher.js?v=437d132c"></script>
+    <link rel="icon" href="../_static/favicon.svg"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Per-core Worker Model" href="per_core_worker.html" />
+    <link rel="prev" title="WebAssembly Integration" href="wasm.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="v0.1" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+<aside class="bd-header-announcement" aria-label="Announcement">
+  <div class="bd-header-announcement__content"><div class="mududb-announcement" data-current-version="v0.1" data-current-language="en"><span class="mududb-announcement-title">MuduDB documentation</span><label class="mududb-doc-switch-group"><span class="mududb-doc-switch-label">Version</span><select class="mududb-doc-switcher" data-switch-kind="version"><option value="v0.1" data-language="en" selected>v0.1</option></select></label><label class="mududb-doc-switch-group"><span class="mududb-doc-switch-label">Language</span><select class="mududb-doc-switcher" data-switch-kind="language"><option value="en" data-version="v0.1" selected>English</option><option value="zh_cn" data-version="v0.1">简体中文</option></select></label></div></div>
+</aside>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/mudu_logo.png" class="logo__image only-light" alt="MuduDB v0.1 - Home"/>
+    <img src="../_static/mudu_logo.png" class="logo__image only-dark pst-js-only" alt="MuduDB v0.1 - Home"/>
+  
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../preface/index.html">
+    Preface
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../tutorial/index.html">
+    Tutorial
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../sql-language/index.html">
+    The SQL Language
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../administration/index.html">
+    Administration
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../programming/index.html">
+    Programming
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" current active">
+  <a class="nav-link dropdown-item nav-internal" href="index.html">
+    Internal
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../reference/index.html">
+    Reference
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scuptio/mududb" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../preface/index.html">
+    Preface
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../tutorial/index.html">
+    Tutorial
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../sql-language/index.html">
+    The SQL Language
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../administration/index.html">
+    Administration
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../programming/index.html">
+    Programming
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    Internal
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../reference/index.html">
+    Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scuptio/mududb" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../index.html">
+                    MuduDB Documentation
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../preface/index.html">Preface</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../preface/overview.html">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../preface/data-model.html">Data Model</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../preface/release-notes/index.html">Release Notes</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../preface/release-notes/v0.1.html">v0.1</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../tutorial/index.html">Tutorial</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../tutorial/getting-started/index.html">Getting Started</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../tutorial/getting-started/install.html">Installation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../tutorial/getting-started/first-session.html">First Session</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../tutorial/tutorials/index.html">Tutorials</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../tutorial/tutorials/sql-crud.html">SQL CRUD Tutorial</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../tutorial/tutorials/wallet.html">Wallet Example</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../sql-language/index.html">The SQL Language</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../sql-language/ddl/index.html">Data Definition</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../sql-language/ddl/columns.html">Columns</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sql-language/ddl/create-table.html">Create Table</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sql-language/ddl/primary-key.html">Primary Key</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sql-language/ddl/drop-table.html">Drop Table</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../sql-language/dml/index.html">Data Manipulation</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../sql-language/dml/insert.html">Insert</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sql-language/dml/update.html">Update</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sql-language/dml/delete.html">Delete</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="../sql-language/query.html">Query</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../sql-language/data_types/index.html">Data Types</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../sql-language/data_types/integer.html">Integer Types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sql-language/data_types/floating-point.html">Floating-Point Types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sql-language/data_types/fixed-point.html">Fixed-Point Types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sql-language/data_types/string.html">String Types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sql-language/data_types/temporal.html">Temporal Types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sql-language/data_types/other.html">Other Types</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../administration/index.html">Administration</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../administration/client.html">Client</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../administration/server.html">Server Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../administration/configuration.html">Configuration Reference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../administration/packages.html">Application Packages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../administration/toolchain.html">Toolchain</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../programming/index.html">Programming</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../programming/mudu_procedure.html">Mudu Procedure</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../programming/syscalls.html">Syscalls</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/open.html">open</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/close.html">close</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/read.html">read</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/write.html">write</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/range-scan.html">range-scan</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/batch.html">batch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/command.html">command</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">Internal</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="kernel.html">Kernel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapter.html">Adapters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="procedure-runtime.html">Procedure Runtime</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wasm.html">WebAssembly Integration</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Partitioning and Worker Mapping</a></li>
+<li class="toctree-l2"><a class="reference internal" href="per_core_worker.html">Per-core Worker Model</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/index.html">Reference</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item"><nav class="sidebar-indices-items" aria-labelledby="pst-indices-navigation-heading-2">
+  <p id="pst-indices-navigation-heading-2" class="sidebar-indices-items__title" role="heading" aria-level="1">Indices</p>
+  <ul class="indices-link">
+        <li class="toctree-l1">
+          <a class="reference internal"
+             href="../genindex.html"
+             accesskey="I">General Index</a>
+        </li>
+  </ul>
+</nav></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item"><button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Partitioning and Worker Mapping</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#design-rationale">Design rationale</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#terminology">Terminology</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#model-syntax">Model &amp; syntax</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-routing-works">How routing works</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discovering-topology">Discovering topology</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#backend-mapping-caching">Backend mapping &amp; caching</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sharding-port-and-worker-connection">Sharding port and worker connection</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#obtaining-topology-and-connecting-directly">Obtaining topology and connecting directly</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-examples">Usage examples</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#failure-modes-fallbacks">Failure modes &amp; fallbacks</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#operational-concerns">Operational concerns</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#performance-and-tuning">Performance and tuning</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#troubleshooting">Troubleshooting</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="partitioning-and-worker-mapping">
+<h1>Partitioning and Worker Mapping<a class="headerlink" href="#partitioning-and-worker-mapping" title="Link to this heading">#</a></h1>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">#</a></h2>
+<p>Partitioning divides application data and traffic into logical partitions (partition_oid) that are mapped to backend workers (worker_oid). The goal is to exploit locality: keep related data and operations on the same worker to reduce cross-worker communication, lower latency, and improve cache locality.</p>
+</section>
+<section id="design-rationale">
+<h2>Design rationale<a class="headerlink" href="#design-rationale" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Locality: co-locate related keys/records to reduce remote calls and state synchronization.</p></li>
+<li><p>Load isolation: partitioning limits hotspots to specific workers and simplifies load balancing by moving partitions.</p></li>
+<li><p>Predictable routing: clients can route requests to the partition owner, avoiding unnecessary gateway hops.</p></li>
+</ul>
+</section>
+<section id="terminology">
+<h2>Terminology<a class="headerlink" href="#terminology" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>partition_oid: logical identifier for a partition.</p></li>
+<li><p>worker_oid: backend worker process identifier that hosts partitions.</p></li>
+<li><p>sharding port: a TCP port on which a worker accepts connections dedicated to specific shards/partitions.</p></li>
+<li><p>topology: management HTTP API data that maps partition_oid -&gt; worker_oid and provides worker addresses.</p></li>
+</ul>
+</section>
+<section id="model-syntax">
+<h2>Model &amp; syntax<a class="headerlink" href="#model-syntax" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Partition identifiers are opaque integers used in the topology mapping.</p></li>
+<li><p>Connection strings can embed app-level hints; topology is discovered via <code class="docutils literal notranslate"><span class="pre">http_addr</span></code> from <code class="docutils literal notranslate"><span class="pre">MUDU_CONNECTION</span></code>.</p></li>
+</ul>
+<p>Example connection: <code class="docutils literal notranslate"><span class="pre">mudud://127.0.0.1:9527/ycsb?http_addr=127.0.0.1:8300</span></code></p>
+<p>Clients obtain topology and resolve partition_oid -&gt; worker_oid, then open sessions targeting the worker OID.</p>
+</section>
+<section id="how-routing-works">
+<h2>How routing works<a class="headerlink" href="#how-routing-works" title="Link to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p>Client fetches topology from management HTTP API (http_addr).</p></li>
+<li><p>Client computes or is given a partition_oid for each operation (e.g., by hashing a key or using app semantics).</p></li>
+<li><p>Client looks up the partition_oid -&gt; worker_oid mapping in the topology cache.</p></li>
+<li><p>Client connects to the worker’s sharding port (or standard port with worker routing) and opens a session for that worker_oid (session open includes worker_id in the config handshake).</p></li>
+<li><p>Requests routed to the worker are executed locally or proxied efficiently by the worker.</p></li>
+</ol>
+</section>
+<section id="discovering-topology">
+<h2>Discovering topology<a class="headerlink" href="#discovering-topology" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Use the HTTP management API <code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/management/topology</span></code> or <code class="docutils literal notranslate"><span class="pre">mcli</span> <span class="pre">--http-addr</span> <span class="pre">&lt;addr&gt;</span> <span class="pre">server-topology</span></code> to retrieve live topology.</p></li>
+<li><p>The topology JSON contains fields:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">worker_count</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tcp_multi_port</span></code> (bool)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tcp_base_listen_port</span></code> (int)</p></li>
+<li><p>per-worker <code class="docutils literal notranslate"><span class="pre">worker_index</span></code>, <code class="docutils literal notranslate"><span class="pre">worker_id</span></code>, <code class="docutils literal notranslate"><span class="pre">tcp_listen_port</span></code>, and list of <code class="docutils literal notranslate"><span class="pre">partition_ids</span></code>.</p></li>
+</ul>
+</li>
+<li><p>To resolve a partition key to a worker:</p>
+<ol class="arabic simple">
+<li><p>Call <code class="docutils literal notranslate"><span class="pre">partition-route</span></code> with the rule name and key tuple to obtain <code class="docutils literal notranslate"><span class="pre">partition_id</span></code> and <code class="docutils literal notranslate"><span class="pre">worker_id</span></code>.</p></li>
+<li><p>Look up the worker’s <code class="docutils literal notranslate"><span class="pre">tcp_listen_port</span></code> from <code class="docutils literal notranslate"><span class="pre">server-topology</span></code> result.</p></li>
+<li><p>Connect to <code class="docutils literal notranslate"><span class="pre">listen_ip:tcp_listen_port</span></code> and open a session with <code class="docutils literal notranslate"><span class="pre">worker_id</span></code> in session config.</p></li>
+</ol>
+</li>
+</ul>
+<p>Examples:</p>
+<p>… code-block:: bash</p>
+<p>mcli –http-addr 127.0.0.1:8300 partition-route –rule-name r_orders –key 1001,50001
+mcli –http-addr 127.0.0.1:8300 server-topology</p>
+</section>
+<section id="backend-mapping-caching">
+<h2>Backend mapping &amp; caching<a class="headerlink" href="#backend-mapping-caching" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Topology is authoritative on the management HTTP endpoint. Clients should cache the mapping locally and refresh periodically or on error.</p></li>
+<li><p>Cache invalidation: on RPC errors indicating “NoSuchPartition” or similar, clients should invalidate relevant entries and re-fetch topology.</p></li>
+<li><p>Update strategy: periodic short-interval refresh (seconds) plus event-driven refresh on errors.</p></li>
+</ul>
+</section>
+<section id="sharding-port-and-worker-connection">
+<h2>Sharding port and worker connection<a class="headerlink" href="#sharding-port-and-worker-connection" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Workers may expose a sharding port bound to a given partition range or accept connections with a worker_id handshake.</p></li>
+<li><p>When supported, the client can connect directly to a worker’s sharding port to reach the partitions owned by that worker.</p></li>
+<li><p>If multi-port per worker is enabled (tcp_multi_port), the server opens per-worker listeners to reduce accept contention and provide direct routes.</p></li>
+</ul>
+</section>
+<section id="obtaining-topology-and-connecting-directly">
+<h2>Obtaining topology and connecting directly<a class="headerlink" href="#obtaining-topology-and-connecting-directly" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>The management HTTP API (http_addr) provides a JSON topology mapping. Example flow:</p>
+<ul>
+<li><p>GET /management/topology -&gt; returns list of workers and partition assignments.</p></li>
+<li><p>Extract worker network address and sharding port for target worker_oid.</p></li>
+<li><p>Connect to worker address and open session with session_open_config_json containing worker_id.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="usage-examples">
+<h2>Usage examples<a class="headerlink" href="#usage-examples" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Hash-based partitioning (client-side): compute partition_oid = hash(key) % partition_count, then route to topology[partition_oid].</p></li>
+<li><p>App-assigned partitioning: application assigns partition_oid based on business logic (player_id → partition_oid).</p></li>
+</ul>
+</section>
+<section id="failure-modes-fallbacks">
+<h2>Failure modes &amp; fallbacks<a class="headerlink" href="#failure-modes-fallbacks" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Stale mapping: on connect/refuse, refresh topology and retry with updated mapping.</p></li>
+<li><p>Worker failover: if a worker is down, topology will reassign partitions — clients must re-resolve and reconnect.</p></li>
+<li><p>Conservative fallback: if topology unavailable, client may route through management/gateway worker that proxies requests, accepting higher latency.</p></li>
+</ul>
+</section>
+<section id="operational-concerns">
+<h2>Operational concerns<a class="headerlink" href="#operational-concerns" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Re-sharding: moving partitions between workers requires updating topology and draining connections. Clients must handle transient failures during re-sharding.</p></li>
+<li><p>Monitoring: expose partition-to-worker mappings and per-partition metrics to detect hot partitions.</p></li>
+</ul>
+</section>
+<section id="performance-and-tuning">
+<h2>Performance and tuning<a class="headerlink" href="#performance-and-tuning" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Partition granularity: smaller partitions increase routing resolution but add metadata overhead.</p></li>
+<li><p>Connection reuse: keep persistent session per worker_oid to amortize session open cost.</p></li>
+<li><p>async_session_loop: use adapter async loop for high concurrency to avoid blocking on session management.</p></li>
+</ul>
+</section>
+<section id="troubleshooting">
+<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Common errors: NoSuchPartition, ConnectionRefused, NotAuthorized.</p></li>
+<li><p>Diagnostics: fetch topology, verify partition assignment, confirm worker network reachability, check sharding port availability.</p></li>
+</ul>
+<hr class="docutils" />
+<p>End of partitioning document (EN).</p>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="wasm.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">WebAssembly Integration</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="per_core_worker.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Per-core Worker Model</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#design-rationale">Design rationale</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#terminology">Terminology</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#model-syntax">Model &amp; syntax</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-routing-works">How routing works</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discovering-topology">Discovering topology</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#backend-mapping-caching">Backend mapping &amp; caching</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sharding-port-and-worker-connection">Sharding port and worker connection</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#obtaining-topology-and-connecting-directly">Obtaining topology and connecting directly</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-examples">Usage examples</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#failure-modes-fallbacks">Failure modes &amp; fallbacks</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#operational-concerns">Operational concerns</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#performance-and-tuning">Performance and tuning</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#troubleshooting">Troubleshooting</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By MuduDB contributors
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026, MuduDB contributors.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
