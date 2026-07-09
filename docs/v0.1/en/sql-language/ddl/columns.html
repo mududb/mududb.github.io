@@ -385,7 +385,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../preface/overview.html">Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../preface/data-model.html">Data Model</a></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../preface/release-notes/index.html">Release Notes</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../preface/release-notes/v0.1.html">v0.1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../preface/release-notes/v0.1.html">v0.1 Release Notes</a></li>
 </ul>
 </details></li>
 </ul>
@@ -460,7 +460,22 @@
 <li class="toctree-l2"><a class="reference internal" href="../../internal/per_core_worker.html">Per-core Worker Model</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1"><a class="reference internal" href="../../reference/index.html">Reference</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../reference/index.html">Reference</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../reference/contracts/index.html">MuduDB Format and Protocol Contracts</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/contracts/page_header_v1.html">Page Header Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/contracts/tuple_binary_v1.html">Tuple Binary Format Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/contracts/log_frame_v1.html">Log Frame Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/contracts/protocol_frame_v1.html">TCP Protocol Frame Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/contracts/mpk_manifest_v1.html">MPK Package Manifest Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/contracts/mudud_cfg_v1.html">MuduDB Server Configuration Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/contracts/file_layout_v1.html">MuduDB File Layout Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/contracts/syscall_payload_v1.html">Guest→Host Syscall Payload Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/contracts/how_to_add_format_upgrade.html">How to Add a Format Upgrade</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="../../reference/mcli-admin.html">mcli Management Interface (HTTP)</a></li>
+</ul>
+</details></li>
 </ul>
 
     </div>
@@ -520,7 +535,7 @@
 </div>
 <ul class="simple">
 <li><p><strong>column_name</strong> — an identifier. Case-insensitive in parsing; stored and matched exactly as given.</p></li>
-<li><p><strong>data_type</strong> — see <span class="xref std std-doc">../data-types/index</span> for the full list.</p></li>
+<li><p><strong>data_type</strong> — see <a class="reference internal" href="../data_types/index.html"><span class="doc">Data Types</span></a> for the full list.</p></li>
 <li><p><strong>column_constraint</strong> — currently <code class="docutils literal notranslate"><span class="pre">PRIMARY</span> <span class="pre">KEY</span></code> (inline) and <code class="docutils literal notranslate"><span class="pre">NOT</span> <span class="pre">NULL</span></code>.</p></li>
 </ul>
 <p>Column order in the <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">TABLE</span></code> statement determines the physical layout of the row. MuduDB does not support adding or dropping columns after creation.</p>

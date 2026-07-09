@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>v0.1 &#8212; MuduDB v0.1</title>
+    <title>v0.1 Release Notes &#8212; MuduDB v0.1</title>
   
   
   
@@ -241,6 +241,10 @@
   
 
   
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
 </div>
 
     </header>
@@ -385,7 +389,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../overview.html">Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../data-model.html">Data Model</a></li>
 <li class="toctree-l2 current active has-children"><a class="reference internal" href="index.html">Release Notes</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
-<li class="toctree-l3 current active"><a class="current reference internal" href="#">v0.1</a></li>
+<li class="toctree-l3 current active"><a class="current reference internal" href="#">v0.1 Release Notes</a></li>
 </ul>
 </details></li>
 </ul>
@@ -460,7 +464,22 @@
 <li class="toctree-l2"><a class="reference internal" href="../../internal/per_core_worker.html">Per-core Worker Model</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1"><a class="reference internal" href="../../reference/index.html">Reference</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../reference/index.html">Reference</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../reference/contracts/index.html">MuduDB Format and Protocol Contracts</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/contracts/page_header_v1.html">Page Header Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/contracts/tuple_binary_v1.html">Tuple Binary Format Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/contracts/log_frame_v1.html">Log Frame Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/contracts/protocol_frame_v1.html">TCP Protocol Frame Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/contracts/mpk_manifest_v1.html">MPK Package Manifest Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/contracts/mudud_cfg_v1.html">MuduDB Server Configuration Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/contracts/file_layout_v1.html">MuduDB File Layout Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/contracts/syscall_payload_v1.html">Guest→Host Syscall Payload Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/contracts/how_to_add_format_upgrade.html">How to Add a Format Upgrade</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="../../reference/mcli-admin.html">mcli Management Interface (HTTP)</a></li>
+</ul>
+</details></li>
 </ul>
 
     </div>
@@ -493,16 +512,40 @@
           <div class="bd-content">
             <div class="bd-article-container">
               
-              <div class="bd-header-article d-print-none"></div>
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item"><button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button></div>
+      
+    </div>
+  
+</div>
+</div>
               
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>v0.1</h1>
+    <h1>v0.1 Release Notes</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#new-features">New features</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#known-limitations">Known limitations</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#migration-and-compatibility">Migration and compatibility</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-to-read-next">What to read next</a></li>
+</ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -512,17 +555,46 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="v0-1">
-<h1>v0.1<a class="headerlink" href="#v0-1" title="Link to this heading">#</a></h1>
-<p><code class="docutils literal notranslate"><span class="pre">v0.1</span></code> is the initial documentation version directory for organizing existing installation, command, procedure application, and architecture material.</p>
-<p>Future release notes should record:</p>
+  <section id="v0-1-release-notes">
+<h1>v0.1 Release Notes<a class="headerlink" href="#v0-1-release-notes" title="Link to this heading">#</a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">v0.1</span></code> is the initial documentation release for MuduDB. It covers installation, SQL usage, procedure development, package deployment, and architecture.</p>
+<section id="new-features">
+<h2>New features<a class="headerlink" href="#new-features" title="Link to this heading">#</a></h2>
 <ul class="simple">
-<li><p>new features</p></li>
-<li><p>behavior changes</p></li>
-<li><p>compatibility impact</p></li>
-<li><p>migration steps</p></li>
-<li><p>known limitations</p></li>
+<li><p><strong>SQL CRUD support</strong>: <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">TABLE</span></code>, <code class="docutils literal notranslate"><span class="pre">INSERT</span></code>, <code class="docutils literal notranslate"><span class="pre">UPDATE</span></code>, <code class="docutils literal notranslate"><span class="pre">DELETE</span></code>, and <code class="docutils literal notranslate"><span class="pre">SELECT</span></code> with predicates and expressions.</p></li>
+<li><p><strong>Mudu Procedure model</strong>: write stored procedures in Rust (and experimentally AssemblyScript), deploy them as <code class="docutils literal notranslate"><span class="pre">.mpk</span></code> packages, and invoke them through <code class="docutils literal notranslate"><span class="pre">mcli</span></code>.</p></li>
+<li><p><strong>MPK packaging</strong>: package WebAssembly components, DDL, descriptors, and initialization data into a ZIP-based <code class="docutils literal notranslate"><span class="pre">.mpk</span></code> archive.</p></li>
+<li><p><strong>Multi-mode server backends</strong>: choose between <code class="docutils literal notranslate"><span class="pre">Legacy</span></code>, <code class="docutils literal notranslate"><span class="pre">IOUring</span></code>, and <code class="docutils literal notranslate"><span class="pre">Tokio</span></code> execution modes in <code class="docutils literal notranslate"><span class="pre">mudud.cfg</span></code>.</p></li>
+<li><p><strong>Per-core worker model</strong>: kernel-managed workers with partition-local ownership for reduced cross-core contention.</p></li>
+<li><p><strong>Range partitioning</strong>: define global partition rules, bind tables to them, and place partitions on specific workers.</p></li>
+<li><p><strong>Format contracts</strong>: formal specifications for page header, tuple binary format, log frame, protocol frame, MPK manifest, server config, file layout, and syscall payload.</p></li>
+<li><p><strong>HTTP management API</strong>: install, list, and uninstall applications and query topology through <code class="docutils literal notranslate"><span class="pre">mcli</span> <span class="pre">--http-addr</span></code>.</p></li>
 </ul>
+</section>
+<section id="known-limitations">
+<h2>Known limitations<a class="headerlink" href="#known-limitations" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>SQL support on the <code class="docutils literal notranslate"><span class="pre">IOUring</span></code> backend path is not yet implemented; the KV-oriented path is the current usable direction on that backend.</p></li>
+<li><p>Distributed two-phase commit across multiple workers is not implemented. Cross-worker writes are forwarded and executed remotely, but full atomic commit across workers is not yet supported.</p></li>
+<li><p>Secondary indexes are not supported; queries rely on primary key and range scans.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">mudup</span></code> release installer is not yet stable; source builds are recommended for development.</p></li>
+</ul>
+</section>
+<section id="migration-and-compatibility">
+<h2>Migration and compatibility<a class="headerlink" href="#migration-and-compatibility" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>v0.1 uses format version <code class="docutils literal notranslate"><span class="pre">1</span></code> for all on-disk and wire contracts. Future releases will bump these versions and provide offline migration tools.</p></li>
+<li><p>Configuration files use the v1 TOML schema described in the <a class="reference internal" href="../../reference/contracts/mudud_cfg_v1.html"><span class="doc">Server Configuration Contract</span></a>.</p></li>
+</ul>
+</section>
+<section id="what-to-read-next">
+<h2>What to read next<a class="headerlink" href="#what-to-read-next" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../tutorial/getting-started/index.html"><span class="doc">Getting Started</span></a></p></li>
+<li><p><a class="reference internal" href="../data-model.html"><span class="doc">Core concepts and data model</span></a></p></li>
+<li><p><a class="reference internal" href="../../tutorial/tutorials/wallet.html"><span class="doc">Your First MPK Package</span></a></p></li>
+</ul>
+</section>
 </section>
 
 
@@ -560,6 +632,26 @@
             </div>
             
             
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#new-features">New features</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#known-limitations">Known limitations</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#migration-and-compatibility">Migration and compatibility</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-to-read-next">What to read next</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>

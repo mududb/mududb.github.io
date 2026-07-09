@@ -194,7 +194,7 @@
 
 <li class=" ">
   <a class="nav-link dropdown-item nav-internal" href="../../reference/index.html">
-    参考
+    参考资料
   </a>
 </li>
 
@@ -240,6 +240,10 @@
   
   
 
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="当前页面">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
   
 </div>
 
@@ -311,7 +315,7 @@
 
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="../../reference/index.html">
-    参考
+    参考资料
   </a>
 </li>
 
@@ -385,7 +389,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../preface/overview.html">概览</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../preface/data-model.html">数据模型</a></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../preface/release-notes/index.html">发行说明</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../preface/release-notes/v0.1.html">v0.1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../preface/release-notes/v0.1.html">v0.1 发布说明</a></li>
 </ul>
 </details></li>
 </ul>
@@ -431,9 +435,9 @@
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../administration/index.html">管理</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../administration/client.html">客户端</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../administration/server.html">服务器管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../administration/server.html">服务端管理</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../administration/configuration.html">配置参考</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../administration/packages.html">应用程序包</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../administration/packages.html">应用包</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../administration/toolchain.html">工具链</a></li>
 </ul>
 </details></li>
@@ -460,7 +464,22 @@
 <li class="toctree-l2"><a class="reference internal" href="../../internal/per_core_worker.html">每核心工作线程模型</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1"><a class="reference internal" href="../../reference/index.html">参考</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../reference/index.html">参考资料</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../reference/contracts/index.html">MuduDB 格式与协议契约</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/contracts/page_header_v1.html">Page Header 契约 v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/contracts/tuple_binary_v1.html">Tuple Binary Format Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/contracts/log_frame_v1.html">Log Frame 契约 v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/contracts/protocol_frame_v1.html">TCP 协议帧契约 v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/contracts/mpk_manifest_v1.html">MPK 包清单契约 v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/contracts/mudud_cfg_v1.html">MuduDB 服务端配置契约 v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/contracts/file_layout_v1.html">MuduDB 文件布局契约 v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/contracts/syscall_payload_v1.html">Guest→Host 系统调用负载契约 v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/contracts/how_to_add_format_upgrade.html">如何添加一次格式升级</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="../../reference/mcli-admin.html">mcli 管理接口（HTTP）</a></li>
+</ul>
+</details></li>
 </ul>
 
     </div>
@@ -493,7 +512,20 @@
           <div class="bd-content">
             <div class="bd-article-container">
               
-              <div class="bd-header-article d-print-none"></div>
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item"><button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button></div>
+      
+    </div>
+  
+</div>
+</div>
               
               
 
@@ -503,6 +535,22 @@
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> 目录 </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rust-api">Rust API</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">概念签名</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">参数</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">行为</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">返回值</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">错误</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">事务语义</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">示例</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">备注</a></li>
+</ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -514,49 +562,79 @@
                   
   <section id="read">
 <h1>read<a class="headerlink" href="#read" title="Link to this heading">#</a></h1>
-<p>用途</p>
 <p>通过主键或查找条件读取单条记录。</p>
-<p>签名</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>read(table: string, key: KeyExpr, options?: { projection?: [string], for_update?: bool }) -&gt; Row | null
-</pre></div>
-</div>
-<p>参数</p>
-<ul class="simple">
-<li><p>table：目标表或逻辑集合名称。</p></li>
-<li><p>key：主键值或用于查找的结构化键表达式。</p></li>
-<li><p>options.projection：可选的列名列表，用于指定返回的列。</p></li>
-<li><p>options.for_update：当为 true 时，读取会获取锁，以允许在同一事务内安全地进行后续更新。</p></li>
-</ul>
-<p>行为</p>
-<ul class="simple">
-<li><p>在表或索引中执行点查找，并返回匹配的行，如果未找到则返回 null。</p></li>
-<li><p>读取遵守当前事务的隔离和可见性规则（根据隔离级别可能返回已提交快照值）。</p></li>
-</ul>
-<p>返回值</p>
-<ul class="simple">
-<li><p>包含列值的单个 Row 对象，如果没有匹配行则返回 null。</p></li>
-</ul>
-<p>错误</p>
-<ul class="simple">
-<li><p>NotFound：不是错误；读取在未匹配时返回 null。</p></li>
-<li><p>LockConflict：当请求 for_update 且锁获取失败时。</p></li>
-</ul>
-<p>事务语义</p>
-<ul class="simple">
-<li><p>在打开的事务内进行的读取受该事务的快照/隔离影响。事务外的读取遵循宿主默认语义。</p></li>
-</ul>
-<p>示例</p>
-<div class="highlight-rust notranslate"><div class="highlight"><pre><span></span><span class="kd">let</span><span class="w"> </span><span class="n">row</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">read</span><span class="p">(</span><span class="s">&quot;accounts&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">42</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">projection</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s">&quot;id&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;balance&quot;</span><span class="p">]</span><span class="w"> </span><span class="p">});</span>
-<span class="k">if</span><span class="w"> </span><span class="n">row</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">null</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="c1">// use row.balance</span>
+<section id="rust-api">
+<h2>Rust API<a class="headerlink" href="#rust-api" title="Link to this heading">#</a></h2>
+<div class="highlight-rust notranslate"><div class="highlight"><pre><span></span><span class="c1">// sync_api</span>
+<span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">mudu_get</span><span class="p">(</span><span class="n">session_id</span><span class="p">:</span><span class="w"> </span><span class="nc">OID</span><span class="p">,</span><span class="w"> </span><span class="n">key</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="p">[</span><span class="kt">u8</span><span class="p">])</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">RS</span><span class="o">&lt;</span><span class="nb">Option</span><span class="o">&lt;</span><span class="nb">Vec</span><span class="o">&lt;</span><span class="kt">u8</span><span class="o">&gt;&gt;&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="cm">/* ... */</span>
+<span class="p">}</span>
+
+<span class="c1">// async_api</span>
+<span class="k">pub</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">mudu_get</span><span class="p">(</span><span class="n">session_id</span><span class="p">:</span><span class="w"> </span><span class="nc">OID</span><span class="p">,</span><span class="w"> </span><span class="n">key</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="p">[</span><span class="kt">u8</span><span class="p">])</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">RS</span><span class="o">&lt;</span><span class="nb">Option</span><span class="o">&lt;</span><span class="nb">Vec</span><span class="o">&lt;</span><span class="kt">u8</span><span class="o">&gt;&gt;&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="cm">/* ... */</span>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>备注</p>
+</section>
+<section id="id1">
+<h2>概念签名<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>read(table: string, key: KeyExpr, options?: { projection?: [string], for_update?: bool }) -&gt; Row | null
+</pre></div>
+</div>
+</section>
+<section id="id2">
+<h2>参数<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">table</span></code> —— 目标表或逻辑集合名称。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">key</span></code> —— 主键值或用于查找的结构化键表达式。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">options.projection</span></code> —— 可选的列名列表，用于指定返回的列。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">options.for_update</span></code> —— 为 true 时，读取会获取锁，以允许在同一事务内安全地进行后续更新。</p></li>
+</ul>
+</section>
+<section id="id3">
+<h2>行为<a class="headerlink" href="#id3" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>在表或索引中执行点查找，返回匹配的行；如果未找到则返回 null。</p></li>
+<li><p>读取遵守当前事务的隔离和可见性规则（根据隔离级别可能返回已提交快照值）。</p></li>
+</ul>
+</section>
+<section id="id4">
+<h2>返回值<a class="headerlink" href="#id4" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>包含列值的单个 <code class="docutils literal notranslate"><span class="pre">Row</span></code> 对象；如果没有匹配行则返回 <code class="docutils literal notranslate"><span class="pre">null</span></code>。</p></li>
+</ul>
+</section>
+<section id="id5">
+<h2>错误<a class="headerlink" href="#id5" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">NotFound</span></code>：不是错误；未匹配时 <code class="docutils literal notranslate"><span class="pre">read</span></code> 返回 <code class="docutils literal notranslate"><span class="pre">null</span></code>。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">LockConflict</span></code>：请求 <code class="docutils literal notranslate"><span class="pre">for_update</span></code> 且锁获取失败时返回。</p></li>
+</ul>
+</section>
+<section id="id6">
+<h2>事务语义<a class="headerlink" href="#id6" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>在打开的事务内进行的读取受该事务的快照/隔离影响。</p></li>
+<li><p>事务外的读取遵循宿主默认语义。</p></li>
+</ul>
+</section>
+<section id="id7">
+<h2>示例<a class="headerlink" href="#id7" title="Link to this heading">#</a></h2>
+<div class="highlight-rust notranslate"><div class="highlight"><pre><span></span><span class="kd">let</span><span class="w"> </span><span class="n">row</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mudu_get</span><span class="p">(</span><span class="n">oid</span><span class="p">,</span><span class="w"> </span><span class="s">b&quot;accounts:42&quot;</span><span class="p">)</span><span class="o">?</span><span class="p">;</span>
+<span class="k">if</span><span class="w"> </span><span class="kd">let</span><span class="w"> </span><span class="nb">Some</span><span class="p">(</span><span class="n">bytes</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">row</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// 按表模式解码 bytes</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="id8">
+<h2>备注<a class="headerlink" href="#id8" title="Link to this heading">#</a></h2>
 <ul class="simple">
 <li><p>使用 projection 可以减少数据传输并提高性能。</p></li>
-<li><p>对于读-改-写模式，优先使用 for_update 以避免丢失更新竞争。</p></li>
+<li><p>对于读-改-写模式，优先使用 <code class="docutils literal notranslate"><span class="pre">for_update</span></code> 以避免丢失更新竞争。</p></li>
 </ul>
+</section>
 </section>
 
 
@@ -594,6 +672,31 @@
             </div>
             
             
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> 目录
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rust-api">Rust API</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">概念签名</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">参数</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">行为</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">返回值</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">错误</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">事务语义</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">示例</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">备注</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>

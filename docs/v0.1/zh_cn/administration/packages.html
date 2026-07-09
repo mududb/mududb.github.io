@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>应用程序包 &#8212; MuduDB v0.1</title>
+    <title>应用包 &#8212; MuduDB v0.1</title>
   
   
   
@@ -194,7 +194,7 @@
 
 <li class=" ">
   <a class="nav-link dropdown-item nav-internal" href="../reference/index.html">
-    参考
+    参考资料
   </a>
 </li>
 
@@ -240,6 +240,10 @@
   
   
 
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="当前页面">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
   
 </div>
 
@@ -311,7 +315,7 @@
 
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="../reference/index.html">
-    参考
+    参考资料
   </a>
 </li>
 
@@ -385,7 +389,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../preface/overview.html">概览</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../preface/data-model.html">数据模型</a></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../preface/release-notes/index.html">发行说明</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../preface/release-notes/v0.1.html">v0.1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../preface/release-notes/v0.1.html">v0.1 发布说明</a></li>
 </ul>
 </details></li>
 </ul>
@@ -431,9 +435,9 @@
 </details></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">管理</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="client.html">客户端</a></li>
-<li class="toctree-l2"><a class="reference internal" href="server.html">服务器管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="server.html">服务端管理</a></li>
 <li class="toctree-l2"><a class="reference internal" href="configuration.html">配置参考</a></li>
-<li class="toctree-l2 current active"><a class="current reference internal" href="#">应用程序包</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">应用包</a></li>
 <li class="toctree-l2"><a class="reference internal" href="toolchain.html">工具链</a></li>
 </ul>
 </details></li>
@@ -460,7 +464,22 @@
 <li class="toctree-l2"><a class="reference internal" href="../internal/per_core_worker.html">每核心工作线程模型</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1"><a class="reference internal" href="../reference/index.html">参考</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../reference/index.html">参考资料</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../reference/contracts/index.html">MuduDB 格式与协议契约</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/page_header_v1.html">Page Header 契约 v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/tuple_binary_v1.html">Tuple Binary Format Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/log_frame_v1.html">Log Frame 契约 v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/protocol_frame_v1.html">TCP 协议帧契约 v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/mpk_manifest_v1.html">MPK 包清单契约 v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/mudud_cfg_v1.html">MuduDB 服务端配置契约 v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/file_layout_v1.html">MuduDB 文件布局契约 v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/syscall_payload_v1.html">Guest→Host 系统调用负载契约 v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/how_to_add_format_upgrade.html">如何添加一次格式升级</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/mcli-admin.html">mcli 管理接口（HTTP）</a></li>
+</ul>
+</details></li>
 </ul>
 
     </div>
@@ -493,16 +512,43 @@
           <div class="bd-content">
             <div class="bd-article-container">
               
-              <div class="bd-header-article d-print-none"></div>
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item"><button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button></div>
+      
+    </div>
+  
+</div>
+</div>
               
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>应用程序包</h1>
+    <h1>应用包</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> 目录 </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">包内容</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">构建包</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">安装包</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">列出已安装应用</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">查看应用详情</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">卸载包</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">调用过程</a></li>
+</ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -513,15 +559,98 @@
                 <article class="bd-article">
                   
   <section id="id1">
-<h1>应用程序包<a class="headerlink" href="#id1" title="Link to this heading">#</a></h1>
-<p>MuduDB 应用程序以 <code class="docutils literal notranslate"><span class="pre">.mpk</span></code> 包的形式部署。一个包通常包含：</p>
-<ul class="simple">
-<li><p>WebAssembly 组件</p></li>
-<li><p>模式定义</p></li>
-<li><p>初始化数据</p></li>
-<li><p>过程元数据</p></li>
-</ul>
-<p>使用 <code class="docutils literal notranslate"><span class="pre">mpk</span></code> 构建包，并使用 <code class="docutils literal notranslate"><span class="pre">mcli</span> <span class="pre">app-install</span></code> 进行安装。有关完整示例，请参阅 <a class="reference internal" href="../tutorial/tutorials/wallet.html"><span class="doc">Wallet 示例</span></a>。</p>
+<h1>应用包<a class="headerlink" href="#id1" title="Link to this heading">#</a></h1>
+<p>MuduDB 应用以 <code class="docutils literal notranslate"><span class="pre">.mpk</span></code> 包的形式部署。<code class="docutils literal notranslate"><span class="pre">.mpk</span></code> 是一个 ZIP 归档，包含编译后的 WebAssembly 组件、schema DDL、过程描述符、可选初始化数据及应用元数据。</p>
+<section id="id2">
+<h2>包内容<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
+<p>有效的 <code class="docutils literal notranslate"><span class="pre">.mpk</span></code> 归档至少包含以下条目：</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>条目</p></th>
+<th class="head"><p>必需</p></th>
+<th class="head"><p>说明</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">package.cfg.json</span></code></p></td>
+<td><p>是</p></td>
+<td><p>应用元数据（<code class="docutils literal notranslate"><span class="pre">name</span></code>、<code class="docutils literal notranslate"><span class="pre">lang</span></code>、<code class="docutils literal notranslate"><span class="pre">version</span></code>、<code class="docutils literal notranslate"><span class="pre">use_async</span></code>）。</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">package.desc.json</span></code></p></td>
+<td><p>是</p></td>
+<td><p>模块/过程描述符（<code class="docutils literal notranslate"><span class="pre">ModProcDesc</span></code>）。</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ddl.sql</span></code></p></td>
+<td><p>是</p></td>
+<td><p>Schema DDL 语句。</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">initdb.sql</span></code></p></td>
+<td><p>打包器：是；加载器：否</p></td>
+<td><p>初始数据 SQL。加载器接受缺失或为空的文件。</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">package.manifest.json</span></code></p></td>
+<td><p>否</p></td>
+<td><p>前后向兼容清单。新包应包含。</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">*.wasm</span></code></p></td>
+<td><p>打包器：是；加载器：否</p></td>
+<td><p>一个或多个编译后的 WebAssembly 组件模块。</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>完整规范请参见 <a class="reference internal" href="../reference/contracts/mpk_manifest_v1.html"><span class="std std-doc">MPK 清单契约</span></a>。</p>
+</section>
+<section id="id3">
+<h2>构建包<a class="headerlink" href="#id3" title="Link to this heading">#</a></h2>
+<p>在应用目录下使用 <code class="docutils literal notranslate"><span class="pre">mpm-build</span></code>：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mpm-build<span class="w"> </span>create<span class="w"> </span>--cfg<span class="w"> </span>package.cfg.json
+</pre></div>
+</div>
+<p>输出为一个 <code class="docutils literal notranslate"><span class="pre">.mpk</span></code> 文件，可安装到运行中的 <code class="docutils literal notranslate"><span class="pre">mudud</span></code> 服务器。</p>
+</section>
+<section id="id4">
+<h2>安装包<a class="headerlink" href="#id4" title="Link to this heading">#</a></h2>
+<p>通过 HTTP 管理端点使用 <code class="docutils literal notranslate"><span class="pre">mcli</span></code>：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mcli<span class="w"> </span>--http-addr<span class="w"> </span><span class="m">127</span>.0.0.1:8300<span class="w"> </span>app-install<span class="w"> </span>--mpk<span class="w"> </span>target/wasm32-wasip2/release/wallet.mpk
+</pre></div>
+</div>
+</section>
+<section id="id5">
+<h2>列出已安装应用<a class="headerlink" href="#id5" title="Link to this heading">#</a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mcli<span class="w"> </span>--http-addr<span class="w"> </span><span class="m">127</span>.0.0.1:8300<span class="w"> </span>app-list
+</pre></div>
+</div>
+</section>
+<section id="id6">
+<h2>查看应用详情<a class="headerlink" href="#id6" title="Link to this heading">#</a></h2>
+<p>列出应用中的过程：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mcli<span class="w"> </span>--http-addr<span class="w"> </span><span class="m">127</span>.0.0.1:8300<span class="w"> </span>app-detail<span class="w"> </span>--app<span class="w"> </span>wallet
+</pre></div>
+</div>
+<p>查看单个过程：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mcli<span class="w"> </span>--http-addr<span class="w"> </span><span class="m">127</span>.0.0.1:8300<span class="w"> </span>app-detail<span class="w"> </span>--app<span class="w"> </span>wallet<span class="w"> </span>--module<span class="w"> </span>wallet<span class="w"> </span>--proc<span class="w"> </span>transfer_funds
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">--proc</span></code> 必须与 <code class="docutils literal notranslate"><span class="pre">--module</span></code> 一起使用。</p>
+</section>
+<section id="id7">
+<h2>卸载包<a class="headerlink" href="#id7" title="Link to this heading">#</a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mcli<span class="w"> </span>--http-addr<span class="w"> </span><span class="m">127</span>.0.0.1:8300<span class="w"> </span>app-uninstall<span class="w"> </span>--app<span class="w"> </span>wallet
+</pre></div>
+</div>
+</section>
+<section id="id8">
+<h2>调用过程<a class="headerlink" href="#id8" title="Link to this heading">#</a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mcli<span class="w"> </span>--addr<span class="w"> </span><span class="m">127</span>.0.0.1:9527<span class="w"> </span>--http-addr<span class="w"> </span><span class="m">127</span>.0.0.1:8300<span class="w"> </span>app-invoke<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--app<span class="w"> </span>wallet<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--module<span class="w"> </span>wallet<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--proc<span class="w"> </span>transfer_funds<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--json<span class="w"> </span><span class="s1">&#39;{&quot;from_user_id&quot;: 1001, &quot;to_user_id&quot;: 1002, &quot;amount&quot;: 1200}&#39;</span>
+</pre></div>
+</div>
+<p>完整示例请参见<a class="reference internal" href="../tutorial/tutorials/wallet.html"><span class="std std-doc">你的第一个 MPK 包</span></a>，所有管理命令请参见 <a class="reference internal" href="../reference/mcli-admin.html"><span class="std std-doc">mcli HTTP 管理接口</span></a>。</p>
+</section>
 </section>
 
 
@@ -559,6 +688,29 @@
             </div>
             
             
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> 目录
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">包内容</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">构建包</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">安装包</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">列出已安装应用</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">查看应用详情</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">卸载包</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">调用过程</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>

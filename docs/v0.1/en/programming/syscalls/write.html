@@ -241,6 +241,10 @@
   
 
   
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
 </div>
 
     </header>
@@ -385,7 +389,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../preface/overview.html">Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../preface/data-model.html">Data Model</a></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../preface/release-notes/index.html">Release Notes</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../preface/release-notes/v0.1.html">v0.1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../preface/release-notes/v0.1.html">v0.1 Release Notes</a></li>
 </ul>
 </details></li>
 </ul>
@@ -460,7 +464,22 @@
 <li class="toctree-l2"><a class="reference internal" href="../../internal/per_core_worker.html">Per-core Worker Model</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1"><a class="reference internal" href="../../reference/index.html">Reference</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../reference/index.html">Reference</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../reference/contracts/index.html">MuduDB Format and Protocol Contracts</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/contracts/page_header_v1.html">Page Header Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/contracts/tuple_binary_v1.html">Tuple Binary Format Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/contracts/log_frame_v1.html">Log Frame Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/contracts/protocol_frame_v1.html">TCP Protocol Frame Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/contracts/mpk_manifest_v1.html">MPK Package Manifest Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/contracts/mudud_cfg_v1.html">MuduDB Server Configuration Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/contracts/file_layout_v1.html">MuduDB File Layout Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/contracts/syscall_payload_v1.html">Guest→Host Syscall Payload Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/contracts/how_to_add_format_upgrade.html">How to Add a Format Upgrade</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="../../reference/mcli-admin.html">mcli Management Interface (HTTP)</a></li>
+</ul>
+</details></li>
 </ul>
 
     </div>
@@ -493,7 +512,20 @@
           <div class="bd-content">
             <div class="bd-article-container">
               
-              <div class="bd-header-article d-print-none"></div>
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item"><button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button></div>
+      
+    </div>
+  
+</div>
+</div>
               
               
 
@@ -503,6 +535,22 @@
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rust-api">Rust API</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conceptual-signature">Conceptual signature</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parameters">Parameters</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#behavior">Behavior</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#return-value">Return value</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#errors">Errors</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#transaction-semantics">Transaction semantics</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example">Example</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#best-practices">Best practices</a></li>
+</ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -514,53 +562,83 @@
                   
   <section id="write">
 <h1>write<a class="headerlink" href="#write" title="Link to this heading">#</a></h1>
-<p>Purpose</p>
 <p>Insert, update, or delete a record in a table or key-value store.</p>
-<p>Signature</p>
+<section id="rust-api">
+<h2>Rust API<a class="headerlink" href="#rust-api" title="Link to this heading">#</a></h2>
+<div class="highlight-rust notranslate"><div class="highlight"><pre><span></span><span class="c1">// sync_api</span>
+<span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">mudu_put</span><span class="p">(</span><span class="n">session_id</span><span class="p">:</span><span class="w"> </span><span class="nc">OID</span><span class="p">,</span><span class="w"> </span><span class="n">key</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="p">[</span><span class="kt">u8</span><span class="p">],</span><span class="w"> </span><span class="n">value</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="p">[</span><span class="kt">u8</span><span class="p">])</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">RS</span><span class="o">&lt;</span><span class="p">()</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="cm">/* ... */</span>
+<span class="p">}</span>
+
+<span class="c1">// async_api</span>
+<span class="k">pub</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">mudu_put</span><span class="p">(</span><span class="n">session_id</span><span class="p">:</span><span class="w"> </span><span class="nc">OID</span><span class="p">,</span><span class="w"> </span><span class="n">key</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="p">[</span><span class="kt">u8</span><span class="p">],</span><span class="w"> </span><span class="n">value</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="p">[</span><span class="kt">u8</span><span class="p">])</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">RS</span><span class="o">&lt;</span><span class="p">()</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="cm">/* ... */</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="conceptual-signature">
+<h2>Conceptual signature<a class="headerlink" href="#conceptual-signature" title="Link to this heading">#</a></h2>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>write(table: string, op: { type: &#39;insert&#39; | &#39;update&#39; | &#39;delete&#39;, row?: Row, key?: KeyExpr, patch?: Partial&lt;Row&gt; }) -&gt; WriteResult
 </pre></div>
 </div>
-<p>Parameters</p>
+</section>
+<section id="parameters">
+<h2>Parameters<a class="headerlink" href="#parameters" title="Link to this heading">#</a></h2>
 <ul class="simple">
-<li><p>table: target table name.</p></li>
-<li><p>op.type: one of ‘insert’, ‘update’, or ‘delete’.</p></li>
-<li><p>op.row: full row payload for inserts.</p></li>
-<li><p>op.key: primary key selector for updates/deletes.</p></li>
-<li><p>op.patch: partial fields to apply for updates.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">table</span></code> — target table name.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">op.type</span></code> — one of <code class="docutils literal notranslate"><span class="pre">insert</span></code>, <code class="docutils literal notranslate"><span class="pre">update</span></code>, or <code class="docutils literal notranslate"><span class="pre">delete</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">op.row</span></code> — full row payload for inserts.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">op.key</span></code> — primary key selector for updates/deletes.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">op.patch</span></code> — partial fields to apply for updates.</p></li>
 </ul>
-<p>Behavior</p>
+</section>
+<section id="behavior">
+<h2>Behavior<a class="headerlink" href="#behavior" title="Link to this heading">#</a></h2>
 <ul class="simple">
 <li><p>Mutations are staged in the current transaction and become visible on commit.</p></li>
 <li><p>The host enforces schema, types, and constraint checks at write time.</p></li>
 </ul>
-<p>Return</p>
+</section>
+<section id="return-value">
+<h2>Return value<a class="headerlink" href="#return-value" title="Link to this heading">#</a></h2>
 <ul class="simple">
-<li><p>WriteResult contains status, affected row count, and generated keys when applicable.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">WriteResult</span></code> contains status, affected row count, and generated keys when applicable.</p></li>
 </ul>
-<p>Errors</p>
+</section>
+<section id="errors">
+<h2>Errors<a class="headerlink" href="#errors" title="Link to this heading">#</a></h2>
 <ul class="simple">
-<li><p>ConstraintViolation: schema or uniqueness violation.</p></li>
-<li><p>NotFound: update/delete on a non-existing key may return NotFound depending on op mode.</p></li>
-<li><p>SerializationError or Conflict: transaction conflicts requiring retry.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ConstraintViolation</span></code> — schema or uniqueness violation.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">NotFound</span></code> — update/delete on a non-existing key may return <code class="docutils literal notranslate"><span class="pre">NotFound</span></code> depending on op mode.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SerializationError</span></code> or <code class="docutils literal notranslate"><span class="pre">Conflict</span></code> — transaction conflicts requiring retry.</p></li>
 </ul>
-<p>Transaction semantics</p>
+</section>
+<section id="transaction-semantics">
+<h2>Transaction semantics<a class="headerlink" href="#transaction-semantics" title="Link to this heading">#</a></h2>
 <ul class="simple">
-<li><p>Writes must be performed within a transaction for atomic multi-step updates. Outside a transaction, behavior is host-defined (autocommit or reject).</p></li>
+<li><p>Writes must be performed within a transaction for atomic multi-step updates.</p></li>
+<li><p>Outside a transaction, behavior is host-defined (autocommit or reject).</p></li>
 </ul>
-<p>Example</p>
-<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="c1">-- insert</span>
-<span class="k">write</span><span class="p">(</span><span class="s1">&#39;accounts&#39;</span><span class="p">,</span><span class="w"> </span><span class="err">{</span><span class="w"> </span><span class="k">type</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;insert&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">row</span><span class="p">:</span><span class="w"> </span><span class="err">{</span><span class="w"> </span><span class="n">id</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="k">owner</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;Carol&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">balance</span><span class="p">:</span><span class="w"> </span><span class="mi">1000</span><span class="w"> </span><span class="err">}</span><span class="w"> </span><span class="err">}</span><span class="p">);</span>
+</section>
+<section id="example">
+<h2>Example<a class="headerlink" href="#example" title="Link to this heading">#</a></h2>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>-- insert
+write(&#39;accounts&#39;, { type: &#39;insert&#39;, row: { id: 5, owner: &#39;Carol&#39;, balance: 1000 } });
 
-<span class="c1">-- update</span>
-<span class="k">write</span><span class="p">(</span><span class="s1">&#39;accounts&#39;</span><span class="p">,</span><span class="w"> </span><span class="err">{</span><span class="w"> </span><span class="k">type</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;update&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">key</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="n">patch</span><span class="p">:</span><span class="w"> </span><span class="err">{</span><span class="w"> </span><span class="n">balance</span><span class="p">:</span><span class="w"> </span><span class="mi">1200</span><span class="w"> </span><span class="err">}</span><span class="w"> </span><span class="err">}</span><span class="p">);</span>
+-- update
+write(&#39;accounts&#39;, { type: &#39;update&#39;, key: 5, patch: { balance: 1200 } });
 </pre></div>
 </div>
-<p>Best practices</p>
+</section>
+<section id="best-practices">
+<h2>Best practices<a class="headerlink" href="#best-practices" title="Link to this heading">#</a></h2>
 <ul class="simple">
 <li><p>Use transactions for multi-statement updates to ensure atomicity.</p></li>
 <li><p>Validate inputs at the procedure boundary to avoid constraint errors.</p></li>
 <li><p>Prefer idempotent operations when procedures may be retried.</p></li>
 </ul>
+</section>
 </section>
 
 
@@ -598,6 +676,31 @@
             </div>
             
             
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rust-api">Rust API</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conceptual-signature">Conceptual signature</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parameters">Parameters</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#behavior">Behavior</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#return-value">Return value</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#errors">Errors</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#transaction-semantics">Transaction semantics</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example">Example</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#best-practices">Best practices</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>

@@ -241,6 +241,10 @@
   
 
   
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
 </div>
 
     </header>
@@ -385,7 +389,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../preface/overview.html">Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../preface/data-model.html">Data Model</a></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../preface/release-notes/index.html">Release Notes</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../preface/release-notes/v0.1.html">v0.1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../preface/release-notes/v0.1.html">v0.1 Release Notes</a></li>
 </ul>
 </details></li>
 </ul>
@@ -460,7 +464,22 @@
 <li class="toctree-l2"><a class="reference internal" href="../internal/per_core_worker.html">Per-core Worker Model</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1"><a class="reference internal" href="../reference/index.html">Reference</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../reference/index.html">Reference</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../reference/contracts/index.html">MuduDB Format and Protocol Contracts</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/page_header_v1.html">Page Header Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/tuple_binary_v1.html">Tuple Binary Format Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/log_frame_v1.html">Log Frame Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/protocol_frame_v1.html">TCP Protocol Frame Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/mpk_manifest_v1.html">MPK Package Manifest Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/mudud_cfg_v1.html">MuduDB Server Configuration Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/file_layout_v1.html">MuduDB File Layout Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/syscall_payload_v1.html">Guest→Host Syscall Payload Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/how_to_add_format_upgrade.html">How to Add a Format Upgrade</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/mcli-admin.html">mcli Management Interface (HTTP)</a></li>
+</ul>
+</details></li>
 </ul>
 
     </div>
@@ -493,7 +512,20 @@
           <div class="bd-content">
             <div class="bd-article-container">
               
-              <div class="bd-header-article d-print-none"></div>
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item"><button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button></div>
+      
+    </div>
+  
+</div>
+</div>
               
               
 
@@ -503,6 +535,15 @@
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tool-overview">Tool overview</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#typical-workflow">Typical workflow</a></li>
+</ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -514,12 +555,63 @@
                   
   <section id="toolchain">
 <h1>Toolchain<a class="headerlink" href="#toolchain" title="Link to this heading">#</a></h1>
-<p>The MuduDB toolchain is organized around procedure applications:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">mgen</span></code>: generate types, interfaces, and procedure-related code.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">mtp</span></code>: transform procedure source code so synchronous-style code can compile into asynchronous execution form.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">mpk</span></code>: package WebAssembly, schema, initialization data, and metadata.</p></li>
-</ul>
+<p>The MuduDB toolchain is organized around building, packaging, deploying, and invoking procedure applications.</p>
+<section id="tool-overview">
+<h2>Tool overview<a class="headerlink" href="#tool-overview" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Tool</p></th>
+<th class="head"><p>Purpose</p></th>
+<th class="head"><p>Typical usage</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">mudud</span></code></p></td>
+<td><p>The MuduDB server process.</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">mudud</span></code> or <code class="docutils literal notranslate"><span class="pre">mudud</span> <span class="pre">serve</span> <span class="pre">--cfg</span> <span class="pre">./mudud.cfg</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">mcli</span></code></p></td>
+<td><p>TCP client, interactive SQL shell, and HTTP management CLI.</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">mcli</span> <span class="pre">shell</span></code>, <code class="docutils literal notranslate"><span class="pre">mcli</span> <span class="pre">app-install</span></code>, <code class="docutils literal notranslate"><span class="pre">mcli</span> <span class="pre">server-topology</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">mgen</span></code></p></td>
+<td><p>Source generator. Creates typed Rust entities from SQL DDL.</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">mgen</span> <span class="pre">--ddl</span> <span class="pre">ddl.sql</span> <span class="pre">--out</span> <span class="pre">./src/generated</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">mtp</span></code></p></td>
+<td><p>Transpiler. Rewrites synchronous procedure source into async-compatible form for the WASM runtime.</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">mtp</span> <span class="pre">--input</span> <span class="pre">./src</span> <span class="pre">--output</span> <span class="pre">./src_async</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">mpm-build</span></code></p></td>
+<td><p>Package builder. Produces <code class="docutils literal notranslate"><span class="pre">.mpk</span></code> archives from DDL, descriptors, and WASM modules.</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">mpm-build</span> <span class="pre">create</span> <span class="pre">--cfg</span> <span class="pre">package.cfg.json</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">mpm-install</span></code></p></td>
+<td><p>MPK installer helper (also installable through <code class="docutils literal notranslate"><span class="pre">mcli</span> <span class="pre">app-install</span></code>).</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">mpm-install</span> <span class="pre">--mpk</span> <span class="pre">wallet.mpk</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">mudup</span></code></p></td>
+<td><p>Release installer. Downloads released binaries without building from source.</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">mudup</span> <span class="pre">install</span></code> — <strong>not stable yet; source build recommended.</strong></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="typical-workflow">
+<h2>Typical workflow<a class="headerlink" href="#typical-workflow" title="Link to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p><strong>Define schema</strong>: write <code class="docutils literal notranslate"><span class="pre">ddl.sql</span></code> for your application tables.</p></li>
+<li><p><strong>Generate types</strong>: run <code class="docutils literal notranslate"><span class="pre">mgen</span></code> to produce typed <code class="docutils literal notranslate"><span class="pre">Entity</span></code> structs from the DDL.</p></li>
+<li><p><strong>Write procedures</strong>: implement functions marked with <code class="docutils literal notranslate"><span class="pre">/**mudu-proc**/</span></code>, using <code class="docutils literal notranslate"><span class="pre">sys_interface::sync_api</span></code>.</p></li>
+<li><p><strong>Transpile</strong>: run <code class="docutils literal notranslate"><span class="pre">mtp</span></code> to convert blocking syscalls into async form for the component runtime.</p></li>
+<li><p><strong>Build WASM</strong>: compile the transpiled source to <code class="docutils literal notranslate"><span class="pre">wasm32-wasip2</span></code> and compose it with the host component.</p></li>
+<li><p><strong>Package</strong>: run <code class="docutils literal notranslate"><span class="pre">mpm-build</span> <span class="pre">create</span></code> to produce a <code class="docutils literal notranslate"><span class="pre">.mpk</span></code> file.</p></li>
+<li><p><strong>Install</strong>: run <code class="docutils literal notranslate"><span class="pre">mcli</span> <span class="pre">app-install</span> <span class="pre">--mpk</span> <span class="pre">&lt;file&gt;.mpk</span></code> on the target server.</p></li>
+<li><p><strong>Invoke</strong>: run <code class="docutils literal notranslate"><span class="pre">mcli</span> <span class="pre">app-invoke</span> <span class="pre">--app</span> <span class="pre">&lt;app&gt;</span> <span class="pre">--module</span> <span class="pre">&lt;module&gt;</span> <span class="pre">--proc</span> <span class="pre">&lt;proc&gt;</span> <span class="pre">--json</span> <span class="pre">'{...}'</span></code>.</p></li>
+</ol>
+<p>See <a class="reference internal" href="packages.html"><span class="std std-doc">Application Packages</span></a> for the package format and <a class="reference internal" href="../tutorial/tutorials/wallet.html"><span class="std std-doc">Your First MPK Package</span></a> for a complete walkthrough.</p>
+</section>
 </section>
 
 
@@ -557,6 +649,24 @@
             </div>
             
             
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tool-overview">Tool overview</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#typical-workflow">Typical workflow</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>

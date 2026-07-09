@@ -389,7 +389,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../preface/overview.html">Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../preface/data-model.html">Data Model</a></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../preface/release-notes/index.html">Release Notes</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../preface/release-notes/v0.1.html">v0.1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../preface/release-notes/v0.1.html">v0.1 Release Notes</a></li>
 </ul>
 </details></li>
 </ul>
@@ -464,7 +464,22 @@
 <li class="toctree-l2"><a class="reference internal" href="../internal/per_core_worker.html">Per-core Worker Model</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1"><a class="reference internal" href="../reference/index.html">Reference</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../reference/index.html">Reference</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../reference/contracts/index.html">MuduDB Format and Protocol Contracts</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/page_header_v1.html">Page Header Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/tuple_binary_v1.html">Tuple Binary Format Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/log_frame_v1.html">Log Frame Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/protocol_frame_v1.html">TCP Protocol Frame Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/mpk_manifest_v1.html">MPK Package Manifest Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/mudud_cfg_v1.html">MuduDB Server Configuration Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/file_layout_v1.html">MuduDB File Layout Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/syscall_payload_v1.html">Guest→Host Syscall Payload Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/how_to_add_format_upgrade.html">How to Add a Format Upgrade</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/mcli-admin.html">mcli Management Interface (HTTP)</a></li>
+</ul>
+</details></li>
 </ul>
 
     </div>
@@ -525,8 +540,11 @@
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#notable-configuration-fields">Notable configuration fields</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#file-location">File location</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#generate-a-default-config">Generate a default config</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#configuration-fields">Configuration fields</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#server-and-routing-modes">Server and routing modes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-mudud-cfg">Example <code class="docutils literal notranslate"><span class="pre">mudud.cfg</span></code></a></li>
 </ul>
             </nav>
         </div>
@@ -540,46 +558,181 @@
                   
   <section id="configuration-reference">
 <h1>Configuration Reference<a class="headerlink" href="#configuration-reference" title="Link to this heading">#</a></h1>
-<p>The default configuration file is <code class="docutils literal notranslate"><span class="pre">${HOME}/.mududb/mududb_cfg.toml</span></code>.</p>
-<p>Recommended groups:</p>
-<ul class="simple">
-<li><p>network listen addresses</p></li>
-<li><p>storage paths</p></li>
-<li><p>HTTP management port</p></li>
-<li><p>worker and scheduling parameters</p></li>
-<li><p>logging level</p></li>
-</ul>
-<p>The exact option schema should follow the configuration structures in the source code for the active version.</p>
-<section id="notable-configuration-fields">
-<h2>Notable configuration fields<a class="headerlink" href="#notable-configuration-fields" title="Link to this heading">#</a></h2>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">tcp_multi_port</span></code> (bool): When true and supported by the backend, the server may open one TCP listener per worker to improve accept/affinity and reduce contention. Default: <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">io_uring_worker_threads</span></code> (int): If &gt; 0, the runtime will reserve this number of worker threads for the io_uring backend. If set to <code class="docutils literal notranslate"><span class="pre">0</span></code>, the server derives a sensible default from available CPU cores.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">io_uring_ring_entries</span></code> (int): The depth of the per-worker io_uring submission/completion queue. Larger values may improve throughput at the cost of memory. Default: <code class="docutils literal notranslate"><span class="pre">1024</span></code>.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">io_uring_accept_multishot</span></code>, <code class="docutils literal notranslate"><span class="pre">io_uring_recv_multishot</span></code> (bool): Enable multishot accept/recv for reduced syscall overhead and improved connection throughput. Defaults: <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">io_uring_enable_fixed_buffers</span></code>, <code class="docutils literal notranslate"><span class="pre">io_uring_enable_fixed_files</span></code> (bool): When enabled, the runtime uses pre-registered fixed buffers or files to avoid dynamic allocations and speed up hot I/O paths. These options require additional setup and trade flexibility for performance. Defaults: <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">io_uring_log_chunk_size</span></code> (bytes): Size used for internal io_uring-related chunking or log rotation. Default: 67108864 (64MB).</p></li>
-</ul>
+<p><code class="docutils literal notranslate"><span class="pre">mudud</span></code> reads its configuration from a TOML file. The file controls listen ports, execution mode, storage paths, and io_uring behavior.</p>
+<section id="file-location">
+<h2>File location<a class="headerlink" href="#file-location" title="Link to this heading">#</a></h2>
+<p>The server loads the first file that exists, in this order:</p>
+<ol class="arabic simple">
+<li><p>The path provided by <code class="docutils literal notranslate"><span class="pre">--cfg</span> <span class="pre">/path/to/mudud.cfg</span></code> (or <code class="docutils literal notranslate"><span class="pre">-c</span> <span class="pre">/path/to/mudud.cfg</span></code>), if given.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">./mudud.cfg</span></code> in the current working directory.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">~/.mududb/mudud.cfg</span></code> in the user’s home directory.</p></li>
+</ol>
+<p>If none of these files exist, <code class="docutils literal notranslate"><span class="pre">mudud</span></code> returns a <code class="docutils literal notranslate"><span class="pre">NotFound</span></code> error. Use <code class="docutils literal notranslate"><span class="pre">mudud</span> <span class="pre">init-cfg</span></code> to create a default <code class="docutils literal notranslate"><span class="pre">./mudud.cfg</span></code> before starting the server.</p>
+</section>
+<section id="generate-a-default-config">
+<h2>Generate a default config<a class="headerlink" href="#generate-a-default-config" title="Link to this heading">#</a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mudud<span class="w"> </span>init-cfg
+</pre></div>
+</div>
+</section>
+<section id="configuration-fields">
+<h2>Configuration fields<a class="headerlink" href="#configuration-fields" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Field</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">mpk_path</span></code></p></td>
+<td><p>string</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&quot;./mpk&quot;</span></code></p></td>
+<td><p>Path to the application package directory.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">db_path</span></code></p></td>
+<td><p>string</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&quot;./data&quot;</span></code></p></td>
+<td><p>Path to the database directory.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">listen_ip</span></code></p></td>
+<td><p>string</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">127.0.0.1</span></code></p></td>
+<td><p>IP address to listen on.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">http_listen_port</span></code></p></td>
+<td><p>u16</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">8300</span></code></p></td>
+<td><p>HTTP management API port.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">http_worker_threads</span></code></p></td>
+<td><p>usize</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">1</span></code></p></td>
+<td><p>HTTP worker thread count.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">pg_listen_port</span></code></p></td>
+<td><p>u16</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">5432</span></code></p></td>
+<td><p>PostgreSQL wire protocol port.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">component_target</span></code></p></td>
+<td><p>string</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">p2</span></code></p></td>
+<td><p>Wasm component ABI target. Allowed: <code class="docutils literal notranslate"><span class="pre">p2</span></code>, <code class="docutils literal notranslate"><span class="pre">p3</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">enable_async</span></code></p></td>
+<td><p>boolean</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">true</span></code></p></td>
+<td><p>Enable the WASI component runtime.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">server_mode</span></code></p></td>
+<td><p>string</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&quot;IOUring&quot;</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&quot;Legacy&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;IOUring&quot;</span></code>, or <code class="docutils literal notranslate"><span class="pre">&quot;Tokio&quot;</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">tcp_listen_port</span></code></p></td>
+<td><p>u16</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">9527</span></code></p></td>
+<td><p>TCP framed protocol port.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">tcp_multi_port</span></code></p></td>
+<td><p>boolean</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">false</span></code></p></td>
+<td><p>One TCP listener per worker.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">worker_threads</span></code></p></td>
+<td><p>usize</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">0</span></code></p></td>
+<td><p>Worker thread count. <code class="docutils literal notranslate"><span class="pre">0</span></code> means use available parallelism.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">io_uring_ring_entries</span></code></p></td>
+<td><p>u32</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">1024</span></code></p></td>
+<td><p>io_uring completion queue depth.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">io_uring_accept_multishot</span></code></p></td>
+<td><p>boolean</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">true</span></code></p></td>
+<td><p>Enable io_uring accept multishot.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">io_uring_recv_multishot</span></code></p></td>
+<td><p>boolean</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">true</span></code></p></td>
+<td><p>Enable io_uring recv multishot.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">io_uring_enable_fixed_buffers</span></code></p></td>
+<td><p>boolean</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">false</span></code></p></td>
+<td><p>Enable io_uring fixed buffers.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">io_uring_enable_fixed_files</span></code></p></td>
+<td><p>boolean</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">false</span></code></p></td>
+<td><p>Enable io_uring fixed files.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">routing_mode</span></code></p></td>
+<td><p>string</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&quot;ConnectionId&quot;</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&quot;ConnectionId&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;PlayerId&quot;</span></code>, or <code class="docutils literal notranslate"><span class="pre">&quot;RemoteHash&quot;</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">log_chunk_size</span></code></p></td>
+<td><p>u64</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">64</span> <span class="pre">*</span> <span class="pre">1024</span> <span class="pre">*</span> <span class="pre">1024</span></code></p></td>
+<td><p>io_uring log chunk size in bytes.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">page_size</span></code></p></td>
+<td><p>usize</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">4096</span></code></p></td>
+<td><p>Database page size in bytes. Persistent: changing it for an existing database requires migration or re-initialization.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
 </section>
 <section id="server-and-routing-modes">
 <h2>Server and routing modes<a class="headerlink" href="#server-and-routing-modes" title="Link to this heading">#</a></h2>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">server_mode</span></code> (enum): Controls backend I/O/runtime path. Possible values:</p>
+<li><p><code class="docutils literal notranslate"><span class="pre">server_mode</span></code>: controls the backend I/O/runtime path.</p>
 <ul>
-<li><p><code class="docutils literal notranslate"><span class="pre">Legacy</span></code> (0): Traditional blocking I/O path for maximum compatibility.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">IOUring</span></code> (1): Use Linux io_uring based kernel path for high-performance async I/O.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">Tokio</span></code> (2): Use a Tokio-based async runtime.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Legacy</span></code>: traditional blocking I/O path for maximum compatibility.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">IOUring</span></code>: Linux io_uring based high-performance async I/O.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Tokio</span></code>: Tokio-based async runtime.</p></li>
 </ul>
 </li>
-<li><p><code class="docutils literal notranslate"><span class="pre">routing_mode</span></code> (enum): Controls how requests are routed to workers:</p>
+<li><p><code class="docutils literal notranslate"><span class="pre">routing_mode</span></code>: controls how requests are routed to workers.</p>
 <ul>
-<li><p><code class="docutils literal notranslate"><span class="pre">ConnectionId</span></code> (0, default): Route based on connection identifier.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">PlayerId</span></code> (1): Route based on an application-level player/user identifier.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">RemoteHash</span></code> (2): Hash-based routing using remote address or hashed key.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ConnectionId</span></code> (default): route based on connection identifier.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">PlayerId</span></code>: route based on an application-level player/user identifier.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">RemoteHash</span></code>: hash-based routing using remote address or hashed key.</p></li>
 </ul>
 </li>
 </ul>
-<p>These fields influence performance and compatibility; prefer <code class="docutils literal notranslate"><span class="pre">IOUring</span></code> or <code class="docutils literal notranslate"><span class="pre">Tokio</span></code> for high-concurrency deployments and <code class="docutils literal notranslate"><span class="pre">Legacy</span></code> for compatibility testing.</p>
+</section>
+<section id="example-mudud-cfg">
+<h2>Example <code class="docutils literal notranslate"><span class="pre">mudud.cfg</span></code><a class="headerlink" href="#example-mudud-cfg" title="Link to this heading">#</a></h2>
+<div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="n">mpk_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;./mpk&quot;</span>
+<span class="n">db_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;./data&quot;</span>
+<span class="n">listen_ip</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;127.0.0.1&quot;</span>
+<span class="n">http_listen_port</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">8300</span>
+<span class="n">http_worker_threads</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
+<span class="n">pg_listen_port</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5432</span>
+<span class="n">tcp_listen_port</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">9527</span>
+<span class="n">server_mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Tokio&quot;</span>
+<span class="n">worker_threads</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
+<span class="n">io_uring_ring_entries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1024</span>
+<span class="n">io_uring_accept_multishot</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="n">io_uring_recv_multishot</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="n">io_uring_enable_fixed_buffers</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span>
+<span class="n">io_uring_enable_fixed_files</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span>
+<span class="n">routing_mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;ConnectionId&quot;</span>
+<span class="n">enable_async</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="n">tcp_multi_port</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span>
+<span class="n">log_chunk_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">67108864</span>
+<span class="n">page_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4096</span>
+</pre></div>
+</div>
+<p>See the <a class="reference internal" href="../reference/contracts/mudud_cfg_v1.html"><span class="std std-doc">Server Configuration Contract</span></a> for compatibility and upgrade rules.</p>
 </section>
 </section>
 
@@ -630,8 +783,11 @@
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#notable-configuration-fields">Notable configuration fields</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#file-location">File location</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#generate-a-default-config">Generate a default config</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#configuration-fields">Configuration fields</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#server-and-routing-modes">Server and routing modes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-mudud-cfg">Example <code class="docutils literal notranslate"><span class="pre">mudud.cfg</span></code></a></li>
 </ul>
   </nav></div>
 

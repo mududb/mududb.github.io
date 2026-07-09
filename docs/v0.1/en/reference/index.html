@@ -54,6 +54,7 @@
     <link rel="icon" href="../_static/favicon.svg"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="MuduDB Format and Protocol Contracts" href="contracts/index.html" />
     <link rel="prev" title="Per-core Worker Model" href="../internal/per_core_worker.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -240,6 +241,10 @@
   
 
   
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
 </div>
 
     </header>
@@ -384,7 +389,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../preface/overview.html">Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../preface/data-model.html">Data Model</a></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../preface/release-notes/index.html">Release Notes</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../preface/release-notes/v0.1.html">v0.1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../preface/release-notes/v0.1.html">v0.1 Release Notes</a></li>
 </ul>
 </details></li>
 </ul>
@@ -459,7 +464,22 @@
 <li class="toctree-l2"><a class="reference internal" href="../internal/per_core_worker.html">Per-core Worker Model</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Reference</a></li>
+<li class="toctree-l1 current active has-children"><a class="current reference internal" href="#">Reference</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="contracts/index.html">MuduDB Format and Protocol Contracts</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="contracts/page_header_v1.html">Page Header Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contracts/tuple_binary_v1.html">Tuple Binary Format Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contracts/log_frame_v1.html">Log Frame Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contracts/protocol_frame_v1.html">TCP Protocol Frame Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contracts/mpk_manifest_v1.html">MPK Package Manifest Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contracts/mudud_cfg_v1.html">MuduDB Server Configuration Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contracts/file_layout_v1.html">MuduDB File Layout Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contracts/syscall_payload_v1.html">Guest→Host Syscall Payload Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contracts/how_to_add_format_upgrade.html">How to Add a Format Upgrade</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="mcli-admin.html">mcli Management Interface (HTTP)</a></li>
+</ul>
+</details></li>
 </ul>
 
     </div>
@@ -492,7 +512,20 @@
           <div class="bd-content">
             <div class="bd-article-container">
               
-              <div class="bd-header-article d-print-none"></div>
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item"><button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button></div>
+      
+    </div>
+  
+</div>
+</div>
               
               
 
@@ -502,6 +535,15 @@
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contracts">Contracts</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#administration">Administration</a></li>
+</ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -513,7 +555,45 @@
                   
   <section id="reference">
 <h1>Reference<a class="headerlink" href="#reference" title="Link to this heading">#</a></h1>
-<p>Stable reference materials</p>
+<p>This section contains stable reference materials for MuduDB.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="contracts/index.html">MuduDB Format and Protocol Contracts</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="contracts/index.html#active-contracts">Active contracts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contracts/index.html#adding-or-changing-a-contract">Adding or changing a contract</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="mcli-admin.html">mcli Management Interface (HTTP)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="mcli-admin.html#prerequisites">Prerequisites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mcli-admin.html#commands">Commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mcli-admin.html#argument-constraints">Argument constraints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mcli-admin.html#output">Output</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<section id="contracts">
+<h2>Contracts<a class="headerlink" href="#contracts" title="Link to this heading">#</a></h2>
+<p>Formal, versioned specifications for persistent formats, network protocols, and deployment artifacts.</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="contracts/page_header_v1.html"><span class="std std-doc">Page Header Contract v1</span></a></p></li>
+<li><p><a class="reference internal" href="contracts/tuple_binary_v1.html"><span class="std std-doc">Tuple Binary Format Contract v1</span></a></p></li>
+<li><p><a class="reference internal" href="contracts/log_frame_v1.html"><span class="std std-doc">Log Frame Contract v1</span></a></p></li>
+<li><p><a class="reference internal" href="contracts/protocol_frame_v1.html"><span class="std std-doc">TCP Protocol Frame Contract v1</span></a></p></li>
+<li><p><a class="reference internal" href="contracts/mpk_manifest_v1.html"><span class="std std-doc">MPK Package Manifest Contract v1</span></a></p></li>
+<li><p><a class="reference internal" href="contracts/mudud_cfg_v1.html"><span class="std std-doc">Server Configuration Contract v1</span></a></p></li>
+<li><p><a class="reference internal" href="contracts/file_layout_v1.html"><span class="std std-doc">File Layout Contract v1</span></a></p></li>
+<li><p><a class="reference internal" href="contracts/syscall_payload_v1.html"><span class="std std-doc">Guest→Host Syscall Payload Contract v1</span></a></p></li>
+<li><p><a class="reference internal" href="contracts/how_to_add_format_upgrade.html"><span class="std std-doc">How to Add a Format Upgrade</span></a></p></li>
+</ul>
+</section>
+<section id="administration">
+<h2>Administration<a class="headerlink" href="#administration" title="Link to this heading">#</a></h2>
+<p>Operational command and interface references.</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="mcli-admin.html"><span class="std std-doc">mcli Management Interface (HTTP)</span></a></p></li>
+</ul>
+</section>
 </section>
 
 
@@ -536,12 +616,39 @@
         <p class="prev-next-title">Per-core Worker Model</p>
       </div>
     </a>
+    <a class="right-next"
+       href="contracts/index.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">MuduDB Format and Protocol Contracts</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
 </div>
                 </footer>
               
             </div>
             
             
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contracts">Contracts</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#administration">Administration</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>

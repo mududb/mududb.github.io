@@ -194,7 +194,7 @@
 
 <li class=" ">
   <a class="nav-link dropdown-item nav-internal" href="../reference/index.html">
-    参考
+    参考资料
   </a>
 </li>
 
@@ -240,6 +240,10 @@
   
   
 
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="当前页面">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
   
 </div>
 
@@ -311,7 +315,7 @@
 
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="../reference/index.html">
-    参考
+    参考资料
   </a>
 </li>
 
@@ -385,7 +389,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../preface/overview.html">概览</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../preface/data-model.html">数据模型</a></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../preface/release-notes/index.html">发行说明</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../preface/release-notes/v0.1.html">v0.1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../preface/release-notes/v0.1.html">v0.1 发布说明</a></li>
 </ul>
 </details></li>
 </ul>
@@ -431,9 +435,9 @@
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../administration/index.html">管理</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../administration/client.html">客户端</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../administration/server.html">服务器管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../administration/server.html">服务端管理</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../administration/configuration.html">配置参考</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../administration/packages.html">应用程序包</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../administration/packages.html">应用包</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../administration/toolchain.html">工具链</a></li>
 </ul>
 </details></li>
@@ -460,7 +464,22 @@
 <li class="toctree-l2"><a class="reference internal" href="per_core_worker.html">每核心工作线程模型</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1"><a class="reference internal" href="../reference/index.html">参考</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../reference/index.html">参考资料</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../reference/contracts/index.html">MuduDB 格式与协议契约</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/page_header_v1.html">Page Header 契约 v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/tuple_binary_v1.html">Tuple Binary Format Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/log_frame_v1.html">Log Frame 契约 v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/protocol_frame_v1.html">TCP 协议帧契约 v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/mpk_manifest_v1.html">MPK 包清单契约 v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/mudud_cfg_v1.html">MuduDB 服务端配置契约 v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/file_layout_v1.html">MuduDB 文件布局契约 v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/syscall_payload_v1.html">Guest→Host 系统调用负载契约 v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/how_to_add_format_upgrade.html">如何添加一次格式升级</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/mcli-admin.html">mcli 管理接口（HTTP）</a></li>
+</ul>
+</details></li>
 </ul>
 
     </div>
@@ -493,7 +512,20 @@
           <div class="bd-content">
             <div class="bd-article-container">
               
-              <div class="bd-header-article d-print-none"></div>
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item"><button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button></div>
+      
+    </div>
+  
+</div>
+</div>
               
               
 
@@ -503,6 +535,17 @@
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> 目录 </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">设计</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">同步源码，异步执行</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">系统调用边界</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">适用场景</a></li>
+</ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -514,9 +557,51 @@
                   
   <section id="id1">
 <h1>过程运行时<a class="headerlink" href="#id1" title="Link to this heading">#</a></h1>
-<p>过程运行时是一个被动组件：它不引入自己的调度器，也不定义独立的执行策略。</p>
-<p>过程执行由内核触发和控制。过程内部的数据库访问跨越系统调用边界，并受事务、调度和一致性规则的约束。</p>
-<p>该模型适用于需要强一致性、低延迟业务逻辑和数据局部性的应用程序。</p>
+<p>过程运行时在数据库进程内部托管 Mudu 过程。它加载 WebAssembly 组件模块，将其绑定到内核的系统调用接口，并在内核控制下执行过程调用。</p>
+<section id="id2">
+<h2>设计<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
+<p>运行时是被动的：它不定义自己的调度器或执行策略。内核决定过程何时何地运行，运行时提供执行容器。</p>
+<p>典型调用流程如下：</p>
+<ol class="arabic simple">
+<li><p>内核收到过程调用请求。</p></li>
+<li><p>内核将请求路由到拥有目标分区的工作线程。</p></li>
+<li><p>该工作线程的运行时加载尚未驻留的应用/模块。</p></li>
+<li><p>运行时调用导出的过程函数，传入会话 <code class="docutils literal notranslate"><span class="pre">OID</span></code> 与用户参数。</p></li>
+<li><p>过程内部通过系统调用接口访问数据库，操作陷入内核。</p></li>
+<li><p>内核对每个系统调用应用事务、调度与一致性规则。</p></li>
+<li><p>过程返回后，内核提交或回滚事务，并返回结果。</p></li>
+</ol>
+</section>
+<section id="id3">
+<h2>同步源码，异步执行<a class="headerlink" href="#id3" title="Link to this heading">#</a></h2>
+<p>开发者使用同步风格的 API（<code class="docutils literal notranslate"><span class="pre">sys_interface::sync_api</span></code>）编写过程。构建时，<code class="docutils literal notranslate"><span class="pre">mtp</span></code> 转译器可将阻塞式系统调用改写为适合运行时基于续体的执行器的异步形式。</p>
+<p>这意味着：</p>
+<ul class="simple">
+<li><p>过程作者保持顺序编程模型。</p></li>
+<li><p>运行时在等待 I/O 或远程 RPC 时仍可让出执行权。</p></li>
+<li><p>同一份源码可在开发阶段交互式运行，也可作为存储过程部署。</p></li>
+</ul>
+</section>
+<section id="id4">
+<h2>系统调用边界<a class="headerlink" href="#id4" title="Link to this heading">#</a></h2>
+<p>过程通过紧凑的系统调用集访问数据库状态：</p>
+<ul class="simple">
+<li><p>会话：<code class="docutils literal notranslate"><span class="pre">mudu_open</span></code>、<code class="docutils literal notranslate"><span class="pre">mudu_close</span></code></p></li>
+<li><p>SQL：<code class="docutils literal notranslate"><span class="pre">mudu_query</span></code>、<code class="docutils literal notranslate"><span class="pre">mudu_command</span></code>、<code class="docutils literal notranslate"><span class="pre">mudu_batch</span></code></p></li>
+<li><p>KV：<code class="docutils literal notranslate"><span class="pre">mudu_get</span></code>、<code class="docutils literal notranslate"><span class="pre">mudu_put</span></code>、<code class="docutils literal notranslate"><span class="pre">mudu_range</span></code></p></li>
+</ul>
+<p>每次系统调用都携带会话 <code class="docutils literal notranslate"><span class="pre">OID</span></code>，以便内核强制执行事务与调度上下文。</p>
+</section>
+<section id="id5">
+<h2>适用场景<a class="headerlink" href="#id5" title="Link to this heading">#</a></h2>
+<p>该模型适合以下应用：</p>
+<ul class="simple">
+<li><p>需要过程边界内强一致性的场景；</p></li>
+<li><p>需要靠近数据的低延迟业务逻辑；</p></li>
+<li><p>希望避免重复客户端-服务器往返的数据本地执行。</p></li>
+</ul>
+<p>编程模型请参见 <a class="reference internal" href="../programming/mudu_procedure.html"><span class="std std-doc">Mudu 过程</span></a>，系统调用 API 请参见 <a class="reference internal" href="../programming/syscalls.html"><span class="std std-doc">系统调用参考</span></a>，组件运行时细节请参见 <a class="reference internal" href="wasm.html"><span class="std std-doc">WebAssembly 集成</span></a>。</p>
+</section>
 </section>
 
 
@@ -554,6 +639,26 @@
             </div>
             
             
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> 目录
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">设计</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">同步源码，异步执行</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">系统调用边界</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">适用场景</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>

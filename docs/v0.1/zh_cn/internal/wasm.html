@@ -194,7 +194,7 @@
 
 <li class=" ">
   <a class="nav-link dropdown-item nav-internal" href="../reference/index.html">
-    参考
+    参考资料
   </a>
 </li>
 
@@ -240,6 +240,10 @@
   
   
 
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="当前页面">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
   
 </div>
 
@@ -311,7 +315,7 @@
 
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="../reference/index.html">
-    参考
+    参考资料
   </a>
 </li>
 
@@ -385,7 +389,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../preface/overview.html">概览</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../preface/data-model.html">数据模型</a></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../preface/release-notes/index.html">发行说明</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../preface/release-notes/v0.1.html">v0.1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../preface/release-notes/v0.1.html">v0.1 发布说明</a></li>
 </ul>
 </details></li>
 </ul>
@@ -431,9 +435,9 @@
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../administration/index.html">管理</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../administration/client.html">客户端</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../administration/server.html">服务器管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../administration/server.html">服务端管理</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../administration/configuration.html">配置参考</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../administration/packages.html">应用程序包</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../administration/packages.html">应用包</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../administration/toolchain.html">工具链</a></li>
 </ul>
 </details></li>
@@ -460,7 +464,22 @@
 <li class="toctree-l2"><a class="reference internal" href="per_core_worker.html">每核心工作线程模型</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1"><a class="reference internal" href="../reference/index.html">参考</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../reference/index.html">参考资料</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../reference/contracts/index.html">MuduDB 格式与协议契约</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/page_header_v1.html">Page Header 契约 v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/tuple_binary_v1.html">Tuple Binary Format Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/log_frame_v1.html">Log Frame 契约 v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/protocol_frame_v1.html">TCP 协议帧契约 v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/mpk_manifest_v1.html">MPK 包清单契约 v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/mudud_cfg_v1.html">MuduDB 服务端配置契约 v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/file_layout_v1.html">MuduDB 文件布局契约 v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/syscall_payload_v1.html">Guest→Host 系统调用负载契约 v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/how_to_add_format_upgrade.html">如何添加一次格式升级</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/mcli-admin.html">mcli 管理接口（HTTP）</a></li>
+</ul>
+</details></li>
 </ul>
 
     </div>
@@ -493,7 +512,20 @@
           <div class="bd-content">
             <div class="bd-article-container">
               
-              <div class="bd-header-article d-print-none"></div>
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item"><button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button></div>
+      
+    </div>
+  
+</div>
+</div>
               
               
 
@@ -503,6 +535,19 @@
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> 目录 </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">组件模型</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#wasi">WASI 沙箱</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">语言支持</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">客户绑定</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">运行时限制</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">包格式</a></li>
+</ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -514,7 +559,63 @@
                   
   <section id="webassembly">
 <h1>WebAssembly 集成<a class="headerlink" href="#webassembly" title="Link to this heading">#</a></h1>
-<p>MuduDB 使用 WebAssembly Component Model 来托管过程模块。相关文档应涵盖组件接口、主机导入、包格式和运行时限制。</p>
+<p>MuduDB 在 WASI 沙箱中运行用户过程 WebAssembly 组件。它在保持数据库访问受内核控制的同时，提供可移植性、隔离性与多语言支持。</p>
+<section id="id1">
+<h2>组件模型<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
+<p>MuduDB 过程被编译为面向 <code class="docutils literal notranslate"><span class="pre">wasm32-wasip2</span></code> 平台的 WebAssembly 组件。该组件导入少量宿主编译的系统调用，并导出标记为 <code class="docutils literal notranslate"><span class="pre">/**mudu-proc**/</span></code> 的过程函数。</p>
+<p>打包前，客户组件会与 MuduDB 宿主组件组合，使最终模块具备运行时加载器期望的导入/导出签名。</p>
+</section>
+<section id="wasi">
+<h2>WASI 沙箱<a class="headerlink" href="#wasi" title="Link to this heading">#</a></h2>
+<p>过程在 WASI 沙箱中执行，具有以下特性：</p>
+<ul class="simple">
+<li><p>数据库访问只能通过显式内核系统调用进行。</p></li>
+<li><p>内核中介所有网络、文件与存储访问。</p></li>
+<li><p>可按每次过程调用强制执行资源限制（内存、CPU、系统调用次数）。</p></li>
+</ul>
+</section>
+<section id="id2">
+<h2>语言支持<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
+<p>工具链目前主要支持 Rust 作为过程语言，AssemblyScript 示例也已存在。原则上，任何能生成 WASI 组件的语言未来都可支持。</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>语言</p></th>
+<th class="head"><p>目标</p></th>
+<th class="head"><p>说明</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Rust</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">wasm32-wasip2</span></code></p></td>
+<td><p>主要支持语言；<code class="docutils literal notranslate"><span class="pre">mudu_wasm</span></code> crate 提供绑定。</p></td>
+</tr>
+<tr class="row-odd"><td><p>AssemblyScript</p></td>
+<td><p>WASI 组件</p></td>
+<td><p>通过 AssemblyScript 转译器与 shim 支持。</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="id3">
+<h2>客户绑定<a class="headerlink" href="#id3" title="Link to this heading">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">mudu_wasm</span></code> crate（以 Cargo 包名 <code class="docutils literal notranslate"><span class="pre">mod_0</span></code> 发布）提供生成的客户绑定与宿主端转译辅助。它由 <code class="docutils literal notranslate"><span class="pre">mudu_binding/wit/</span></code> 中的 WIT 接口定义生成。</p>
+</section>
+<section id="id4">
+<h2>运行时限制<a class="headerlink" href="#id4" title="Link to this heading">#</a></h2>
+<p>运行时可对每次过程调用强制执行以下限制：</p>
+<ul class="simple">
+<li><p>内存使用；</p></li>
+<li><p>CPU 时间；</p></li>
+<li><p>系统调用次数；</p></li>
+<li><p>嵌套调用深度。</p></li>
+</ul>
+<p>这些限制有助于将用户代码与内核及其他过程隔离。</p>
+</section>
+<section id="id5">
+<h2>包格式<a class="headerlink" href="#id5" title="Link to this heading">#</a></h2>
+<p>编译后的组件与 DDL、描述符及可选初始化数据一起打包为 <code class="docutils literal notranslate"><span class="pre">.mpk</span></code> 归档。详见<a class="reference internal" href="../administration/packages.html"><span class="std std-doc">应用包</span></a>与 <a class="reference internal" href="../reference/contracts/mpk_manifest_v1.html"><span class="std std-doc">MPK 清单契约</span></a>。</p>
+</section>
 </section>
 
 
@@ -552,6 +653,28 @@
             </div>
             
             
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> 目录
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">组件模型</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#wasi">WASI 沙箱</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">语言支持</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">客户绑定</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">运行时限制</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">包格式</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>

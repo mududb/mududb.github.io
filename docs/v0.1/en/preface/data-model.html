@@ -241,6 +241,10 @@
   
 
   
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
 </div>
 
     </header>
@@ -385,7 +389,7 @@
 <li class="toctree-l2"><a class="reference internal" href="overview.html">Overview</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">Data Model</a></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="release-notes/index.html">Release Notes</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="release-notes/v0.1.html">v0.1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="release-notes/v0.1.html">v0.1 Release Notes</a></li>
 </ul>
 </details></li>
 </ul>
@@ -460,7 +464,22 @@
 <li class="toctree-l2"><a class="reference internal" href="../internal/per_core_worker.html">Per-core Worker Model</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1"><a class="reference internal" href="../reference/index.html">Reference</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../reference/index.html">Reference</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../reference/contracts/index.html">MuduDB Format and Protocol Contracts</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/page_header_v1.html">Page Header Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/tuple_binary_v1.html">Tuple Binary Format Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/log_frame_v1.html">Log Frame Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/protocol_frame_v1.html">TCP Protocol Frame Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/mpk_manifest_v1.html">MPK Package Manifest Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/mudud_cfg_v1.html">MuduDB Server Configuration Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/file_layout_v1.html">MuduDB File Layout Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/syscall_payload_v1.html">Guest→Host Syscall Payload Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/how_to_add_format_upgrade.html">How to Add a Format Upgrade</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/mcli-admin.html">mcli Management Interface (HTTP)</a></li>
+</ul>
+</details></li>
 </ul>
 
     </div>
@@ -493,7 +512,20 @@
           <div class="bd-content">
             <div class="bd-article-container">
               
-              <div class="bd-header-article d-print-none"></div>
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item"><button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button></div>
+      
+    </div>
+  
+</div>
+</div>
               
               
 
@@ -503,6 +535,19 @@
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tables-and-primary-keys">Tables and primary keys</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#indexes">Indexes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#partitioning-keys">Partitioning keys</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#procedure-input-and-output-types">Procedure input and output types</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#schema-to-code-mapping">Schema-to-code mapping</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#compatibility">Compatibility</a></li>
+</ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -514,14 +559,53 @@
                   
   <section id="data-model">
 <h1>Data Model<a class="headerlink" href="#data-model" title="Link to this heading">#</a></h1>
-<p>MuduDB documentation should describe both SQL data access and procedure-oriented business logic:</p>
+<p>MuduDB exposes both SQL-style relational data access and procedure-oriented business logic. This page describes the shared data model that underlies both paths.</p>
+<section id="tables-and-primary-keys">
+<h2>Tables and primary keys<a class="headerlink" href="#tables-and-primary-keys" title="Link to this heading">#</a></h2>
+<p>A MuduDB database contains <strong>tables</strong> defined through SQL DDL. Each table has:</p>
 <ul class="simple">
-<li><p>tables, primary keys, and indexes</p></li>
-<li><p>procedure input and output types</p></li>
-<li><p>mapping between schema and generated code</p></li>
-<li><p>compatibility changes</p></li>
+<li><p>A table name and a logical <code class="docutils literal notranslate"><span class="pre">table_id</span></code>.</p></li>
+<li><p>One or more columns with a declared data type and nullability.</p></li>
+<li><p>A <strong>primary key</strong>, which may be simple or composite.</p></li>
 </ul>
-<p>When data model semantics change, update this page in the corresponding version and record migration impact in the release notes.</p>
+<p>The primary key determines the physical clustering order and is used for point lookups, range scans, and partition routing.</p>
+</section>
+<section id="indexes">
+<h2>Indexes<a class="headerlink" href="#indexes" title="Link to this heading">#</a></h2>
+<p>Currently, the primary key is the main access path. Secondary index support is planned; until then, range scans over the primary key and direct key access are the primary query mechanisms.</p>
+</section>
+<section id="partitioning-keys">
+<h2>Partitioning keys<a class="headerlink" href="#partitioning-keys" title="Link to this heading">#</a></h2>
+<p>Tables can be bound to a global <strong>partition rule</strong>. The partition columns must form a prefix of the primary key. MuduDB uses RANGE partitioning in v0.1: each partition owns a contiguous key interval.</p>
+<p>See <a class="reference internal" href="../internal/partitioning.html"><span class="std std-doc">Partitioning</span></a> for the rule, binding, placement, and routing model.</p>
+</section>
+<section id="procedure-input-and-output-types">
+<h2>Procedure input and output types<a class="headerlink" href="#procedure-input-and-output-types" title="Link to this heading">#</a></h2>
+<p>Mudu Procedures are ordinary functions that operate on MuduDB data. Their input and return types must be representable by the MuduDB datum / tuple conversion system:</p>
+<ul class="simple">
+<li><p>Scalar values: <code class="docutils literal notranslate"><span class="pre">i32</span></code>, <code class="docutils literal notranslate"><span class="pre">i64</span></code>, <code class="docutils literal notranslate"><span class="pre">String</span></code>, <code class="docutils literal notranslate"><span class="pre">f32</span></code>, <code class="docutils literal notranslate"><span class="pre">f64</span></code>, etc.</p></li>
+<li><p>Container values: <code class="docutils literal notranslate"><span class="pre">Vec&lt;T&gt;</span></code>, tuples, and generated <code class="docutils literal notranslate"><span class="pre">Entity</span></code> structs.</p></li>
+</ul>
+<p>The exact supported surface is defined by the current <code class="docutils literal notranslate"><span class="pre">mudu_type</span></code> conversion and transpiler implementation.</p>
+</section>
+<section id="schema-to-code-mapping">
+<h2>Schema-to-code mapping<a class="headerlink" href="#schema-to-code-mapping" title="Link to this heading">#</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">mgen</span></code> tool reads <code class="docutils literal notranslate"><span class="pre">ddl.sql</span></code> and generates Rust <code class="docutils literal notranslate"><span class="pre">Entity</span></code> structs that implement the <code class="docutils literal notranslate"><span class="pre">Entity</span></code> trait. This gives typed query results and parameters:</p>
+<div class="highlight-rust notranslate"><div class="highlight"><pre><span></span><span class="cp">#[derive(Entity)]</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">Account</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">id</span><span class="p">:</span><span class="w"> </span><span class="kt">i64</span><span class="p">,</span>
+<span class="w">    </span><span class="n">owner</span><span class="p">:</span><span class="w"> </span><span class="nb">String</span><span class="p">,</span>
+<span class="w">    </span><span class="n">balance</span><span class="p">:</span><span class="w"> </span><span class="kt">i64</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">mudu_query::&lt;Account&gt;(oid,</span> <span class="pre">sql,</span> <span class="pre">params)</span></code> automatically maps result rows to <code class="docutils literal notranslate"><span class="pre">Account</span></code> instances.</p>
+</section>
+<section id="compatibility">
+<h2>Compatibility<a class="headerlink" href="#compatibility" title="Link to this heading">#</a></h2>
+<p>When data model semantics change (for example, adding a new format version or changing tuple encoding), MuduDB tracks compatibility through versioned contracts. Application code and persisted data should be migrated according to the relevant contract’s upgrade and rollback rules.</p>
+<p>See the <a class="reference internal" href="../reference/contracts/index.html"><span class="std std-doc">Format and Protocol Contracts</span></a> for details.</p>
+</section>
 </section>
 
 
@@ -559,6 +643,28 @@
             </div>
             
             
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tables-and-primary-keys">Tables and primary keys</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#indexes">Indexes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#partitioning-keys">Partitioning keys</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#procedure-input-and-output-types">Procedure input and output types</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#schema-to-code-mapping">Schema-to-code mapping</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#compatibility">Compatibility</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>

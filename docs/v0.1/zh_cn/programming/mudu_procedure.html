@@ -194,7 +194,7 @@
 
 <li class=" ">
   <a class="nav-link dropdown-item nav-internal" href="../reference/index.html">
-    参考
+    参考资料
   </a>
 </li>
 
@@ -315,7 +315,7 @@
 
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="../reference/index.html">
-    参考
+    参考资料
   </a>
 </li>
 
@@ -389,7 +389,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../preface/overview.html">概览</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../preface/data-model.html">数据模型</a></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../preface/release-notes/index.html">发行说明</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../preface/release-notes/v0.1.html">v0.1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../preface/release-notes/v0.1.html">v0.1 发布说明</a></li>
 </ul>
 </details></li>
 </ul>
@@ -435,9 +435,9 @@
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../administration/index.html">管理</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../administration/client.html">客户端</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../administration/server.html">服务器管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../administration/server.html">服务端管理</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../administration/configuration.html">配置参考</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../administration/packages.html">应用程序包</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../administration/packages.html">应用包</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../administration/toolchain.html">工具链</a></li>
 </ul>
 </details></li>
@@ -464,7 +464,22 @@
 <li class="toctree-l2"><a class="reference internal" href="../internal/per_core_worker.html">每核心工作线程模型</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1"><a class="reference internal" href="../reference/index.html">参考</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../reference/index.html">参考资料</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../reference/contracts/index.html">MuduDB 格式与协议契约</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/page_header_v1.html">Page Header 契约 v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/tuple_binary_v1.html">Tuple Binary Format Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/log_frame_v1.html">Log Frame 契约 v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/protocol_frame_v1.html">TCP 协议帧契约 v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/mpk_manifest_v1.html">MPK 包清单契约 v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/mudud_cfg_v1.html">MuduDB 服务端配置契约 v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/file_layout_v1.html">MuduDB 文件布局契约 v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/syscall_payload_v1.html">Guest→Host 系统调用负载契约 v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/how_to_add_format_upgrade.html">如何添加一次格式升级</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/mcli-admin.html">mcli 管理接口（HTTP）</a></li>
+</ul>
+</details></li>
 </ul>
 
     </div>
@@ -527,6 +542,11 @@
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">1. 设计目标</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">2. 交互式执行与存储过程——以及统一模型</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#webassembly-wasi">3. WebAssembly / WASI 编译与运行时</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">4. 多语言支持</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#color-bind-async-await">5. Color-bind async/await：语言体验与运行时</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">6. 其他注意事项</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">参考与示例</a></li>
 </ul>
             </nav>
         </div>
@@ -569,69 +589,70 @@
   <div style="flex: 1; min-width: 280px;">
     <img src="../_static/procedural_tx.png" alt="Stored procedure deployment — data-local execution" style="max-width: 100%; border: 1px solid #ddd;">
   </div>
-</div>
-::::{}
-
-两者都汇聚为单一的基于 WASI 的执行流程，过程在其中调用系统调用，而内核协调事务和路由。
-
-## 3. WebAssembly / WASI 编译与运行时
-
-Mudu 将过程编译为 WebAssembly（WASI）模块，并在沙箱化运行时中执行它们。
-
-为什么选择 WASI？
-
-- 可移植性：WASI 模块与平台无关、与语言无关。
-- 沙箱化：内核控制系统调用和 I/O 表面，以强制执行安全和资源限制。
-- 工具链：多种语言可以面向 WASI 编译，从而实现多语言支持。
-
-典型工具链流程：
-
-1. 使用支持的语言编写过程（目前已有 Rust 示例）。
-2. 构建/编译为 WASI 模块（wasm-ld / rust + wasm32-wasi 目标）。
-3. 可选地通过 mudu-transpiler 运行以应用 color-bind 转换（见下文）。
-4. 部署模块（将 mpk/包放入 mpk_path）并向内核注册。
-5. 以交互方式或作为存储过程调用；内核处理系统调用、事务和路由。
-
-运行时暴露了一组紧凑的系统调用（打开会话、get/put/range/query/command/batch 等）。过程使用这些系统调用与数据库状态交互；所有网络和存储访问都由内核中介。
-
-## 4. 多语言支持
-
-与许多绑定到嵌入式语言（SQL/PLSQL/PLpgSQL）的传统存储过程环境不同，Mudu 过程计划通过面向 WASI 来支持多种高级语言。
-
-- 当前支持的实现示例：Rust。
-- 未来：其他可以生成 WASI 模块的语言（C/C++、Zig、AssemblyScript、Go（wasi 支持待定）等）。
-
-这为利用现代语言生态系统、包管理器和开发者工具打开了大门，同时保持执行的安全性和可移植性。
-
-## 5. Color-bind async/await：语言体验与运行时
-
-Mudu 采用“color-bind”模型，其中异步是运行时特性而非强制的语言构造：
-
-- 开发者编写顺序的、看起来同步的代码，以提高清晰度和可维护性。
-- mudu 工具链（mudu-transpiler / 编译器遍）将阻塞式系统调用重写或转换为异步兼容调用（await 点），作为构建流水线的一部分。
-- 这在精神上与 Zig 的方法类似，即运行时可以提供异步模型，而源代码保持简单。
-
-优势：
-
-- 开发者体验：编写直接的代码，无需手动管理异步状态机。
-- 运行时效率：生成的 WASI 模块与宿主异步运行时（io_uring / Tokio）协作，以实现高并发。
-
-转译器在底层将系统调用重写为异步系统调用，以便运行时可以在等待 I/O 或远程 RPC 时让出执行权。
-
-## 6. 其他注意事项
-
-- 调试与测试：开发者工作流包括本地 WASI 执行、单元测试和交互式会话调试。工具链尽可能提供源码级调试辅助。
-- 资源限制与配额：内核对每个过程强制执行 CPU、内存和系统调用配额，以维持隔离。
-- 权限与审计：过程通过元数据（所有者、版本）注册，并可以通过能力集进行限制；审计捕获调用和系统调用跟踪。
-- 版本控制与热交换：模块在 mpk 打包模型中进行版本控制；运维工作流支持滚动部署和会话的优雅排空。
-
-## 参考与示例
-
-- 有关系统调用语义（mudu_open、mudu_get、mudu_put、mudu_query 等），请参见 `mududb_p/doc/lang.common/*`。
-- 有关客户端、内核和工作者之间的可视化流程，请参见文档中的架构图（`/_static/procedural_tx.png`）。
-
-
-Mudu 过程概述结束。</section>
+</div><p>两者都汇聚为单一的基于 WASI 的执行流程，过程在其中调用系统调用，而内核协调事务和路由。</p>
+</section>
+<section id="webassembly-wasi">
+<h2>3. WebAssembly / WASI 编译与运行时<a class="headerlink" href="#webassembly-wasi" title="Link to this heading">#</a></h2>
+<p>Mudu 将过程编译为 WebAssembly（WASI）模块，并在沙箱化运行时中执行它们。</p>
+<p>为什么选择 WASI？</p>
+<ul class="simple">
+<li><p>可移植性：WASI 模块与平台无关、与语言无关。</p></li>
+<li><p>沙箱化：内核控制系统调用和 I/O 表面，以强制执行安全和资源限制。</p></li>
+<li><p>工具链：多种语言可以面向 WASI 编译，从而实现多语言支持。</p></li>
+</ul>
+<p>典型工具链流程：</p>
+<ol class="arabic simple">
+<li><p>使用支持的语言编写过程（目前已有 Rust 示例）。</p></li>
+<li><p>构建/编译为 WASI 模块（wasm-ld / rust + wasm32-wasi 目标）。</p></li>
+<li><p>可选地通过 mudu-transpiler 运行以应用 color-bind 转换（见下文）。</p></li>
+<li><p>部署模块（将 mpk/包放入 mpk_path）并向内核注册。</p></li>
+<li><p>以交互方式或作为存储过程调用；内核处理系统调用、事务和路由。</p></li>
+</ol>
+<p>运行时暴露了一组紧凑的系统调用（打开会话、get/put/range/query/command/batch 等）。过程使用这些系统调用与数据库状态交互；所有网络和存储访问都由内核中介。</p>
+</section>
+<section id="id3">
+<h2>4. 多语言支持<a class="headerlink" href="#id3" title="Link to this heading">#</a></h2>
+<p>与许多绑定到嵌入式语言（SQL/PLSQL/PLpgSQL）的传统存储过程环境不同，Mudu 过程计划通过面向 WASI 来支持多种高级语言。</p>
+<ul class="simple">
+<li><p>当前支持的实现示例：Rust。</p></li>
+<li><p>未来：其他可以生成 WASI 模块的语言（C/C++、Zig、AssemblyScript、Go（wasi 支持待定）等）。</p></li>
+</ul>
+<p>这为利用现代语言生态系统、包管理器和开发者工具打开了大门，同时保持执行的安全性和可移植性。</p>
+</section>
+<section id="color-bind-async-await">
+<h2>5. Color-bind async/await：语言体验与运行时<a class="headerlink" href="#color-bind-async-await" title="Link to this heading">#</a></h2>
+<p>Mudu 采用“color-bind”模型，其中异步是运行时特性而非强制的语言构造：</p>
+<ul class="simple">
+<li><p>开发者编写顺序的、看起来同步的代码，以提高清晰度和可维护性。</p></li>
+<li><p>mudu 工具链（mudu-transpiler / 编译器遍）将阻塞式系统调用重写或转换为异步兼容调用（await 点），作为构建流水线的一部分。</p></li>
+<li><p>这在精神上与 Zig 的方法类似，即运行时可以提供异步模型，而源代码保持简单。</p></li>
+</ul>
+<p>优势：</p>
+<ul class="simple">
+<li><p>开发者体验：编写直接的代码，无需手动管理异步状态机。</p></li>
+<li><p>运行时效率：生成的 WASI 模块与宿主异步运行时（io_uring / Tokio）协作，以实现高并发。</p></li>
+</ul>
+<p>转译器在底层将系统调用重写为异步系统调用，以便运行时可以在等待 I/O 或远程 RPC 时让出执行权。</p>
+</section>
+<section id="id4">
+<h2>6. 其他注意事项<a class="headerlink" href="#id4" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>调试与测试：开发者工作流包括本地 WASI 执行、单元测试和交互式会话调试。工具链尽可能提供源码级调试辅助。</p></li>
+<li><p>资源限制与配额：内核对每个过程强制执行 CPU、内存和系统调用配额，以维持隔离。</p></li>
+<li><p>权限与审计：过程通过元数据（所有者、版本）注册，并可以通过能力集进行限制；审计捕获调用和系统调用跟踪。</p></li>
+<li><p>版本控制与热交换：模块在 mpk 打包模型中进行版本控制；运维工作流支持滚动部署和会话的优雅排空。</p></li>
+</ul>
+</section>
+<section id="id5">
+<h2>参考与示例<a class="headerlink" href="#id5" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>系统调用参考请参见 <a class="reference internal" href="syscalls.html"><span class="std std-doc">系统调用参考</span></a>，包括 <code class="docutils literal notranslate"><span class="pre">mudu_open</span></code>、<code class="docutils literal notranslate"><span class="pre">mudu_get</span></code>、<code class="docutils literal notranslate"><span class="pre">mudu_put</span></code>、<code class="docutils literal notranslate"><span class="pre">mudu_query</span></code>、<code class="docutils literal notranslate"><span class="pre">mudu_command</span></code> 等。</p></li>
+<li><p>WebAssembly 组件模型与 WASI 沙箱请参见 <a class="reference internal" href="../internal/wasm.html"><span class="std std-doc">WebAssembly 集成</span></a>。</p></li>
+<li><p>如何构建与安装 <code class="docutils literal notranslate"><span class="pre">.mpk</span></code> 包请参见 <a class="reference internal" href="../administration/packages.html"><span class="std std-doc">应用包</span></a>。</p></li>
+<li><p>客户端、内核和工作者之间的可视化流程请参见文档中的架构图（<code class="docutils literal notranslate"><span class="pre">/_static/procedural_tx.png</span></code>）。</p></li>
+</ul>
+<p>Mudu 过程概述结束。</p>
+</section>
 </section>
 
 
@@ -683,6 +704,11 @@ Mudu 过程概述结束。</section>
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">1. 设计目标</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">2. 交互式执行与存储过程——以及统一模型</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#webassembly-wasi">3. WebAssembly / WASI 编译与运行时</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">4. 多语言支持</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#color-bind-async-await">5. Color-bind async/await：语言体验与运行时</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">6. 其他注意事项</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">参考与示例</a></li>
 </ul>
   </nav></div>
 

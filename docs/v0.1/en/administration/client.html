@@ -241,6 +241,10 @@
   
 
   
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
 </div>
 
     </header>
@@ -385,7 +389,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../preface/overview.html">Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../preface/data-model.html">Data Model</a></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../preface/release-notes/index.html">Release Notes</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../preface/release-notes/v0.1.html">v0.1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../preface/release-notes/v0.1.html">v0.1 Release Notes</a></li>
 </ul>
 </details></li>
 </ul>
@@ -460,7 +464,22 @@
 <li class="toctree-l2"><a class="reference internal" href="../internal/per_core_worker.html">Per-core Worker Model</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1"><a class="reference internal" href="../reference/index.html">Reference</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../reference/index.html">Reference</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../reference/contracts/index.html">MuduDB Format and Protocol Contracts</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/page_header_v1.html">Page Header Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/tuple_binary_v1.html">Tuple Binary Format Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/log_frame_v1.html">Log Frame Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/protocol_frame_v1.html">TCP Protocol Frame Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/mpk_manifest_v1.html">MPK Package Manifest Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/mudud_cfg_v1.html">MuduDB Server Configuration Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/file_layout_v1.html">MuduDB File Layout Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/syscall_payload_v1.html">Guest→Host Syscall Payload Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/how_to_add_format_upgrade.html">How to Add a Format Upgrade</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/mcli-admin.html">mcli Management Interface (HTTP)</a></li>
+</ul>
+</details></li>
 </ul>
 
     </div>
@@ -493,7 +512,20 @@
           <div class="bd-content">
             <div class="bd-article-container">
               
-              <div class="bd-header-article d-print-none"></div>
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item"><button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button></div>
+      
+    </div>
+  
+</div>
+</div>
               
               
 
@@ -503,6 +535,18 @@
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#connection-options">Connection options</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#interactive-sql-shell">Interactive SQL shell</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#common-admin-commands">Common admin commands</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#invoke-a-procedure">Invoke a procedure</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#output">Output</a></li>
+</ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -514,14 +558,55 @@
                   
   <section id="client">
 <h1>Client<a class="headerlink" href="#client" title="Link to this heading">#</a></h1>
-<p><code class="docutils literal notranslate"><span class="pre">mcli</span></code> is the MuduDB command-line client for interactive SQL, HTTP administration, and procedure invocation.</p>
-<p>Common commands:</p>
+<p><code class="docutils literal notranslate"><span class="pre">mcli</span></code> is the MuduDB command-line client. It supports interactive SQL, HTTP administration, and procedure invocation.</p>
+<section id="connection-options">
+<h2>Connection options<a class="headerlink" href="#connection-options" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">--addr</span> <span class="pre">&lt;host:port&gt;</span></code> — TCP protocol endpoint for SQL shell and procedure invocation (default <code class="docutils literal notranslate"><span class="pre">127.0.0.1:9527</span></code>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--http-addr</span> <span class="pre">&lt;host:port&gt;</span></code> — HTTP management endpoint for admin commands (default <code class="docutils literal notranslate"><span class="pre">127.0.0.1:8300</span></code>).</p></li>
+</ul>
+</section>
+<section id="interactive-sql-shell">
+<h2>Interactive SQL shell<a class="headerlink" href="#interactive-sql-shell" title="Link to this heading">#</a></h2>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mcli<span class="w"> </span>--addr<span class="w"> </span><span class="m">127</span>.0.0.1:9527<span class="w"> </span>shell<span class="w"> </span>--app<span class="w"> </span>demo
-mcli<span class="w"> </span>--http-addr<span class="w"> </span><span class="m">127</span>.0.0.1:8300<span class="w"> </span>app-list
-mcli<span class="w"> </span>--http-addr<span class="w"> </span><span class="m">127</span>.0.0.1:8300<span class="w"> </span>server-topology
 </pre></div>
 </div>
-<p>In TTY sessions, query results are displayed as an interactive table by default.</p>
+<p>Inside the shell you can run SQL statements, meta commands, and exit with <code class="docutils literal notranslate"><span class="pre">\q</span></code>.</p>
+</section>
+<section id="common-admin-commands">
+<h2>Common admin commands<a class="headerlink" href="#common-admin-commands" title="Link to this heading">#</a></h2>
+<p>List installed applications:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mcli<span class="w"> </span>--http-addr<span class="w"> </span><span class="m">127</span>.0.0.1:8300<span class="w"> </span>app-list
+</pre></div>
+</div>
+<p>Show server topology:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mcli<span class="w"> </span>--http-addr<span class="w"> </span><span class="m">127</span>.0.0.1:8300<span class="w"> </span>server-topology
+</pre></div>
+</div>
+<p>Resolve a partition route:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mcli<span class="w"> </span>--http-addr<span class="w"> </span><span class="m">127</span>.0.0.1:8300<span class="w"> </span>partition-route<span class="w"> </span>--rule-name<span class="w"> </span>user_rule<span class="w"> </span>--key<span class="w"> </span>user-100
+</pre></div>
+</div>
+</section>
+<section id="invoke-a-procedure">
+<h2>Invoke a procedure<a class="headerlink" href="#invoke-a-procedure" title="Link to this heading">#</a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mcli<span class="w"> </span>--addr<span class="w"> </span><span class="m">127</span>.0.0.1:9527<span class="w"> </span>--http-addr<span class="w"> </span><span class="m">127</span>.0.0.1:8300<span class="w"> </span>app-invoke<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--app<span class="w"> </span>wallet<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--module<span class="w"> </span>wallet<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--proc<span class="w"> </span>transfer_funds<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--json<span class="w"> </span><span class="s1">&#39;{&quot;from_user_id&quot;: 1001, &quot;to_user_id&quot;: 1002, &quot;amount&quot;: 1200}&#39;</span>
+</pre></div>
+</div>
+</section>
+<section id="output">
+<h2>Output<a class="headerlink" href="#output" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Query results are displayed as a table by default in TTY sessions.</p></li>
+<li><p>Management commands output pretty JSON by default; add <code class="docutils literal notranslate"><span class="pre">--compact</span></code> for compact JSON.</p></li>
+<li><p>On error, <code class="docutils literal notranslate"><span class="pre">mcli</span></code> exits non-zero and prints the error to stderr.</p></li>
+</ul>
+<p>See <a class="reference internal" href="../reference/mcli-admin.html"><span class="std std-doc">mcli Management Interface (HTTP)</span></a> for the full command reference.</p>
+</section>
 </section>
 
 
@@ -559,6 +644,27 @@ mcli<span class="w"> </span>--http-addr<span class="w"> </span><span class="m">1
             </div>
             
             
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#connection-options">Connection options</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#interactive-sql-shell">Interactive SQL shell</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#common-admin-commands">Common admin commands</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#invoke-a-procedure">Invoke a procedure</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#output">Output</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>

@@ -241,6 +241,10 @@
   
 
   
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
 </div>
 
     </header>
@@ -385,7 +389,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../preface/overview.html">Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../preface/data-model.html">Data Model</a></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../preface/release-notes/index.html">Release Notes</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../preface/release-notes/v0.1.html">v0.1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../preface/release-notes/v0.1.html">v0.1 Release Notes</a></li>
 </ul>
 </details></li>
 </ul>
@@ -460,7 +464,22 @@
 <li class="toctree-l2"><a class="reference internal" href="per_core_worker.html">Per-core Worker Model</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1"><a class="reference internal" href="../reference/index.html">Reference</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../reference/index.html">Reference</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../reference/contracts/index.html">MuduDB Format and Protocol Contracts</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/page_header_v1.html">Page Header Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/tuple_binary_v1.html">Tuple Binary Format Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/log_frame_v1.html">Log Frame Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/protocol_frame_v1.html">TCP Protocol Frame Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/mpk_manifest_v1.html">MPK Package Manifest Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/mudud_cfg_v1.html">MuduDB Server Configuration Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/file_layout_v1.html">MuduDB File Layout Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/syscall_payload_v1.html">Guest→Host Syscall Payload Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/how_to_add_format_upgrade.html">How to Add a Format Upgrade</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/mcli-admin.html">mcli Management Interface (HTTP)</a></li>
+</ul>
+</details></li>
 </ul>
 
     </div>
@@ -493,7 +512,20 @@
           <div class="bd-content">
             <div class="bd-article-container">
               
-              <div class="bd-header-article d-print-none"></div>
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item"><button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button></div>
+      
+    </div>
+  
+</div>
+</div>
               
               
 
@@ -503,6 +535,17 @@
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#design">Design</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#synchronous-source-asynchronous-execution">Synchronous source, asynchronous execution</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#syscall-boundary">Syscall boundary</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#use-cases">Use cases</a></li>
+</ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -514,9 +557,51 @@
                   
   <section id="procedure-runtime">
 <h1>Procedure Runtime<a class="headerlink" href="#procedure-runtime" title="Link to this heading">#</a></h1>
-<p>The procedure runtime is a passive component: it does not introduce its own scheduler or define an independent execution policy.</p>
-<p>Procedure execution is triggered and controlled by the kernel. Database access inside procedures crosses the syscall boundary and is governed by transaction, scheduling, and consistency rules.</p>
-<p>This model suits applications that need strong consistency, low-latency business logic, and data locality.</p>
+<p>The procedure runtime hosts Mudu Procedures inside the database process. It loads WebAssembly component modules, binds them to the kernel’s syscall surface, and executes procedure calls under kernel control.</p>
+<section id="design">
+<h2>Design<a class="headerlink" href="#design" title="Link to this heading">#</a></h2>
+<p>The runtime is passive: it does not define its own scheduler or execution policy. The kernel decides when and where a procedure runs, and the runtime provides the execution container.</p>
+<p>A typical invocation flow:</p>
+<ol class="arabic simple">
+<li><p>The kernel receives a procedure invocation request.</p></li>
+<li><p>The kernel routes the request to the worker that owns the target partition.</p></li>
+<li><p>The worker’s runtime loads the app/module if it is not already resident.</p></li>
+<li><p>The runtime calls the exported procedure function with the session <code class="docutils literal notranslate"><span class="pre">OID</span></code> and user arguments.</p></li>
+<li><p>Inside the procedure, database operations trap into the kernel through the syscall interface.</p></li>
+<li><p>The kernel applies transaction, scheduling, and consistency rules to each syscall.</p></li>
+<li><p>When the procedure returns, the kernel commits or rolls back the transaction and returns the result.</p></li>
+</ol>
+</section>
+<section id="synchronous-source-asynchronous-execution">
+<h2>Synchronous source, asynchronous execution<a class="headerlink" href="#synchronous-source-asynchronous-execution" title="Link to this heading">#</a></h2>
+<p>Developers write procedures using synchronous-looking APIs (<code class="docutils literal notranslate"><span class="pre">sys_interface::sync_api</span></code>). At build time, the <code class="docutils literal notranslate"><span class="pre">mtp</span></code> transpiler can rewrite blocking syscalls into async-compatible forms suitable for the runtime’s continuation-driven executor.</p>
+<p>This means:</p>
+<ul class="simple">
+<li><p>Procedure authors keep a sequential programming model.</p></li>
+<li><p>The runtime still yields while waiting for I/O or remote RPCs.</p></li>
+<li><p>The same source can run interactively during development and be deployed as a stored procedure.</p></li>
+</ul>
+</section>
+<section id="syscall-boundary">
+<h2>Syscall boundary<a class="headerlink" href="#syscall-boundary" title="Link to this heading">#</a></h2>
+<p>Procedures access database state through a compact syscall set:</p>
+<ul class="simple">
+<li><p>Session: <code class="docutils literal notranslate"><span class="pre">mudu_open</span></code>, <code class="docutils literal notranslate"><span class="pre">mudu_close</span></code></p></li>
+<li><p>SQL: <code class="docutils literal notranslate"><span class="pre">mudu_query</span></code>, <code class="docutils literal notranslate"><span class="pre">mudu_command</span></code>, <code class="docutils literal notranslate"><span class="pre">mudu_batch</span></code></p></li>
+<li><p>KV: <code class="docutils literal notranslate"><span class="pre">mudu_get</span></code>, <code class="docutils literal notranslate"><span class="pre">mudu_put</span></code>, <code class="docutils literal notranslate"><span class="pre">mudu_range</span></code></p></li>
+</ul>
+<p>Each syscall carries the session <code class="docutils literal notranslate"><span class="pre">OID</span></code> so the kernel can enforce transactional and scheduling context.</p>
+</section>
+<section id="use-cases">
+<h2>Use cases<a class="headerlink" href="#use-cases" title="Link to this heading">#</a></h2>
+<p>This model suits applications that need:</p>
+<ul class="simple">
+<li><p>strong consistency inside a single procedure boundary,</p></li>
+<li><p>low-latency business logic close to the data,</p></li>
+<li><p>data-local execution that avoids repeated client-server round trips.</p></li>
+</ul>
+<p>See <a class="reference internal" href="../programming/mudu_procedure.html"><span class="std std-doc">Mudu Procedure</span></a> for the programming model, <a class="reference internal" href="../programming/syscalls.html"><span class="std std-doc">System Call Reference</span></a> for the syscall API, and <a class="reference internal" href="wasm.html"><span class="std std-doc">WebAssembly Integration</span></a> for the component runtime details.</p>
+</section>
 </section>
 
 
@@ -554,6 +639,26 @@
             </div>
             
             
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#design">Design</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#synchronous-source-asynchronous-execution">Synchronous source, asynchronous execution</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#syscall-boundary">Syscall boundary</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#use-cases">Use cases</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>

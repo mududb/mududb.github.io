@@ -389,7 +389,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../preface/overview.html">Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../preface/data-model.html">Data Model</a></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../preface/release-notes/index.html">Release Notes</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../preface/release-notes/v0.1.html">v0.1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../preface/release-notes/v0.1.html">v0.1 Release Notes</a></li>
 </ul>
 </details></li>
 </ul>
@@ -464,7 +464,22 @@
 <li class="toctree-l2"><a class="reference internal" href="per_core_worker.html">Per-core Worker Model</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1"><a class="reference internal" href="../reference/index.html">Reference</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../reference/index.html">Reference</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../reference/contracts/index.html">MuduDB Format and Protocol Contracts</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/page_header_v1.html">Page Header Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/tuple_binary_v1.html">Tuple Binary Format Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/log_frame_v1.html">Log Frame Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/protocol_frame_v1.html">TCP Protocol Frame Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/mpk_manifest_v1.html">MPK Package Manifest Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/mudud_cfg_v1.html">MuduDB Server Configuration Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/file_layout_v1.html">MuduDB File Layout Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/syscall_payload_v1.html">Guest→Host Syscall Payload Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/how_to_add_format_upgrade.html">How to Add a Format Upgrade</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/mcli-admin.html">mcli Management Interface (HTTP)</a></li>
+</ul>
+</details></li>
 </ul>
 
     </div>
@@ -525,7 +540,14 @@
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#async-session-loop-async-session-loop">Async session loop (async_session_loop)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#supported-backends">Supported backends</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#connection-configuration">Connection configuration</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#async-session-loop">Async session loop</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#behavioral-differences">Behavioral differences</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#when-to-use-async-loop">When to use async loop</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#known-differences">Known differences</a></li>
 </ul>
             </nav>
         </div>
@@ -539,19 +561,80 @@
                   
   <section id="adapters">
 <h1>Adapters<a class="headerlink" href="#adapters" title="Link to this heading">#</a></h1>
-<p>The adapter layer connects different backend capabilities, including SQLite, PostgreSQL, MySQL, and the MuduDB kernel itself. Adapter documentation should describe supported behavior, test coverage, and known differences.</p>
-<section id="async-session-loop-async-session-loop">
-<h2>Async session loop (async_session_loop)<a class="headerlink" href="#async-session-loop-async-session-loop" title="Link to this heading">#</a></h2>
+<p>The adapter layer connects MuduDB client code to different backend capabilities, including SQLite, PostgreSQL, MySQL, and the MuduDB kernel itself. It lets the same procedure code run interactively against a standalone database during development and be deployed against <code class="docutils literal notranslate"><span class="pre">mudud</span></code> in production.</p>
+<section id="supported-backends">
+<h2>Supported backends<a class="headerlink" href="#supported-backends" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Backend</p></th>
+<th class="head"><p>Use case</p></th>
+<th class="head"><p>Connection hint</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>MuduDB kernel</p></td>
+<td><p>Production / full Mudu Procedure runtime.</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">mudud://host:port/...</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>SQLite</p></td>
+<td><p>Local development and tests.</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">sqlite://path/to/db.sqlite</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>PostgreSQL</p></td>
+<td><p>Compatibility testing against Postgres.</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">postgres://user:pass&#64;host/db</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>MySQL</p></td>
+<td><p>Compatibility testing against MySQL.</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">mysql://user:pass&#64;host/db</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The exact URL format depends on the adapter implementation in use. Check the current <code class="docutils literal notranslate"><span class="pre">mudu_adapter</span></code> crate for the supported connection strings in this release.</p>
+</section>
+<section id="connection-configuration">
+<h2>Connection configuration<a class="headerlink" href="#connection-configuration" title="Link to this heading">#</a></h2>
+<p>Adapters are typically configured through the <code class="docutils literal notranslate"><span class="pre">MUDU_CONNECTION</span></code> environment variable or a connection string passed to <code class="docutils literal notranslate"><span class="pre">mudu_open</span></code>. Common parameters include:</p>
 <ul class="simple">
-<li><p>When the connection configuration enables the async session loop (<code class="docutils literal notranslate"><span class="pre">async_session_loop=true</span></code>), the adapter forwards session management and I/O commands to a dedicated background manager thread running an async runtime. This manager keeps long-lived AsyncClient connections and serializes work through a channel-based command queue.</p></li>
-<li><p>Behavioral differences:</p>
-<ul>
-<li><p>Synchronous path (<code class="docutils literal notranslate"><span class="pre">async_session_loop=false</span></code>): each <code class="docutils literal notranslate"><span class="pre">mudu_open</span></code> creates a <code class="docutils literal notranslate"><span class="pre">SyncClient</span></code> and calls are performed blocking on the caller thread.</p></li>
-<li><p>Asynchronous path (<code class="docutils literal notranslate"><span class="pre">async_session_loop=true</span></code>): adapter methods enqueue commands (Open/Close/Get/Put/Range/Query/Command/Batch) to the manager and wait for a response over a small sync channel, reducing blocking on the calling thread and improving concurrency.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">http_addr</span></code> — HTTP management endpoint used to discover topology when connecting to <code class="docutils literal notranslate"><span class="pre">mudud</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">async_session_loop</span></code> — enable or disable the background async manager thread.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">app</span></code> — default application name for interactive SQL shells.</p></li>
 </ul>
-</li>
-<li><p>Performance notes: async loop reduces per-call blocking and thread usage, but introduces runtime and channel overhead. Choose async loop for high-concurrency scenarios or when using IOUring/Tokio backends.</p></li>
+<p>Example connection string:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>mudud://127.0.0.1:9527/ycsb?http_addr=127.0.0.1:8300
+</pre></div>
+</div>
+</section>
+<section id="async-session-loop">
+<h2>Async session loop<a class="headerlink" href="#async-session-loop" title="Link to this heading">#</a></h2>
+<p>When <code class="docutils literal notranslate"><span class="pre">async_session_loop=true</span></code>, the adapter forwards session management and I/O commands to a dedicated background manager thread running an async runtime. The manager keeps long-lived <code class="docutils literal notranslate"><span class="pre">AsyncClient</span></code> connections and serializes work through a channel-based command queue.</p>
+<section id="behavioral-differences">
+<h3>Behavioral differences<a class="headerlink" href="#behavioral-differences" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Synchronous path</strong> (<code class="docutils literal notranslate"><span class="pre">async_session_loop=false</span></code>): each <code class="docutils literal notranslate"><span class="pre">mudu_open</span></code> creates a <code class="docutils literal notranslate"><span class="pre">SyncClient</span></code> and calls are performed blocking on the caller thread.</p></li>
+<li><p><strong>Asynchronous path</strong> (<code class="docutils literal notranslate"><span class="pre">async_session_loop=true</span></code>): adapter methods enqueue commands (<code class="docutils literal notranslate"><span class="pre">Open</span></code>/<code class="docutils literal notranslate"><span class="pre">Close</span></code>/<code class="docutils literal notranslate"><span class="pre">Get</span></code>/<code class="docutils literal notranslate"><span class="pre">Put</span></code>/<code class="docutils literal notranslate"><span class="pre">Range</span></code>/<code class="docutils literal notranslate"><span class="pre">Query</span></code>/<code class="docutils literal notranslate"><span class="pre">Command</span></code>/<code class="docutils literal notranslate"><span class="pre">Batch</span></code>) to the manager and wait for a response over a small sync channel, reducing blocking on the calling thread and improving concurrency.</p></li>
 </ul>
+</section>
+<section id="when-to-use-async-loop">
+<h3>When to use async loop<a class="headerlink" href="#when-to-use-async-loop" title="Link to this heading">#</a></h3>
+<p>Prefer <code class="docutils literal notranslate"><span class="pre">async_session_loop=true</span></code> when:</p>
+<ul class="simple">
+<li><p>connecting to the <code class="docutils literal notranslate"><span class="pre">IOUring</span></code> or <code class="docutils literal notranslate"><span class="pre">Tokio</span></code> backend,</p></li>
+<li><p>running many concurrent sessions from a single client,</p></li>
+<li><p>blocking the caller thread is expensive.</p></li>
+</ul>
+<p>Use <code class="docutils literal notranslate"><span class="pre">false</span></code> for simple scripts, tests, or when debugging step-by-step.</p>
+</section>
+</section>
+<section id="known-differences">
+<h2>Known differences<a class="headerlink" href="#known-differences" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>The MuduDB kernel supports Mudu Procedures and <code class="docutils literal notranslate"><span class="pre">.mpk</span></code> packages; SQLite/PostgreSQL/MySQL adapters do not.</p></li>
+<li><p>Parameterized <code class="docutils literal notranslate"><span class="pre">batch</span></code> may be implemented differently across backends; the kernel currently returns <code class="docutils literal notranslate"><span class="pre">NotImplemented</span></code> when parameters are supplied.</p></li>
+<li><p>Partition routing and topology discovery are kernel-specific features.</p></li>
+</ul>
+<p>See <a class="reference internal" href="partitioning.html"><span class="std std-doc">Partitioning</span></a> for routing details and <a class="reference internal" href="../programming/mudu_procedure.html"><span class="std std-doc">Mudu Procedure</span></a> for the procedure programming model.</p>
 </section>
 </section>
 
@@ -602,7 +685,14 @@
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#async-session-loop-async-session-loop">Async session loop (async_session_loop)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#supported-backends">Supported backends</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#connection-configuration">Connection configuration</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#async-session-loop">Async session loop</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#behavioral-differences">Behavioral differences</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#when-to-use-async-loop">When to use async loop</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#known-differences">Known differences</a></li>
 </ul>
   </nav></div>
 

@@ -389,7 +389,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../preface/overview.html">Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../preface/data-model.html">Data Model</a></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../preface/release-notes/index.html">Release Notes</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../preface/release-notes/v0.1.html">v0.1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../preface/release-notes/v0.1.html">v0.1 Release Notes</a></li>
 </ul>
 </details></li>
 </ul>
@@ -464,7 +464,22 @@
 <li class="toctree-l2"><a class="reference internal" href="../internal/per_core_worker.html">Per-core Worker Model</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1"><a class="reference internal" href="../reference/index.html">Reference</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../reference/index.html">Reference</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../reference/contracts/index.html">MuduDB Format and Protocol Contracts</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/page_header_v1.html">Page Header Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/tuple_binary_v1.html">Tuple Binary Format Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/log_frame_v1.html">Log Frame Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/protocol_frame_v1.html">TCP Protocol Frame Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/mpk_manifest_v1.html">MPK Package Manifest Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/mudud_cfg_v1.html">MuduDB Server Configuration Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/file_layout_v1.html">MuduDB File Layout Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/syscall_payload_v1.html">Guest→Host Syscall Payload Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/how_to_add_format_upgrade.html">How to Add a Format Upgrade</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/mcli-admin.html">mcli Management Interface (HTTP)</a></li>
+</ul>
+</details></li>
 </ul>
 
     </div>
@@ -525,8 +540,17 @@
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#preflight-checks">Preflight Checks</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#runtime-check">Runtime Check</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisites">Prerequisites</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#starting-the-server">Starting the server</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#default-start">Default start</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#start-with-a-custom-config">Start with a custom config</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-to-expect">What to expect</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stopping-the-server">Stopping the server</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#verifying-the-server">Verifying the server</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#server-modes">Server modes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#common-issues">Common issues</a></li>
 </ul>
             </nav>
         </div>
@@ -540,20 +564,90 @@
                   
   <section id="server-management">
 <h1>Server Management<a class="headerlink" href="#server-management" title="Link to this heading">#</a></h1>
-<p><code class="docutils literal notranslate"><span class="pre">mudud</span></code> is the MuduDB server process. Production deployments should start it through a process manager and explicitly configure file paths, logging, and file descriptor limits.</p>
-<section id="preflight-checks">
-<h2>Preflight Checks<a class="headerlink" href="#preflight-checks" title="Link to this heading">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">mudud</span></code> is the MuduDB server process. It hosts the database kernel, runs installed MPK packages, and exposes three listeners: a TCP protocol endpoint, an HTTP management endpoint, and a PostgreSQL-compatible wire protocol port.</p>
+<section id="prerequisites">
+<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading">#</a></h2>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">mudud</span> <span class="pre">--version</span></code> is available.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">${HOME}/.mududb/mududb_cfg.toml</span></code> exists or can be created.</p></li>
-<li><p>The <code class="docutils literal notranslate"><span class="pre">nofile</span></code> soft limit is high enough. <code class="docutils literal notranslate"><span class="pre">65535</span></code> is a practical baseline.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mudud</span></code> and <code class="docutils literal notranslate"><span class="pre">mcli</span></code> are installed and in <code class="docutils literal notranslate"><span class="pre">PATH</span></code>.</p></li>
+<li><p>A configuration file exists at <code class="docutils literal notranslate"><span class="pre">./mudud.cfg</span></code>, <code class="docutils literal notranslate"><span class="pre">~/.mududb/mudud.cfg</span></code>, or a path passed with <code class="docutils literal notranslate"><span class="pre">--cfg</span></code>.</p></li>
+<li><p>On Linux, <code class="docutils literal notranslate"><span class="pre">io_uring</span></code> mode requires <code class="docutils literal notranslate"><span class="pre">liburing-dev</span></code> at runtime.</p></li>
+<li><p>The process should be started with a high file-descriptor limit (<code class="docutils literal notranslate"><span class="pre">ulimit</span> <span class="pre">-n</span> <span class="pre">65535</span></code> is a practical baseline).</p></li>
 </ul>
 </section>
-<section id="runtime-check">
-<h2>Runtime Check<a class="headerlink" href="#runtime-check" title="Link to this heading">#</a></h2>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cat<span class="w"> </span>/proc/<span class="k">$(</span>pgrep<span class="w"> </span>-x<span class="w"> </span>mudud<span class="k">)</span>/limits<span class="w"> </span><span class="p">|</span><span class="w"> </span>rg<span class="w"> </span><span class="s1">&#39;open files&#39;</span>
+<section id="starting-the-server">
+<h2>Starting the server<a class="headerlink" href="#starting-the-server" title="Link to this heading">#</a></h2>
+<section id="default-start">
+<h3>Default start<a class="headerlink" href="#default-start" title="Link to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">ulimit</span><span class="w"> </span>-n<span class="w"> </span><span class="m">65535</span>
+mudud
 </pre></div>
 </div>
+<p>If <code class="docutils literal notranslate"><span class="pre">./mudud.cfg</span></code> does not exist, <code class="docutils literal notranslate"><span class="pre">mudud</span></code> checks <code class="docutils literal notranslate"><span class="pre">~/.mududb/mudud.cfg</span></code>. Create a default config with:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mudud<span class="w"> </span>init-cfg
+</pre></div>
+</div>
+</section>
+<section id="start-with-a-custom-config">
+<h3>Start with a custom config<a class="headerlink" href="#start-with-a-custom-config" title="Link to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">ulimit</span><span class="w"> </span>-n<span class="w"> </span><span class="m">65535</span>
+mudud<span class="w"> </span>serve<span class="w"> </span>--cfg<span class="w"> </span>./config/mudud.cfg
+</pre></div>
+</div>
+</section>
+<section id="what-to-expect">
+<h3>What to expect<a class="headerlink" href="#what-to-expect" title="Link to this heading">#</a></h3>
+<p>After starting, <code class="docutils literal notranslate"><span class="pre">mudud</span></code> logs the effective configuration and opens three listeners:</p>
+<ul class="simple">
+<li><p>TCP protocol: <code class="docutils literal notranslate"><span class="pre">listen_ip:tcp_listen_port</span></code> (default <code class="docutils literal notranslate"><span class="pre">127.0.0.1:9527</span></code>)</p></li>
+<li><p>HTTP management: <code class="docutils literal notranslate"><span class="pre">listen_ip:http_listen_port</span></code> (default <code class="docutils literal notranslate"><span class="pre">127.0.0.1:8300</span></code>)</p></li>
+<li><p>PostgreSQL wire protocol: <code class="docutils literal notranslate"><span class="pre">listen_ip:pg_listen_port</span></code> (default <code class="docutils literal notranslate"><span class="pre">127.0.0.1:5432</span></code>)</p></li>
+</ul>
+</section>
+</section>
+<section id="stopping-the-server">
+<h2>Stopping the server<a class="headerlink" href="#stopping-the-server" title="Link to this heading">#</a></h2>
+<p>Send <code class="docutils literal notranslate"><span class="pre">SIGINT</span></code> (<code class="docutils literal notranslate"><span class="pre">Ctrl+C</span></code>) or <code class="docutils literal notranslate"><span class="pre">SIGTERM</span></code>. <code class="docutils literal notranslate"><span class="pre">mudud</span></code> performs a graceful shutdown, waiting for in-flight work to finish before exiting.</p>
+</section>
+<section id="verifying-the-server">
+<h2>Verifying the server<a class="headerlink" href="#verifying-the-server" title="Link to this heading">#</a></h2>
+<p>Use <code class="docutils literal notranslate"><span class="pre">mcli</span></code> to check the HTTP management endpoint:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mcli<span class="w"> </span>--http-addr<span class="w"> </span><span class="m">127</span>.0.0.1:8300<span class="w"> </span>app-list
+mcli<span class="w"> </span>--http-addr<span class="w"> </span><span class="m">127</span>.0.0.1:8300<span class="w"> </span>server-topology
+</pre></div>
+</div>
+<p>If the commands return JSON output, the server is running and reachable.</p>
+</section>
+<section id="server-modes">
+<h2>Server modes<a class="headerlink" href="#server-modes" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Mode</p></th>
+<th class="head"><p>When to use</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Legacy</span></code></p></td>
+<td><p>Maximum compatibility; single TCP/PG serving model.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">IOUring</span></code></p></td>
+<td><p>High-performance async I/O on Linux (recommended on Linux).</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Tokio</span></code></p></td>
+<td><p>Portable async runtime when <code class="docutils literal notranslate"><span class="pre">io_uring</span></code> is unavailable.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="common-issues">
+<h2>Common issues<a class="headerlink" href="#common-issues" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Address already in use</strong>: another process is using one of the configured ports. Change the conflicting port in <code class="docutils literal notranslate"><span class="pre">mudud.cfg</span></code>.</p></li>
+<li><p><strong>Permission denied</strong>: you may not have permission to bind to the configured <code class="docutils literal notranslate"><span class="pre">listen_ip</span></code> or port. Use <code class="docutils literal notranslate"><span class="pre">127.0.0.1</span></code> and ports above <code class="docutils literal notranslate"><span class="pre">1024</span></code> for local development.</p></li>
+<li><p><strong>Too many open files</strong>: raise the file descriptor limit with <code class="docutils literal notranslate"><span class="pre">ulimit</span> <span class="pre">-n</span> <span class="pre">65535</span></code> before starting.</p></li>
+<li><p><strong>io_uring not available</strong>: if you are not on Linux or <code class="docutils literal notranslate"><span class="pre">liburing-dev</span></code> is missing, switch <code class="docutils literal notranslate"><span class="pre">server_mode</span></code> to <code class="docutils literal notranslate"><span class="pre">Tokio</span></code>.</p></li>
+</ul>
+<p>See the <a class="reference internal" href="configuration.html"><span class="std std-doc">Configuration Reference</span></a> for all available options.</p>
 </section>
 </section>
 
@@ -604,8 +698,17 @@
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#preflight-checks">Preflight Checks</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#runtime-check">Runtime Check</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisites">Prerequisites</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#starting-the-server">Starting the server</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#default-start">Default start</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#start-with-a-custom-config">Start with a custom config</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-to-expect">What to expect</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stopping-the-server">Stopping the server</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#verifying-the-server">Verifying the server</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#server-modes">Server modes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#common-issues">Common issues</a></li>
 </ul>
   </nav></div>
 

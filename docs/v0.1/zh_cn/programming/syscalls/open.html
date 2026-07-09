@@ -194,7 +194,7 @@
 
 <li class=" ">
   <a class="nav-link dropdown-item nav-internal" href="../../reference/index.html">
-    参考
+    参考资料
   </a>
 </li>
 
@@ -240,6 +240,10 @@
   
   
 
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="当前页面">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
   
 </div>
 
@@ -311,7 +315,7 @@
 
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="../../reference/index.html">
-    参考
+    参考资料
   </a>
 </li>
 
@@ -385,7 +389,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../preface/overview.html">概览</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../preface/data-model.html">数据模型</a></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../preface/release-notes/index.html">发行说明</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../preface/release-notes/v0.1.html">v0.1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../preface/release-notes/v0.1.html">v0.1 发布说明</a></li>
 </ul>
 </details></li>
 </ul>
@@ -431,9 +435,9 @@
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../administration/index.html">管理</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../administration/client.html">客户端</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../administration/server.html">服务器管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../administration/server.html">服务端管理</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../administration/configuration.html">配置参考</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../administration/packages.html">应用程序包</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../administration/packages.html">应用包</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../administration/toolchain.html">工具链</a></li>
 </ul>
 </details></li>
@@ -460,7 +464,22 @@
 <li class="toctree-l2"><a class="reference internal" href="../../internal/per_core_worker.html">每核心工作线程模型</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1"><a class="reference internal" href="../../reference/index.html">参考</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../reference/index.html">参考资料</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../reference/contracts/index.html">MuduDB 格式与协议契约</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/contracts/page_header_v1.html">Page Header 契约 v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/contracts/tuple_binary_v1.html">Tuple Binary Format Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/contracts/log_frame_v1.html">Log Frame 契约 v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/contracts/protocol_frame_v1.html">TCP 协议帧契约 v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/contracts/mpk_manifest_v1.html">MPK 包清单契约 v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/contracts/mudud_cfg_v1.html">MuduDB 服务端配置契约 v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/contracts/file_layout_v1.html">MuduDB 文件布局契约 v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/contracts/syscall_payload_v1.html">Guest→Host 系统调用负载契约 v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/contracts/how_to_add_format_upgrade.html">如何添加一次格式升级</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="../../reference/mcli-admin.html">mcli 管理接口（HTTP）</a></li>
+</ul>
+</details></li>
 </ul>
 
     </div>
@@ -493,7 +512,20 @@
           <div class="bd-content">
             <div class="bd-article-container">
               
-              <div class="bd-header-article d-print-none"></div>
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item"><button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button></div>
+      
+    </div>
+  
+</div>
+</div>
               
               
 
@@ -503,6 +535,21 @@
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> 目录 </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rust-api">Rust API</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">概念签名</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">参数</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">返回值</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">错误</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">事务语义</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">示例</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">注意</a></li>
+</ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -514,17 +561,66 @@
                   
   <section id="open">
 <h1>open<a class="headerlink" href="#open" title="Link to this heading">#</a></h1>
-<p>用途</p>
-<p>为过程打开一个会话或逻辑连接上下文。会话为后续系统调用组合事务和执行上下文。</p>
-<p>行为</p>
+<p>打开一个会话或逻辑连接上下文，为后续系统调用提供事务与执行上下文。</p>
+<section id="rust-api">
+<h2>Rust API<a class="headerlink" href="#rust-api" title="Link to this heading">#</a></h2>
+<div class="highlight-rust notranslate"><div class="highlight"><pre><span></span><span class="c1">// sync_api</span>
+<span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">mudu_open</span><span class="p">()</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">RS</span><span class="o">&lt;</span><span class="n">OID</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="cm">/* ... */</span>
+<span class="p">}</span>
+
+<span class="c1">// async_api</span>
+<span class="k">pub</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">mudu_open</span><span class="p">()</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">RS</span><span class="o">&lt;</span><span class="n">OID</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="cm">/* ... */</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="id1">
+<h2>概念签名<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>open() -&gt; OID
+</pre></div>
+</div>
+</section>
+<section id="id2">
+<h2>参数<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
+<p>无。</p>
+</section>
+<section id="id3">
+<h2>返回值<a class="headerlink" href="#id3" title="Link to this heading">#</a></h2>
 <ul class="simple">
-<li><p>创建或绑定一个具有可选事务范围的会话上下文。</p></li>
-<li><p>会话是轻量级的，并且限于调用过程调用，除非显式提升。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">OID</span></code> —— 会话标识符，作为后续 <code class="docutils literal notranslate"><span class="pre">read</span></code>、<code class="docutils literal notranslate"><span class="pre">write</span></code>、<code class="docutils literal notranslate"><span class="pre">query</span></code>、<code class="docutils literal notranslate"><span class="pre">command</span></code> 等系统调用的第一个参数。</p></li>
 </ul>
-<p>备注</p>
+</section>
+<section id="id4">
+<h2>错误<a class="headerlink" href="#id4" title="Link to this heading">#</a></h2>
 <ul class="simple">
-<li><p>打开会话不会隐式启动持久事务；事务语义由与事务相关的系统调用或宿主管理的边界控制。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">OutOfMemory</span></code>：运行时无法分配会话状态。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">NotSupported</span></code>：当前状态下运行时禁止创建新会话。</p></li>
 </ul>
+</section>
+<section id="id5">
+<h2>事务语义<a class="headerlink" href="#id5" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>打开会话不会隐式启动持久事务。</p></li>
+<li><p>事务边界由宿主或事务相关系统调用控制。</p></li>
+</ul>
+</section>
+<section id="id6">
+<h2>示例<a class="headerlink" href="#id6" title="Link to this heading">#</a></h2>
+<div class="highlight-rust notranslate"><div class="highlight"><pre><span></span><span class="kd">let</span><span class="w"> </span><span class="n">oid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mudu_open</span><span class="p">()</span><span class="o">?</span><span class="p">;</span>
+<span class="kd">let</span><span class="w"> </span><span class="n">row</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">read</span><span class="p">(</span><span class="s">&quot;accounts&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">42</span><span class="p">,</span><span class="w"> </span><span class="nb">None</span><span class="p">)</span><span class="o">?</span><span class="p">;</span>
+<span class="n">mudu_close</span><span class="p">(</span><span class="n">oid</span><span class="p">)</span><span class="o">?</span><span class="p">;</span>
+</pre></div>
+</div>
+</section>
+<section id="id7">
+<h2>注意<a class="headerlink" href="#id7" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>在过程代码中，会话 <code class="docutils literal notranslate"><span class="pre">OID</span></code> 通常作为第一个参数传入，因此显式的 <code class="docutils literal notranslate"><span class="pre">open</span></code>/<code class="docutils literal notranslate"><span class="pre">close</span></code> 多见于交互式测试或独立适配器代码。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">open</span></code> 应与 <code class="docutils literal notranslate"><span class="pre">close</span></code> 配对使用，以释放会话级资源。</p></li>
+</ul>
+</section>
 </section>
 
 
@@ -562,6 +658,30 @@
             </div>
             
             
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> 目录
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rust-api">Rust API</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">概念签名</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">参数</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">返回值</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">错误</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">事务语义</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">示例</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">注意</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>

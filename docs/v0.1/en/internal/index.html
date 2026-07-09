@@ -385,7 +385,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../preface/overview.html">Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../preface/data-model.html">Data Model</a></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../preface/release-notes/index.html">Release Notes</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../preface/release-notes/v0.1.html">v0.1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../preface/release-notes/v0.1.html">v0.1 Release Notes</a></li>
 </ul>
 </details></li>
 </ul>
@@ -460,7 +460,22 @@
 <li class="toctree-l2"><a class="reference internal" href="per_core_worker.html">Per-core Worker Model</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1"><a class="reference internal" href="../reference/index.html">Reference</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../reference/index.html">Reference</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../reference/contracts/index.html">MuduDB Format and Protocol Contracts</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/page_header_v1.html">Page Header Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/tuple_binary_v1.html">Tuple Binary Format Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/log_frame_v1.html">Log Frame Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/protocol_frame_v1.html">TCP Protocol Frame Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/mpk_manifest_v1.html">MPK Package Manifest Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/mudud_cfg_v1.html">MuduDB Server Configuration Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/file_layout_v1.html">MuduDB File Layout Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/syscall_payload_v1.html">Guest→Host Syscall Payload Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/how_to_add_format_upgrade.html">How to Add a Format Upgrade</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/mcli-admin.html">mcli Management Interface (HTTP)</a></li>
+</ul>
+</details></li>
 </ul>
 
     </div>
@@ -517,13 +532,36 @@
 <p>Technical architecture and implementation details for MuduDB internals: kernel design, adapter model, partitioning, worker model, and the procedure runtime. Intended for developers and contributors.</p>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="kernel.html">Kernel</a></li>
-<li class="toctree-l1"><a class="reference internal" href="adapter.html">Adapters</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="adapter.html#async-session-loop-async-session-loop">Async session loop (async_session_loop)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="kernel.html">Kernel</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="kernel.html#kernel-runtime-split">Kernel-runtime split</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kernel.html#responsibilities">Responsibilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kernel.html#worker-model">Worker model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kernel.html#boundaries-and-compatibility">Boundaries and compatibility</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="procedure-runtime.html">Procedure Runtime</a></li>
-<li class="toctree-l1"><a class="reference internal" href="wasm.html">WebAssembly Integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adapter.html">Adapters</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="adapter.html#supported-backends">Supported backends</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapter.html#connection-configuration">Connection configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapter.html#async-session-loop">Async session loop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapter.html#known-differences">Known differences</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="procedure-runtime.html">Procedure Runtime</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="procedure-runtime.html#design">Design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="procedure-runtime.html#synchronous-source-asynchronous-execution">Synchronous source, asynchronous execution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="procedure-runtime.html#syscall-boundary">Syscall boundary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="procedure-runtime.html#use-cases">Use cases</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="wasm.html">WebAssembly Integration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="wasm.html#component-model">Component model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wasm.html#wasi-sandbox">WASI sandbox</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wasm.html#language-support">Language support</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wasm.html#guest-bindings">Guest bindings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wasm.html#runtime-limits">Runtime limits</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wasm.html#package-format">Package format</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="partitioning.html">Partitioning and Worker Mapping</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="partitioning.html#overview">Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="partitioning.html#design-rationale">Design rationale</a></li>

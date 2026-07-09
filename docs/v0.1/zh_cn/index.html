@@ -193,7 +193,7 @@
 
 <li class=" ">
   <a class="nav-link dropdown-item nav-internal" href="reference/index.html">
-    参考
+    参考资料
   </a>
 </li>
 
@@ -316,7 +316,7 @@
 
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="reference/index.html">
-    参考
+    参考资料
   </a>
 </li>
 
@@ -390,7 +390,7 @@
 <li class="toctree-l2"><a class="reference internal" href="preface/overview.html">概览</a></li>
 <li class="toctree-l2"><a class="reference internal" href="preface/data-model.html">数据模型</a></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="preface/release-notes/index.html">发行说明</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="preface/release-notes/v0.1.html">v0.1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="preface/release-notes/v0.1.html">v0.1 发布说明</a></li>
 </ul>
 </details></li>
 </ul>
@@ -436,9 +436,9 @@
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="administration/index.html">管理</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="administration/client.html">客户端</a></li>
-<li class="toctree-l2"><a class="reference internal" href="administration/server.html">服务器管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="administration/server.html">服务端管理</a></li>
 <li class="toctree-l2"><a class="reference internal" href="administration/configuration.html">配置参考</a></li>
-<li class="toctree-l2"><a class="reference internal" href="administration/packages.html">应用程序包</a></li>
+<li class="toctree-l2"><a class="reference internal" href="administration/packages.html">应用包</a></li>
 <li class="toctree-l2"><a class="reference internal" href="administration/toolchain.html">工具链</a></li>
 </ul>
 </details></li>
@@ -465,7 +465,22 @@
 <li class="toctree-l2"><a class="reference internal" href="internal/per_core_worker.html">每核心工作线程模型</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1"><a class="reference internal" href="reference/index.html">参考</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="reference/index.html">参考资料</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="reference/contracts/index.html">MuduDB 格式与协议契约</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference/contracts/page_header_v1.html">Page Header 契约 v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/contracts/tuple_binary_v1.html">Tuple Binary Format Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/contracts/log_frame_v1.html">Log Frame 契约 v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/contracts/protocol_frame_v1.html">TCP 协议帧契约 v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/contracts/mpk_manifest_v1.html">MPK 包清单契约 v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/contracts/mudud_cfg_v1.html">MuduDB 服务端配置契约 v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/contracts/file_layout_v1.html">MuduDB 文件布局契约 v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/contracts/syscall_payload_v1.html">Guest→Host 系统调用负载契约 v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference/contracts/how_to_add_format_upgrade.html">如何添加一次格式升级</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/mcli-admin.html">mcli 管理接口（HTTP）</a></li>
+</ul>
+</details></li>
 </ul>
 
     </div>
@@ -574,9 +589,9 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="administration/index.html">管理</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="administration/client.html">客户端</a></li>
-<li class="toctree-l2"><a class="reference internal" href="administration/server.html">服务器管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="administration/server.html">服务端管理</a></li>
 <li class="toctree-l2"><a class="reference internal" href="administration/configuration.html">配置参考</a></li>
-<li class="toctree-l2"><a class="reference internal" href="administration/packages.html">应用程序包</a></li>
+<li class="toctree-l2"><a class="reference internal" href="administration/packages.html">应用包</a></li>
 <li class="toctree-l2"><a class="reference internal" href="administration/toolchain.html">工具链</a></li>
 </ul>
 </li>
@@ -594,7 +609,13 @@
 <li class="toctree-l2"><a class="reference internal" href="internal/per_core_worker.html">每核心工作线程模型</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="reference/index.html">参考</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference/index.html">参考资料</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="reference/contracts/index.html">MuduDB 格式与协议契约</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/mcli-admin.html">mcli 管理接口（HTTP）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/index.html#id2">格式与协议契约</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/index.html#id3">运维管理</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </section>
