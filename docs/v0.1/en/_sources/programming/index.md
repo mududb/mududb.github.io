@@ -6,6 +6,8 @@ Guides and reference for writing, packaging, and running Mudu procedures (WASI c
 :maxdepth: 2
 
 mudu_procedure
+sdk
+filesystem
 churcuring
 syscalls
 ```

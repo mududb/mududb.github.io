@@ -475,21 +475,29 @@
 <li class="toctree-l2"><a class="reference internal" href="../../administration/client.html">Client</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../administration/server.html">Server Management</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../administration/configuration.html">Configuration Reference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../administration/replication.html">Replication and Raft Fault Tolerance</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../administration/packages.html">Application Packages</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../administration/toolchain.html">Toolchain</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../administration/backup.html">Backup and Restore</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../programming/index.html">Programming</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../programming/mudu_procedure.html">Mudu Procedure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../programming/sdk.html">SDKs and Execution Modes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../programming/filesystem.html">Filesystem Object Types</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../programming/churcuring.html">Churcuring and CQL</a></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../programming/syscalls.html">Syscalls</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/open.html">open</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/close.html">close</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/read.html">read</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/write.html">write</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/range-scan.html">range-scan</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/batch.html">batch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/query.html">query</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/command.html">command</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/batch.html">batch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/get.html">get</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/put.html">put</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/delete.html">delete</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/range.html">range</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/fs.html">fs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/relation.html">Relation Syscalls</a></li>
 </ul>
 </details></li>
 </ul>
@@ -498,9 +506,11 @@
 <li class="toctree-l2"><a class="reference internal" href="../../internal/kernel.html">Kernel</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../internal/adapter.html">Adapters</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../internal/procedure-runtime.html">Procedure Runtime</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../internal/suspendable-execution.html">Suspendable Procedure Execution</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../internal/wasm.html">WebAssembly Integration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../internal/partitioning.html">Partitioning and Worker Mapping</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../internal/partitioning.html">Partitioning</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../internal/per_core_worker.html">Per-core Worker Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../internal/replication.html">Replication Architecture</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../index.html">Reference</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
@@ -762,7 +772,7 @@
 <li><p><code class="docutils literal notranslate"><span class="pre">HandshakeRequest</span></code> contains <code class="docutils literal notranslate"><span class="pre">supported_versions:</span> <span class="pre">Vec&lt;u32&gt;</span></code> and optional <code class="docutils literal notranslate"><span class="pre">capabilities:</span> <span class="pre">Vec&lt;String&gt;</span></code>.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">HandshakeResponse</span></code> contains <code class="docutils literal notranslate"><span class="pre">selected_version:</span> <span class="pre">u32</span></code> and optional server capabilities.</p></li>
 </ul>
-<p>The current server implementation selects version <code class="docutils literal notranslate"><span class="pre">1</span></code> only. A client that does not include <code class="docutils literal notranslate"><span class="pre">1</span></code> in <code class="docutils literal notranslate"><span class="pre">supported_versions</span></code> receives <code class="docutils literal notranslate"><span class="pre">IncompatibleProtocolVersion</span></code>.</p>
+<p>The current server implementation selects version <code class="docutils literal notranslate"><span class="pre">1</span></code> only. A client that does not include <code class="docutils literal notranslate"><span class="pre">1</span></code> in <code class="docutils literal notranslate"><span class="pre">supported_versions</span></code> receives an error frame with <code class="docutils literal notranslate"><span class="pre">ErrorCode::Parse</span></code> (“no mutually supported protocol version”).</p>
 </section>
 <section id="integrity-mechanisms">
 <h2>Integrity mechanisms<a class="headerlink" href="#integrity-mechanisms" title="Link to this heading">#</a></h2>
@@ -796,7 +806,7 @@
 <h2>Upgrade and rollback rules<a class="headerlink" href="#upgrade-and-rollback-rules" title="Link to this heading">#</a></h2>
 <ul class="simple">
 <li><p><strong>Upgrade:</strong> A future v2 frame may extend the header (e.g., add capability flags) or define new message types. V2 clients and servers must negotiate the version via the handshake before sending v2 frames.</p></li>
-<li><p><strong>Rollback:</strong> A v1 server receiving a v2-only frame returns <code class="docutils literal notranslate"><span class="pre">UnsupportedFormatVersion</span></code>. A v2 server receiving a v1-only client selects version <code class="docutils literal notranslate"><span class="pre">1</span></code> during handshake.</p></li>
+<li><p><strong>Rollback:</strong> A v1 server receiving a v2-only frame returns <code class="docutils literal notranslate"><span class="pre">IncompatibleProtocolVersion</span></code>. A v2 server receiving a v1-only client selects version <code class="docutils literal notranslate"><span class="pre">1</span></code> during handshake.</p></li>
 <li><p><strong>Breaking changes:</strong> New message types may be added in minor protocol versions. Removed or renamed message types require a major version bump.</p></li>
 </ul>
 </section>
@@ -814,7 +824,7 @@
 <ul class="simple">
 <li><p>Frame format: <code class="docutils literal notranslate"><span class="pre">mudu_contract/src/protocol/format/latest.rs</span></code></p></li>
 <li><p>Message types and payloads: <code class="docutils literal notranslate"><span class="pre">mudu_contract/src/protocol/mod.rs</span></code></p></li>
-<li><p>Handshake handler: <code class="docutils literal notranslate"><span class="pre">mudu_kernel/src/server/handlers/handshake.rs</span></code></p></li>
+<li><p>Handshake handler: <code class="docutils literal notranslate"><span class="pre">server/src/handlers/handshake.rs</span></code></p></li>
 </ul>
 </section>
 </section>

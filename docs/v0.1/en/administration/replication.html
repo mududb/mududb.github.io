@@ -1,0 +1,946 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Replication and Raft Fault Tolerance &#8212; MuduDB v0.1</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=4418a689" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=eb49b5eb" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../_static/scripts/fontawesome.js?digest=90905a2f556bf617f1a9"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
+
+    <script src="../_static/documentation_options.js?v=bf5e005e"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'administration/replication';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <script src="../_static/doc-switcher.js?v=437d132c"></script>
+    <link rel="icon" href="../_static/favicon.svg"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Application Packages" href="packages.html" />
+    <link rel="prev" title="Configuration Reference" href="configuration.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="v0.1" />
+  
+    
+    <script src="../_static/searchtools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+<aside class="bd-header-announcement" aria-label="Announcement">
+  <div class="bd-header-announcement__content"><div class="mududb-announcement" data-current-version="v0.1" data-current-language="en"><span class="mududb-announcement-title">MuduDB documentation</span><label class="mududb-doc-switch-group"><span class="mududb-doc-switch-label">Version</span><select class="mududb-doc-switcher" data-switch-kind="version"><option value="v0.1" data-language="en" selected>v0.1</option></select></label><label class="mududb-doc-switch-group"><span class="mududb-doc-switch-label">Language</span><select class="mududb-doc-switcher" data-switch-kind="language"><option value="en" data-version="v0.1" selected>English</option><option value="zh_cn" data-version="v0.1">简体中文</option></select></label></div></div>
+</aside>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/mudu_logo.png" class="logo__image only-light" alt="MuduDB v0.1 - Home"/>
+    <img src="../_static/mudu_logo.png" class="logo__image only-dark pst-js-only" alt="MuduDB v0.1 - Home"/>
+  
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../preface/index.html">
+    Preface
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../tutorial/index.html">
+    Tutorial
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../sql-language/index.html">
+    The SQL Language
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    Administration
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../programming/index.html">
+    Programming
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../internal/index.html">
+    Internal
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../reference/index.html">
+    Reference
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scuptio/mududb" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../preface/index.html">
+    Preface
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../tutorial/index.html">
+    Tutorial
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../sql-language/index.html">
+    The SQL Language
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    Administration
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../programming/index.html">
+    Programming
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../internal/index.html">
+    Internal
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../reference/index.html">
+    Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scuptio/mududb" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../index.html">
+                    MuduDB Documentation
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../preface/index.html">Preface</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../preface/overview.html">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../preface/data-model.html">Data Model</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../preface/release-notes/index.html">Release Notes</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../preface/release-notes/v0.1.html">v0.1 Release Notes</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../tutorial/index.html">Tutorial</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../tutorial/getting-started/index.html">Getting Started</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../tutorial/getting-started/install.html">Installation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../tutorial/getting-started/first-session.html">First Session</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../tutorial/tutorials/index.html">Tutorials</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../tutorial/tutorials/sql-crud.html">SQL CRUD Tutorial</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../tutorial/tutorials/wallet.html">Wallet Example</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../sql-language/index.html">The SQL Language</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../sql-language/ddl/index.html">Data Definition</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../sql-language/ddl/columns.html">Columns</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sql-language/ddl/create-table.html">Create Table</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sql-language/ddl/primary-key.html">Primary Key</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sql-language/ddl/drop-table.html">Drop Table</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../sql-language/dml/index.html">Data Manipulation</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../sql-language/dml/insert.html">Insert</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sql-language/dml/update.html">Update</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sql-language/dml/delete.html">Delete</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="../sql-language/query.html">Query</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../sql-language/data_types/index.html">Data Types</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../sql-language/data_types/integer.html">Integer Types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sql-language/data_types/floating-point.html">Floating-Point Types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sql-language/data_types/fixed-point.html">Fixed-Point Types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sql-language/data_types/string.html">String Types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sql-language/data_types/temporal.html">Temporal Types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sql-language/data_types/other.html">Other Types</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">Administration</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="client.html">Client</a></li>
+<li class="toctree-l2"><a class="reference internal" href="server.html">Server Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration.html">Configuration Reference</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Replication and Raft Fault Tolerance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="packages.html">Application Packages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="toolchain.html">Toolchain</a></li>
+<li class="toctree-l2"><a class="reference internal" href="backup.html">Backup and Restore</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../programming/index.html">Programming</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../programming/mudu_procedure.html">Mudu Procedure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../programming/sdk.html">SDKs and Execution Modes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../programming/filesystem.html">Filesystem Object Types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../programming/churcuring.html">Churcuring and CQL</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../programming/syscalls.html">Syscalls</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/open.html">open</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/close.html">close</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/query.html">query</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/command.html">command</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/batch.html">batch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/get.html">get</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/put.html">put</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/delete.html">delete</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/range.html">range</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/fs.html">fs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/relation.html">Relation Syscalls</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../internal/index.html">Internal</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../internal/kernel.html">Kernel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../internal/adapter.html">Adapters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../internal/procedure-runtime.html">Procedure Runtime</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../internal/suspendable-execution.html">Suspendable Procedure Execution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../internal/wasm.html">WebAssembly Integration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../internal/partitioning.html">Partitioning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../internal/per_core_worker.html">Per-core Worker Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../internal/replication.html">Replication Architecture</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../reference/index.html">Reference</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../reference/contracts/index.html">MuduDB Format and Protocol Contracts</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/page_header_v1.html">Page Header Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/tuple_binary_v1.html">Tuple Binary Format Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/log_frame_v1.html">Log Frame Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/protocol_frame_v1.html">TCP Protocol Frame Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/mpk_manifest_v1.html">MPK Package Manifest Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/mudud_cfg_v1.html">MuduDB Server Configuration Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/file_layout_v1.html">MuduDB File Layout Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/syscall_payload_v1.html">Guest→Host Syscall Payload Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/how_to_add_format_upgrade.html">How to Add a Format Upgrade</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/mcli-admin.html">mcli Management Interface (HTTP)</a></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item"><nav class="sidebar-indices-items" aria-labelledby="pst-indices-navigation-heading-2">
+  <p id="pst-indices-navigation-heading-2" class="sidebar-indices-items__title" role="heading" aria-level="1">Indices</p>
+  <ul class="indices-link">
+        <li class="toctree-l1">
+          <a class="reference internal"
+             href="../genindex.html"
+             accesskey="I">General Index</a>
+        </li>
+  </ul>
+</nav></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item"><button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Replication and Raft Fault Tolerance</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deployment-shapes">Deployment shapes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-it-works">How it works</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#configuration">Configuration</a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#primary-replica-streaming-two-node-example">Primary-replica streaming (two-node example)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#raft-fault-tolerance-three-node-example">Raft fault tolerance (three-node example)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#validation-rules">Validation rules</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#snapshots-and-wal-gc">Snapshots and WAL GC</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#online-membership-changes-raft-mode">Online membership changes (raft mode)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#observability">Observability</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#failover">Failover</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#current-limitations">Current limitations</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="replication-and-raft-fault-tolerance">
+<h1>Replication and Raft Fault Tolerance<a class="headerlink" href="#replication-and-raft-fault-tolerance" title="Link to this heading">#</a></h1>
+<p>MuduDB supports three deployment shapes: <strong>single node</strong> (default), <strong>primary-replica streaming replication</strong> (<code class="docutils literal notranslate"><span class="pre">stream</span></code>), and <strong>Raft consensus fault tolerance</strong> (<code class="docutils literal notranslate"><span class="pre">raft</span></code>). Adding a <code class="docutils literal notranslate"><span class="pre">[replication]</span></code> section to <code class="docutils literal notranslate"><span class="pre">mudud.cfg</span></code> enables clustering; without it the server runs as a single node with behavior identical to a replication-free deployment.</p>
+<p>Both cluster shapes share one replication channel: replication streams and Raft messages are multiplexed over a single <code class="docutils literal notranslate"><span class="pre">listen_port</span></code> by message type — no separate port is needed.</p>
+<section id="deployment-shapes">
+<h2>Deployment shapes<a class="headerlink" href="#deployment-shapes" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Shape</p></th>
+<th class="head"><p>Configuration</p></th>
+<th class="head"><p>Write acknowledged when</p></th>
+<th class="head"><p>Failover on primary loss</p></th>
+<th class="head"><p>RPO of acknowledged commits</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Single node</p></td>
+<td><p>no <code class="docutils literal notranslate"><span class="pre">[replication]</span></code></p></td>
+<td><p>local WAL durable (per <code class="docutils literal notranslate"><span class="pre">wal_sync_mode</span></code>)</p></td>
+<td><p>—</p></td>
+<td><p>—</p></td>
+</tr>
+<tr class="row-odd"><td><p>Primary-replica (async)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">[replication.stream]</span></code>, <code class="docutils literal notranslate"><span class="pre">sync</span> <span class="pre">=</span> <span class="pre">false</span></code></p></td>
+<td><p>local WAL acknowledgement under <code class="docutils literal notranslate"><span class="pre">wal_sync_mode</span></code></p></td>
+<td><p>manual</p></td>
+<td><p>&gt; 0</p></td>
+</tr>
+<tr class="row-even"><td><p>Primary-replica (sync)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">[replication.stream]</span></code>, <code class="docutils literal notranslate"><span class="pre">sync</span> <span class="pre">=</span> <span class="pre">true</span></code></p></td>
+<td><p>any replica has flushed the commit point</p></td>
+<td><p>manual</p></td>
+<td><p>0 only when promoting a replica that durably holds the acknowledged commits</p></td>
+</tr>
+<tr class="row-odd"><td><p>Raft HA</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">[replication.raft]</span></code>, 3 or 5 nodes</p></td>
+<td><p>majority flush + consensus commit</p></td>
+<td><p>automatic (election + self-heal)</p></td>
+<td><p>0</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Rule of thumb: pick <code class="docutils literal notranslate"><span class="pre">stream</span></code> for read scaling / data redundancy with operator-controlled failover; pick <code class="docutils literal notranslate"><span class="pre">raft</span></code> (at least 3 nodes) for unattended automatic failover.</p>
+</section>
+<section id="how-it-works">
+<h2>How it works<a class="headerlink" href="#how-it-works" title="Link to this heading">#</a></h2>
+<p><strong>Data plane (shared by both shapes)</strong>: each worker owns one replication stream; the primary pushes WAL segments (batched at 64 KiB / 32 frames / 200 µs) to replicas in order, with sliding-window flow control (<code class="docutils literal notranslate"><span class="pre">repl_flow_window_segments</span></code>). Replicas are read-only: write requests are rejected with a <code class="docutils literal notranslate"><span class="pre">leader_hint</span></code>, and clients reconnect to the primary automatically.</p>
+<p><strong>Stream mode</strong>: the primary commits to its local WAL and applies immediately. With <code class="docutils literal notranslate"><span class="pre">sync</span> <span class="pre">=</span> <span class="pre">true</span></code> the acknowledgement waits until any replica confirms it has flushed the commit point; on <code class="docutils literal notranslate"><span class="pre">sync_timeout_ms</span></code> expiry the client gets an error (the data is already durable locally — “not confirmed replicated” — and heals once a replica catches up).</p>
+<p><strong>Raft mode</strong>: all nodes form a single Raft group (<code class="docutils literal notranslate"><span class="pre">mudu_raft</span></code>, an in-repo fork of the TLA±verified scupt-raft). Log entries carry only segment hashes and a commit vector <code class="docutils literal notranslate"><span class="pre">CommitVec{[(worker_id,</span> <span class="pre">lsn,</span> <span class="pre">seg_hash);</span> <span class="pre">W]}</span></code>, so one consensus round advances all worker streams. Two invariants deliver RPO = 0:</p>
+<ul class="simple">
+<li><p>Majority flush gating: a CommitVec covering a segment is only committed after a majority of replicas confirm holding that segment.</p></li>
+<li><p>Apply ≤ committed vector: replicas write incoming segments to a staging area and only replay what Raft has committed; the uncommitted tail never reaches storage, so truncating it on failover costs nothing.</p></li>
+</ul>
+<p>When the leader fails, the survivors elect a new one within the election timeout; the new leader <strong>heals before serving</strong> — it compares hash chains per worker against the last committed CommitVec to locate divergence, fetches missing segments, catches up, writes a Barrier, and only then accepts writes. Transaction ids are encoded as <code class="docutils literal notranslate"><span class="pre">xid</span> <span class="pre">=</span> <span class="pre">(raft_term</span> <span class="pre">&lt;&lt;</span> <span class="pre">32)</span> <span class="pre">|</span> <span class="pre">counter</span></code>, monotonic across leaders.</p>
+</section>
+<section id="configuration">
+<h2>Configuration<a class="headerlink" href="#configuration" title="Link to this heading">#</a></h2>
+<p>Shared fields live in <code class="docutils literal notranslate"><span class="pre">[replication]</span></code>; the mode is chosen by which subsection is present — <code class="docutils literal notranslate"><span class="pre">[replication.stream]</span></code> or <code class="docutils literal notranslate"><span class="pre">[replication.raft]</span></code>. Exactly one must be present; neither or both is a configuration error.</p>
+<section id="primary-replica-streaming-two-node-example">
+<h3>Primary-replica streaming (two-node example)<a class="headerlink" href="#primary-replica-streaming-two-node-example" title="Link to this heading">#</a></h3>
+<p>Node 1 (primary), <code class="docutils literal notranslate"><span class="pre">mudud.cfg</span></code>:</p>
+<div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="n">mpk_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"./mpk"</span>
+<span class="n">db_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"./data"</span>
+<span class="n">listen_ip</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"0.0.0.0"</span>
+<span class="n">http_listen_port</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">8300</span>
+<span class="n">pg_listen_port</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5432</span>
+<span class="n">enable_async</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="n">server_mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Tokio"</span>
+
+<span class="k">[replication]</span>
+<span class="n">node_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="w">                 </span><span class="c1"># persisted to &lt;db_path&gt;/node_id on first boot; a mismatch is a startup error</span>
+<span class="n">listen_port</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">19527</span><span class="w">         </span><span class="c1"># shared replication + Raft port; must not collide with http/pg/tcp ports</span>
+<span class="n">repl_flow_window_segments</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">64</span><span class="w">   </span><span class="c1"># optional, default 64</span>
+<span class="n">snapshot_wal_threshold_bytes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1073741824</span><span class="w">   </span><span class="c1"># optional, default 1 GiB: committed WAL growth past the last snapshot that triggers the next one</span>
+<span class="n">gc_check_interval_secs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">60</span><span class="w">                </span><span class="c1"># optional, default 60: WAL/staging GC evaluation interval</span>
+
+<span class="k">[[replication.peers]]</span><span class="w">       </span><span class="c1"># static member list, identical on every node, must contain this node's node_id</span>
+<span class="n">node_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
+<span class="n">host</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"10.0.0.1"</span>
+<span class="n">port</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">19527</span>
+
+<span class="k">[[replication.peers]]</span>
+<span class="n">node_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span>
+<span class="n">host</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"10.0.0.2"</span>
+<span class="n">port</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">19527</span>
+
+<span class="k">[replication.stream]</span>
+<span class="n">primary</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="w">              </span><span class="c1"># required: exactly one node sets true, the rest false</span>
+<span class="n">sync</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="w">                 </span><span class="c1"># required: true = synchronous, false = asynchronous</span>
+<span class="n">sync_timeout_ms</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10000</span><span class="w">     </span><span class="c1"># optional, default 10000</span>
+</pre></div>
+</div>
+<p>Node 2 (replica) differs only in <code class="docutils literal notranslate"><span class="pre">node_id</span> <span class="pre">=</span> <span class="pre">2</span></code> and <code class="docutils literal notranslate"><span class="pre">primary</span> <span class="pre">=</span> <span class="pre">false</span></code>.</p>
+</section>
+<section id="raft-fault-tolerance-three-node-example">
+<h3>Raft fault tolerance (three-node example)<a class="headerlink" href="#raft-fault-tolerance-three-node-example" title="Link to this heading">#</a></h3>
+<p>Same shared part as above, with <code class="docutils literal notranslate"><span class="pre">node_id</span></code> 1/2/3 per node, and the mode subsection replaced by:</p>
+<div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="k">[replication.raft]</span>
+<span class="n">raft_tick_ms</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">50</span><span class="w">              </span><span class="c1"># optional, default 50; Raft state-machine tick interval</span>
+<span class="n">election_timeout_ticks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">500</span><span class="w">   </span><span class="c1"># optional, default 500; election timeout = tick x this value (25s by default)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">peers</span></code> lists all three nodes. The group should have ≥ 3 members (or exactly 1 for development): <strong>a two-node Raft group is discouraged as a steady-state deployment</strong> (no automatic failover — majority = 2, so one loss stalls the group — and worse write availability than a single node) and only logs a startup warning; it is the sanctioned bootstrap shape for a joining node that names only itself and one existing member (stored conf wins; the cluster conf replaces it after joining).</p>
+</section>
+<section id="validation-rules">
+<h3>Validation rules<a class="headerlink" href="#validation-rules" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Exactly one of the two mode subsections is present; <code class="docutils literal notranslate"><span class="pre">primary</span></code>/<code class="docutils literal notranslate"><span class="pre">sync</span></code> are required keys inside <code class="docutils literal notranslate"><span class="pre">[replication.stream]</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">peers</span></code> is non-empty, node ids and addresses are unique, and the list contains this node’s <code class="docutils literal notranslate"><span class="pre">node_id</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">listen_port</span></code> must not collide with <code class="docutils literal notranslate"><span class="pre">http_listen_port</span></code> / <code class="docutils literal notranslate"><span class="pre">pg_listen_port</span></code> / <code class="docutils literal notranslate"><span class="pre">tcp_listen_port</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">node_id</span></code> is persisted to <code class="docutils literal notranslate"><span class="pre">&lt;db_path&gt;/node_id</span></code> on first boot; a configured value that disagrees with the persisted one is a startup error.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">snapshot_wal_threshold_bytes</span></code> / <code class="docutils literal notranslate"><span class="pre">gc_check_interval_secs</span></code> must be greater than zero.</p></li>
+</ul>
+</section>
+</section>
+<section id="snapshots-and-wal-gc">
+<h2>Snapshots and WAL GC<a class="headerlink" href="#snapshots-and-wal-gc" title="Link to this heading">#</a></h2>
+<p>Every worker independently takes a business snapshot once its committed LSN passes <code class="docutils literal notranslate"><span class="pre">last</span> <span class="pre">snapshot</span> <span class="pre">+</span> <span class="pre">snapshot_wal_threshold_bytes</span></code> (no Raft entry needed — every node snapshots the same committed point locally): it flushes dirty pages and fsyncs the data files (a new persistence action on this path; a larger threshold makes it rarer), copies the partition’s <code class="docutils literal notranslate"><span class="pre">relation/*.dat</span></code> files plus a dump of the in-memory kv store (original xids preserved) into <code class="docutils literal notranslate"><span class="pre">&lt;db_path&gt;/snapshot/worker_N/v&lt;lsn&gt;/</span></code>, and finally publishes a manifest (committed LSN, segment hash, per-file CRC64 list).</p>
+<p>Snapshots enable two kinds of reclamation:</p>
+<ul class="simple">
+<li><p><strong>WAL prefix GC</strong>: whole chunks below the watermark are physically deleted; the watermark is <code class="docutils literal notranslate"><span class="pre">min(connected</span> <span class="pre">subscriber</span> <span class="pre">ack,</span> <span class="pre">committed</span> <span class="pre">point,</span> <span class="pre">latest</span> <span class="pre">snapshot)</span></code> on the primary/leader and <code class="docutils literal notranslate"><span class="pre">min(committed</span> <span class="pre">point,</span> <span class="pre">latest</span> <span class="pre">snapshot)</span></code> on followers. A <code class="docutils literal notranslate"><span class="pre">&lt;db_path&gt;/*.gcfrontier</span></code> marker file lets restarts resume enumeration at the frontier instead of mistaking the log for empty. Staging and raft_log are reclaimed in the same rhythm (the business snapshot point doubles as the Raft snapshot-install frontier).</p></li>
+<li><p><strong>Fast rejoin</strong>: when a replica resubscribes from a point below the primary’s GC frontier, the primary answers with a snapshot offer instead of a stream — the replica pages the snapshot files down, verifies their CRCs, replaces its data files and restores the kv store, installs the snapshot point as its Raft frontier, and resubscribes from <code class="docutils literal notranslate"><span class="pre">snapshot_lsn</span> <span class="pre">+</span> <span class="pre">1</span></code>, skipping a full WAL replay. Disconnected replicas no longer hold back the primary’s WAL reclamation.</p></li>
+</ul>
+<p>Writes after the snapshot point still stream normally; the source keeps writing during a transfer (the snapshot is self-sealed at the manifest point). relation_wal prefix GC is not done in this version (page-LSN stamps make its replay idempotent; its growth is independent of the worker WAL).</p>
+</section>
+<section id="online-membership-changes-raft-mode">
+<h2>Online membership changes (raft mode)<a class="headerlink" href="#online-membership-changes-raft-mode" title="Link to this heading">#</a></h2>
+<p>The raft group’s membership can be changed at runtime through the management HTTP endpoint <code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/mudu/repl/membership</span></code> (or the <code class="docutils literal notranslate"><span class="pre">mcli</span> <span class="pre">repl</span></code> subcommands). Requests must reach the current leader — a non-leader answers with a <code class="docutils literal notranslate"><span class="pre">leader_hint</span></code>, and <code class="docutils literal notranslate"><span class="pre">mcli</span></code> re-issues against the hinted node automatically:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mcli<span class="w"> </span>--http-addr<span class="w"> </span>&lt;any-node&gt;:8300<span class="w"> </span>repl<span class="w"> </span>add-node<span class="w"> </span>--node-id<span class="w"> </span><span class="m">4</span><span class="w"> </span>--host<span class="w"> </span><span class="m">10</span>.0.0.4<span class="w"> </span>--port<span class="w"> </span><span class="m">19527</span><span class="w"> </span>--learner
+mcli<span class="w"> </span>--http-addr<span class="w"> </span>&lt;leader&gt;:8300<span class="w"> </span>repl<span class="w"> </span>promote-learner<span class="w"> </span>--node-id<span class="w"> </span><span class="m">4</span>
+mcli<span class="w"> </span>--http-addr<span class="w"> </span>&lt;leader&gt;:8300<span class="w"> </span>repl<span class="w"> </span>remove-node<span class="w"> </span>--node-id<span class="w"> </span><span class="m">4</span>
+<span class="c1"># add directly as a voter (skip the learner stage):</span>
+mcli<span class="w"> </span>--http-addr<span class="w"> </span>&lt;leader&gt;:8300<span class="w"> </span>repl<span class="w"> </span>add-node<span class="w"> </span>--node-id<span class="w"> </span><span class="m">4</span><span class="w"> </span>--host<span class="w"> </span><span class="m">10</span>.0.0.4<span class="w"> </span>--port<span class="w"> </span><span class="m">19527</span>
+</pre></div>
+</div>
+<p>Recommended join procedure (learner two-step):</p>
+<ol class="arabic simple">
+<li><p>On the leader, <code class="docutils literal notranslate"><span class="pre">add-node</span> <span class="pre">--learner</span></code> to register the new member (with its replication address); the joint consensus commit makes it effective.</p></li>
+<li><p>Start the new node: its local <code class="docutils literal notranslate"><span class="pre">mudud.cfg</span></code> <code class="docutils literal notranslate"><span class="pre">peers</span></code> only needs <strong>itself plus one existing member</strong> (a two-peer raft config only logs a warning — it is the sanctioned bootstrap shape). The cluster’s committed conf replaces the static local list (stored conf wins); the node catches up via snapshot/replication stream.</p></li>
+<li><p>Once caught up, <code class="docutils literal notranslate"><span class="pre">promote-learner</span></code> turns it into a voter that participates in elections and quorum counts.</p></li>
+</ol>
+<p>Notes:</p>
+<ul class="simple">
+<li><p>Changes commit through raft joint consensus, one at a time. If leadership changes mid-reconfiguration the request fails explicitly — re-issue it on the new leader, which keeps driving the joint consensus from its own state.</p></li>
+<li><p>A learner replicates the log but never votes, never counts toward a quorum, and is never elected.</p></li>
+<li><p>The address book is maintained kernel-side (the conf carries only node ids): host/port are registered on <code class="docutils literal notranslate"><span class="pre">add-node</span></code> and cleaned up after a remove.</p></li>
+<li><p>After an online change, consider hand-syncing every node’s <code class="docutils literal notranslate"><span class="pre">mudud.cfg</span></code> <code class="docutils literal notranslate"><span class="pre">peers</span></code> (it only affects first-boot bootstrap; at runtime the committed cluster conf is authoritative).</p></li>
+<li><p>Election timeouts are purely local configuration (never replicated with the conf), so per-node phasing stays deterministic across membership changes.</p></li>
+</ul>
+</section>
+<section id="observability">
+<h2>Observability<a class="headerlink" href="#observability" title="Link to this heading">#</a></h2>
+<p>The read-only endpoint <code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/mudu/server/replication</span></code> reports this node’s replication view (no capability gate; a single-node server answers <code class="docutils literal notranslate"><span class="pre">{&quot;mode&quot;:</span> <span class="pre">&quot;none&quot;}</span></code> instead of 404):</p>
+<ul class="simple">
+<li><p>Common: <code class="docutils literal notranslate"><span class="pre">mode</span></code> (<code class="docutils literal notranslate"><span class="pre">&quot;raft&quot;</span></code> / <code class="docutils literal notranslate"><span class="pre">&quot;stream&quot;</span></code> / <code class="docutils literal notranslate"><span class="pre">&quot;none&quot;</span></code>), <code class="docutils literal notranslate"><span class="pre">node_id</span></code>, <code class="docutils literal notranslate"><span class="pre">role</span></code>, <code class="docutils literal notranslate"><span class="pre">serving</span></code> (whether this node accepts writes).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">raft</span></code> section: <code class="docutils literal notranslate"><span class="pre">term</span></code>, <code class="docutils literal notranslate"><span class="pre">leader_node_id</span></code>, <code class="docutils literal notranslate"><span class="pre">commit_index</span></code>, <code class="docutils literal notranslate"><span class="pre">commit_vec</span></code> (per-worker committed LSN + segment hash), <code class="docutils literal notranslate"><span class="pre">voters</span></code> / <code class="docutils literal notranslate"><span class="pre">learners</span></code>, <code class="docutils literal notranslate"><span class="pre">conf_version_committed</span></code> / <code class="docutils literal notranslate"><span class="pre">conf_version_new</span></code> (unequal while a re-configuration is in progress).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">stream</span></code> section: <code class="docutils literal notranslate"><span class="pre">epoch</span></code>, <code class="docutils literal notranslate"><span class="pre">primary_node_id</span></code>, <code class="docutils literal notranslate"><span class="pre">is_primary</span></code>, <code class="docutils literal notranslate"><span class="pre">sync</span></code>, <code class="docutils literal notranslate"><span class="pre">sync_timeout_ms</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">workers</span></code>: per worker <code class="docutils literal notranslate"><span class="pre">wal_next_lsn</span></code> (produced/applied high water), raft <code class="docutils literal notranslate"><span class="pre">chain_lsn</span></code> + <code class="docutils literal notranslate"><span class="pre">chain_seg_hash</span></code>, <code class="docutils literal notranslate"><span class="pre">staging_max_lsn</span></code>, and the latest snapshot (<code class="docutils literal notranslate"><span class="pre">committed_lsn</span></code> / <code class="docutils literal notranslate"><span class="pre">taken_at_ms</span></code> / directory bytes).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">subscribers</span></code>: every subscriber as the leader/primary sees it — <code class="docutils literal notranslate"><span class="pre">(node_id,</span> <span class="pre">worker_index,</span> <span class="pre">stored_lsn,</span> <span class="pre">source_lsn,</span> <span class="pre">lag_lsn)</span></code>; <code class="docutils literal notranslate"><span class="pre">lag_lsn</span></code> is in LSN (frame) units, the gap between the source’s high water and the subscriber’s durable watermark.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">storage</span></code>: worker WAL / staging / raft_log / snapshot directory sizes in bytes (<strong>periodic cache</strong>: a background thread refreshes them every 10 seconds; the endpoint only reads the cache and never scans the disk on the request path; the first refresh runs at startup).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">counters</span></code>: <code class="docutils literal notranslate"><span class="pre">sync_write_timeouts</span></code>, <code class="docutils literal notranslate"><span class="pre">snapshots_taken</span></code>, <code class="docutils literal notranslate"><span class="pre">wal_chunks_reclaimed</span></code> / <code class="docutils literal notranslate"><span class="pre">staging_chunks_reclaimed</span></code> (prefix-GC reclaimed chunks), <code class="docutils literal notranslate"><span class="pre">snapshot_offers_served</span></code> / <code class="docutils literal notranslate"><span class="pre">snapshot_restores_completed</span></code>.</p></li>
+</ul>
+<p>CLI: <code class="docutils literal notranslate"><span class="pre">mcli</span> <span class="pre">--http-addr</span> <span class="pre">&lt;node&gt;:8300</span> <span class="pre">repl</span> <span class="pre">status</span></code> (JSON; <code class="docutils literal notranslate"><span class="pre">--table</span></code> renders sectioned text). Example (abridged):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mode</span><span class="p">:</span> <span class="n">stream</span>  <span class="n">node_id</span><span class="p">:</span> <span class="mi">1</span>  <span class="n">role</span><span class="p">:</span> <span class="n">primary</span>  <span class="n">serving</span><span class="p">:</span> <span class="n">true</span>
+<span class="n">stream</span><span class="p">:</span> <span class="n">epoch</span><span class="o">=</span><span class="mi">2</span>  <span class="n">primary</span><span class="o">=</span><span class="mi">1</span>  <span class="n">is_primary</span><span class="o">=</span><span class="n">true</span>  <span class="n">sync</span><span class="o">=</span><span class="n">false</span>  <span class="n">sync_timeout_ms</span><span class="o">=</span><span class="mi">10000</span>
+<span class="o">==</span> <span class="n">workers</span> <span class="o">==</span>
+<span class="n">worker</span>  <span class="n">wal_next</span>  <span class="n">chain_lsn</span>  <span class="n">staging</span>  <span class="n">snap_lsn</span>  <span class="n">snap_bytes</span>
+<span class="mi">0</span>       <span class="mi">128</span>       <span class="o">-</span>          <span class="o">-</span>        <span class="mi">64</span>        <span class="mi">4096</span>
+<span class="o">==</span> <span class="n">subscribers</span> <span class="o">==</span>
+<span class="n">node</span>  <span class="n">worker</span>  <span class="n">stored_lsn</span>  <span class="n">source_lsn</span>  <span class="n">lag_lsn</span>
+<span class="mi">2</span>     <span class="mi">0</span>       <span class="mi">100</span>         <span class="mi">127</span>         <span class="mi">27</span>
+<span class="o">==</span> <span class="n">storage</span> <span class="p">(</span><span class="nb">bytes</span><span class="p">)</span> <span class="o">==</span>
+<span class="n">wal</span><span class="p">:</span> <span class="mi">8192</span>  <span class="n">staging</span><span class="p">:</span> <span class="mi">0</span>  <span class="n">raft_log</span><span class="p">:</span> <span class="mi">0</span>  <span class="n">snapshot</span><span class="p">:</span> <span class="mi">4096</span>  <span class="n">refreshed_at_ms</span><span class="p">:</span> <span class="mi">1790039916903</span>
+</pre></div>
+</div>
+<p>Since this version, <code class="docutils literal notranslate"><span class="pre">mcli</span> <span class="pre">server-topology</span></code> also returns the <code class="docutils literal notranslate"><span class="pre">replication</span></code> field (role/leader/commit_vec) instead of dropping it.</p>
+</section>
+<section id="failover">
+<h2>Failover<a class="headerlink" href="#failover" title="Link to this heading">#</a></h2>
+<p><strong>Stream mode (manual, tooled through mcli)</strong>:</p>
+<ol class="arabic">
+<li><p><strong>Fence the old primary (operator responsibility).</strong> Preventing split brain (old and new primary both accepting writes) is the operator’s first duty — make sure the old primary is down or isolated.</p></li>
+<li><p>Promote the new primary (on the chosen replica):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mcli<span class="w"> </span>--http-addr<span class="w"> </span>&lt;replica&gt;:8300<span class="w"> </span>repl<span class="w"> </span>promote<span class="w"> </span>--fencing-cmd<span class="w"> </span>./fence-old.sh
+<span class="c1"># or, without a hook script, confirm explicitly that the old primary is fenced:</span>
+mcli<span class="w"> </span>--http-addr<span class="w"> </span>&lt;replica&gt;:8300<span class="w"> </span>repl<span class="w"> </span>promote<span class="w"> </span>--yes
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">--fencing-cmd</span></code> runs locally and aborts the promote when it fails; the server also refuses a promote without fencing confirmation (HTTP 400). The promotion persists the new epoch first (<code class="docutils literal notranslate"><span class="pre">max(persisted,</span> <span class="pre">known)</span> <span class="pre">+</span> <span class="pre">1</span></code>), then opens the write gate and records <code class="docutils literal notranslate"><span class="pre">stream_role</span></code>.</p>
+</li>
+<li><p>Point the remaining replicas at the new primary (no restart needed; their sinks reconnect automatically):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mcli<span class="w"> </span>--http-addr<span class="w"> </span>&lt;replica&gt;:8300<span class="w"> </span>repl<span class="w"> </span>follow<span class="w"> </span>--primary<span class="w"> </span>&lt;new-primary-host:repl_port&gt;<span class="w"> </span>--primary-node-id<span class="w"> </span>&lt;N&gt;
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">follow</span></code> probes the target and verifies its node id (guards against pointing at the wrong node), then the replica’s stream reconnects and catches up; the overlap is truncated by CRC64 byte-compare.</p>
+</li>
+</ol>
+<p><strong>Epoch as the data-plane backstop</strong>: even if the old (zombie) primary comes back still believing it is primary, its epoch is lower — replicas verify the epoch of the acceptance frame and of every batch and reject anything below what they already know; a <code class="docutils literal notranslate"><span class="pre">follow</span></code> pointing at the zombie is refused with “stale primary”. Transaction ids are encoded as <code class="docutils literal notranslate"><span class="pre">xid</span> <span class="pre">=</span> <span class="pre">(epoch</span> <span class="pre">&lt;&lt;</span> <span class="pre">32)</span> <span class="pre">|</span> <span class="pre">counter</span></code>, monotonic across primaries (same scheme as the raft term). Fencing stays an operator duty: the epoch backstop keeps zombie output out of the new cluster, but writes the zombie accepted locally during the partition are not automatically undone.</p>
+<p><strong>Stored wins</strong>: <code class="docutils literal notranslate"><span class="pre">&lt;db_path&gt;/stream_role</span></code> (role/epoch/primary address) takes precedence over the <code class="docutils literal notranslate"><span class="pre">primary</span></code> key of <code class="docutils literal notranslate"><span class="pre">mudud.cfg</span></code> on restart (same philosophy as the raft stored conf) — a promoted or re-pointed node keeps its new role across restarts instead of falling back to the static config. To force a node back to its configured role, delete <code class="docutils literal notranslate"><span class="pre">stream_role</span></code> and restart it.</p>
+<p><strong>Raft mode (automatic)</strong>: no intervention needed. A new leader is elected within the election timeout and serves after self-healing. When the old leader recovers it rejoins as a follower, truncates its uncommitted divergent tail against the CommitVec, and catches up.</p>
+</section>
+<section id="current-limitations">
+<h2>Current limitations<a class="headerlink" href="#current-limitations" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Only <code class="docutils literal notranslate"><span class="pre">server_mode</span> <span class="pre">=</span> <span class="pre">&quot;Tokio&quot;</span></code> supports replication; enabling it under Legacy / IOUring is a startup error.</p></li>
+<li><p>Stream mode has no online membership changes (raft mode supports them, see above); membership changes do not rewrite the nodes’ local <code class="docutils literal notranslate"><span class="pre">mudud.cfg</span></code> (hand-sync recommended).</p></li>
+<li><p>Snapshot files are read fully into memory when produced and transferred (mind snapshot duration and memory on large datasets); concurrent reads on a replica while it restores are best-effort.</p></li>
+<li><p>relation_wal prefix GC is not done yet (replay is idempotent; the files keep growing over time).</p></li>
+<li><p>Stream mode accepts more than one replica (peers &gt; 2), but write fan-out to multiple replicas is outside the verified envelope.</p></li>
+</ul>
+<p>Filesystem content is stored outside WAL. The current worker snapshot copies relation <code class="docutils literal notranslate"><span class="pre">.dat</span></code> files and KV state, not the <code class="docutils literal notranslate"><span class="pre">fs/</span></code> generation files; logical dumps contain schema and table CSV rather than object-content files. These mechanisms alone therefore do not provide complete replication or recovery of filesystem object content. Preserve and validate that content separately when using FS columns.</p>
+<p>The table assumes the required durable copies survive. In synchronous stream mode, acknowledgement from one replica does not prove every replica is current; choose a caught-up replica when promoting. With <code class="docutils literal notranslate"><span class="pre">wal_sync_mode</span> <span class="pre">=</span> <span class="pre">&quot;periodic&quot;</span></code>, local acknowledgement alone is not a power-loss durability guarantee.</p>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="configuration.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Configuration Reference</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="packages.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Application Packages</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deployment-shapes">Deployment shapes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-it-works">How it works</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#configuration">Configuration</a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#primary-replica-streaming-two-node-example">Primary-replica streaming (two-node example)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#raft-fault-tolerance-three-node-example">Raft fault tolerance (three-node example)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#validation-rules">Validation rules</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#snapshots-and-wal-gc">Snapshots and WAL GC</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#online-membership-changes-raft-mode">Online membership changes (raft mode)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#observability">Observability</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#failover">Failover</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#current-limitations">Current limitations</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By MuduDB contributors
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026, MuduDB contributors.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

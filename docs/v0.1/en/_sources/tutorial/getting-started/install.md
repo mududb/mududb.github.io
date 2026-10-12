@@ -1,49 +1,47 @@
 # Installation
 
-## Install with mudup
+Build from the MuduDB source checkout. `mudup` is a design proposal, not an available installation path in this repository.
+
+## Source build
+
+The following commands target Ubuntu/Debian. Install Rust with rustup first, then run the repository commands from the MuduDB checkout root. The root is not a Cargo workspace; `cargo make` orchestrates the independent workspaces.
 
 ```bash
-curl --proto '=https' --tlsv1.2 -fsSL https://github.com/scuptio/mudup/releases/download/latest/mudup-init.sh | sh
-mudup install
+sudo apt-get update
+sudo apt-get install -y git python3 python3-pip python3-venv build-essential curl liburing-dev clang libclang-dev llvm-dev pkg-config
+# Run these in the MuduDB source checkout:
+rustup show
+rustup target add wasm32-wasip2
+cargo install cargo-make --locked
+python3 -m venv .venv/build
+.venv/build/bin/python -m pip install toml tomli-w
+.venv/build/bin/python script/build/install_binaries.py --profile release
 ```
 
-Verify the installed tools:
+`rust-toolchain.toml` currently pins Rust `1.99.0`; `rustup show` selects the checkout's pinned toolchain. The install script installs `mudud`, `mcli`, `mgen`, `mtp`, `mpm`, `mpm-build`, `mpm-crate`, and `mpm-install` into Cargo's binary directory. Ensure that directory is on `PATH`.
+
+For the full repository build, including the Rust Wallet package, activate the Python environment and run `cargo make`. Additional guest languages have their own toolchains; see [SDKs and Execution Modes](../../programming/sdk.md).
 
 ```bash
 mudud --version
 mcli --version
-mpk --version
+mpm --help
+mpm-build --version
+mpm-crate --version
+mpm-install --version
 mgen --version
 mtp --version
 ```
 
-## Build from Source
+## Initial configuration
 
-Ubuntu or Debian is recommended for development builds.
-
-```bash
-sudo apt-get update -y
-sudo apt-get install -y python3 python3-pip python-is-python3 build-essential curl liburing-dev clang libclang-dev llvm-dev pkgconf
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-rustup toolchain install nightly
-rustup default nightly
-rustup target add wasm32-wasip2
-python -m pip install toml tomli-w
-cargo install cargo-make
-```
-
-Install workspace binaries from the source repository:
+In a new run directory:
 
 ```bash
-python script/build/install_binaries.py
+mkdir -p mudud-run
+cd mudud-run
+mudud init-cfg
+mudud serve --cfg ./mudud.cfg
 ```
 
-## Configuration File
-
-The default configuration path is:
-
-```text
-${HOME}/.mududb/mududb_cfg.toml
-```
-
-If the file does not exist, `mudud` creates a default file on first startup.
+`init-cfg` overwrites `./mudud.cfg`, so run it before editing your configuration. It selects `Tokio` by default, with `./data` and `./mpk` paths. An explicit `--cfg` / `-c` path is exclusive: a missing file is an error. Without that option the server searches `./mudud.cfg`, then `~/.mududb/mudud.cfg`. The server does not generate a missing configuration automatically.

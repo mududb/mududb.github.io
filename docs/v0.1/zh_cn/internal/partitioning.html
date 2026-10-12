@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>分区与工作线程映射 &#8212; MuduDB v0.1</title>
+    <title>分区 &#8212; MuduDB v0.1</title>
   
   
   
@@ -55,7 +55,7 @@
     <link rel="icon" href="../_static/favicon.svg"/>
     <link rel="index" title="索引" href="../genindex.html" />
     <link rel="search" title="搜索" href="../search.html" />
-    <link rel="next" title="每核心工作线程模型" href="per_core_worker.html" />
+    <link rel="next" title="每核 Worker 模型" href="per_core_worker.html" />
     <link rel="prev" title="WebAssembly 集成" href="wasm.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="zh-cn"/>
@@ -475,21 +475,29 @@
 <li class="toctree-l2"><a class="reference internal" href="../administration/client.html">客户端</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../administration/server.html">服务端管理</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../administration/configuration.html">配置参考</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../administration/replication.html">复制与 Raft 容错</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../administration/packages.html">应用包</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../administration/toolchain.html">工具链</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../administration/backup.html">备份与恢复</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../programming/index.html">编程</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../programming/mudu_procedure.html">Mudu 过程</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../programming/sdk.html">SDK 与执行模式</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../programming/filesystem.html">文件系统对象类型</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../programming/churcuring.html">Churcuring 与 CQL</a></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../programming/syscalls.html">系统调用</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/open.html">open</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/close.html">close</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/read.html">read</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/write.html">write</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/range-scan.html">range-scan</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/batch.html">batch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/query.html">query</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/command.html">command</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/batch.html">batch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/get.html">get</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/put.html">put</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/delete.html">delete</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/range.html">range</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/fs.html">fs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/relation.html">Relation 系统调用</a></li>
 </ul>
 </details></li>
 </ul>
@@ -498,9 +506,11 @@
 <li class="toctree-l2"><a class="reference internal" href="kernel.html">内核</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapter.html">适配器</a></li>
 <li class="toctree-l2"><a class="reference internal" href="procedure-runtime.html">过程运行时</a></li>
+<li class="toctree-l2"><a class="reference internal" href="suspendable-execution.html">可挂起的过程执行</a></li>
 <li class="toctree-l2"><a class="reference internal" href="wasm.html">WebAssembly 集成</a></li>
-<li class="toctree-l2 current active"><a class="current reference internal" href="#">分区与工作线程映射</a></li>
-<li class="toctree-l2"><a class="reference internal" href="per_core_worker.html">每核心工作线程模型</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">分区</a></li>
+<li class="toctree-l2"><a class="reference internal" href="per_core_worker.html">每核 Worker 模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="replication.html">复制架构</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../reference/index.html">参考资料</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -569,7 +579,7 @@
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>分区与工作线程映射</h1>
+    <h1>分区</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -579,20 +589,8 @@
             </div>
             <nav aria-label="Page">
                 <ul class="pst-show_toc_level nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">概览</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">设计原理</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">术语</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">模型与语法</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">路由工作原理</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">拓扑发现</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">后端映射与缓存</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">分片端口与工作线程连接</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">获取拓扑并直接连接</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">使用示例</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id12">故障模式与回退</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id13">运维关注</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id14">性能与调优</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id15">故障排除</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">规则与表</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#placement">Placement 与路由</a></li>
 </ul>
             </nav>
         </div>
@@ -605,139 +603,37 @@
                 <article class="bd-article">
                   
   <section id="id1">
-<h1>分区与工作线程映射<a class="headerlink" href="#id1" title="Link to this heading">#</a></h1>
+<h1>分区<a class="headerlink" href="#id1" title="Link to this heading">#</a></h1>
+<p>MuduDB 实现全局 RANGE 分区规则、表绑定和显式的分区到 worker placement。表的分区列必须构成主键前缀。边界为按字典序比较的键元组，区间左闭右开。多张表可以共享规则以实现同分区访问。</p>
 <section id="id2">
-<h2>概览<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
-<p>分区将应用程序数据和流量划分为逻辑分区（partition_oid），并映射到后端工作线程（worker_oid）。目标是利用局部性：将相关的数据和操作保持在同一工作线程上，以减少跨工作线程通信、降低延迟并提高缓存局部性。</p>
-</section>
-<section id="id3">
-<h2>设计原理<a class="headerlink" href="#id3" title="Link to this heading">#</a></h2>
-<ul class="simple">
-<li><p>局部性：将相关的键/记录放置在一起，以减少远程调用和状态同步。</p></li>
-<li><p>负载隔离：分区将热点限制在特定工作线程，并通过移动分区简化负载均衡。</p></li>
-<li><p>可预测路由：客户端可以将请求路由到分区所有者，避免不必要的网关跳转。</p></li>
-</ul>
-</section>
-<section id="id4">
-<h2>术语<a class="headerlink" href="#id4" title="Link to this heading">#</a></h2>
-<ul class="simple">
-<li><p>partition_oid: 分区的逻辑标识符。</p></li>
-<li><p>worker_oid: 托管分区的后端工作线程进程标识符。</p></li>
-<li><p>sharding port: 工作线程接受特定分片/分区连接的 TCP 端口。</p></li>
-<li><p>topology: 管理 HTTP API 数据，将 partition_oid 映射到 worker_oid，并提供工作线程地址。</p></li>
-</ul>
-</section>
-<section id="id5">
-<h2>模型与语法<a class="headerlink" href="#id5" title="Link to this heading">#</a></h2>
-<ul class="simple">
-<li><p>分区标识符是拓扑映射中使用的Opaque整数。</p></li>
-<li><p>连接字符串可以嵌入应用层提示；拓扑通过 <code class="docutils literal notranslate"><span class="pre">MUDU_CONNECTION</span></code> 中的 <code class="docutils literal notranslate"><span class="pre">http_addr</span></code> 发现。</p></li>
-</ul>
-<p>示例连接：<code class="docutils literal notranslate"><span class="pre">mudud://127.0.0.1:9527/ycsb?http_addr=127.0.0.1:8300</span></code></p>
-<p>客户端获取拓扑并解析 partition_oid -&gt; worker_oid，然后打开针对 worker OID 的会话。</p>
-</section>
-<section id="id6">
-<h2>路由工作原理<a class="headerlink" href="#id6" title="Link to this heading">#</a></h2>
-<ol class="arabic simple">
-<li><p>客户端从管理 HTTP API（http_addr）获取拓扑。</p></li>
-<li><p>客户端为每个操作计算或获取 partition_oid（例如，通过对键进行哈希或使用应用语义）。</p></li>
-<li><p>客户端在拓扑缓存中查找 partition_oid -&gt; worker_oid 的映射。</p></li>
-<li><p>客户端连接到工作线程的分片端口（或带工作线程路由的标准端口），并为该 worker_oid 打开会话（会话打开在配置握手中包含 worker_id）。</p></li>
-<li><p>路由到工作线程的请求在工作线程本地执行或由工作线程高效代理。</p></li>
-</ol>
-</section>
-<section id="id7">
-<h2>拓扑发现<a class="headerlink" href="#id7" title="Link to this heading">#</a></h2>
-<ul class="simple">
-<li><p>使用 HTTP 管理 API <code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/management/topology</span></code> 或 <code class="docutils literal notranslate"><span class="pre">mcli</span> <span class="pre">--http-addr</span> <span class="pre">&lt;addr&gt;</span> <span class="pre">server-topology</span></code> 获取实时拓扑。</p></li>
-<li><p>拓扑 JSON 包含以下字段：</p>
-<ul>
-<li><p><code class="docutils literal notranslate"><span class="pre">worker_count</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">tcp_multi_port</span></code> (bool)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">tcp_base_listen_port</span></code> (int)</p></li>
-<li><p>每个工作线程的 <code class="docutils literal notranslate"><span class="pre">worker_index</span></code>、<code class="docutils literal notranslate"><span class="pre">worker_id</span></code>、<code class="docutils literal notranslate"><span class="pre">tcp_listen_port</span></code> 和 <code class="docutils literal notranslate"><span class="pre">partition_ids</span></code> 列表。</p></li>
-</ul>
-</li>
-<li><p>要将分区键解析到工作线程：</p>
-<ol class="arabic simple">
-<li><p>调用 <code class="docutils literal notranslate"><span class="pre">partition-route</span></code>，传入规则名称和键元组以获取 <code class="docutils literal notranslate"><span class="pre">partition_id</span></code> 和 <code class="docutils literal notranslate"><span class="pre">worker_id</span></code>。</p></li>
-<li><p>从 <code class="docutils literal notranslate"><span class="pre">server-topology</span></code> 结果中查找工作线程的 <code class="docutils literal notranslate"><span class="pre">tcp_listen_port</span></code>。</p></li>
-<li><p>连接到 <code class="docutils literal notranslate"><span class="pre">listen_ip:tcp_listen_port</span></code> 并打开包含 <code class="docutils literal notranslate"><span class="pre">worker_id</span></code> 的会话配置。</p></li>
-</ol>
-</li>
-</ul>
-<p>示例：</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mcli<span class="w"> </span>--http-addr<span class="w"> </span><span class="m">127</span>.0.0.1:8300<span class="w"> </span>partition-route<span class="w"> </span>--rule-name<span class="w"> </span>r_orders<span class="w"> </span>--key<span class="w"> </span><span class="m">1001</span>,50001
-mcli<span class="w"> </span>--http-addr<span class="w"> </span><span class="m">127</span>.0.0.1:8300<span class="w"> </span>server-topology
+<h2>规则与表<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="n">PARTITION</span><span class="w"> </span><span class="k">RULE</span><span class="w"> </span><span class="n">r_orders</span>
+<span class="n">RANGE</span><span class="w"> </span><span class="p">(</span><span class="n">region_id</span><span class="p">,</span><span class="w"> </span><span class="n">order_id</span><span class="p">)</span><span class="w"> </span><span class="p">(</span>
+<span class="w">  </span><span class="n">PARTITION</span><span class="w"> </span><span class="n">p0</span><span class="w"> </span><span class="k">VALUES</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="p">(</span><span class="k">MINVALUE</span><span class="p">,</span><span class="w"> </span><span class="k">MINVALUE</span><span class="p">)</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span><span class="w"> </span><span class="k">MINVALUE</span><span class="p">),</span>
+<span class="w">  </span><span class="n">PARTITION</span><span class="w"> </span><span class="n">p1</span><span class="w"> </span><span class="k">VALUES</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span><span class="w"> </span><span class="k">MINVALUE</span><span class="p">)</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="p">(</span><span class="k">MAXVALUE</span><span class="p">,</span><span class="w"> </span><span class="k">MAXVALUE</span><span class="p">)</span>
+<span class="p">);</span>
+
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">orders</span><span class="w"> </span><span class="p">(</span>
+<span class="w">  </span><span class="n">region_id</span><span class="w"> </span><span class="nb">BIGINT</span><span class="p">,</span>
+<span class="w">  </span><span class="n">order_id</span><span class="w"> </span><span class="nb">BIGINT</span><span class="p">,</span>
+<span class="w">  </span><span class="n">amount</span><span class="w"> </span><span class="nb">BIGINT</span><span class="p">,</span>
+<span class="w">  </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">(</span><span class="n">region_id</span><span class="p">,</span><span class="w"> </span><span class="n">order_id</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">PARTITION</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="k">GLOBAL</span><span class="w"> </span><span class="k">RULE</span><span class="w"> </span><span class="n">r_orders</span>
+<span class="k">REFERENCES</span><span class="w"> </span><span class="p">(</span><span class="n">region_id</span><span class="p">,</span><span class="w"> </span><span class="n">order_id</span><span class="p">);</span>
 </pre></div>
 </div>
 </section>
-<section id="id8">
-<h2>后端映射与缓存<a class="headerlink" href="#id8" title="Link to this heading">#</a></h2>
-<ul class="simple">
-<li><p>拓扑在管理 HTTP 端点上是权威的。客户端应在本地缓存映射，并定期或在出错时刷新。</p></li>
-<li><p>缓存失效：当 RPC 错误指示 “NoSuchPartition” 或类似情况时，客户端应使相关条目失效并重新获取拓扑。</p></li>
-<li><p>更新策略：定期的短间隔刷新（秒级）加上出错时的事件驱动刷新。</p></li>
-</ul>
-</section>
-<section id="id9">
-<h2>分片端口与工作线程连接<a class="headerlink" href="#id9" title="Link to this heading">#</a></h2>
-<ul class="simple">
-<li><p>工作线程可能暴露绑定到给定分区范围的分片端口，或接受带有 worker_id 握手的连接。</p></li>
-<li><p>如果支持，客户端可以直接连接到工作线程的分片端口以到达该工作线程拥有的分区。</p></li>
-<li><p>如果启用了每个工作线程多端口（tcp_multi_port），服务器会打开每个工作线程的监听器以减少 accept 争用并提供直接路由。</p></li>
-</ul>
-</section>
-<section id="id10">
-<h2>获取拓扑并直接连接<a class="headerlink" href="#id10" title="Link to this heading">#</a></h2>
-<ul class="simple">
-<li><p>管理 HTTP API（http_addr）提供 JSON 拓扑映射。示例流程：</p>
-<ul>
-<li><p>GET /management/topology -&gt; 返回工作线程和分区分配列表。</p></li>
-<li><p>提取目标 worker_oid 的工作线程网络地址和分片端口。</p></li>
-<li><p>连接到工作线程地址并打开包含 worker_id 的 session_open_config_json 的会话。</p></li>
-</ul>
-</li>
-</ul>
-</section>
-<section id="id11">
-<h2>使用示例<a class="headerlink" href="#id11" title="Link to this heading">#</a></h2>
-<ul class="simple">
-<li><p>基于哈希的分区（客户端侧）：计算 partition_oid = hash(key) % partition_count，然后路由到 topology[partition_oid]。</p></li>
-<li><p>应用分配的分区：应用根据业务逻辑分配 partition_oid（player_id → partition_oid）。</p></li>
-</ul>
-</section>
-<section id="id12">
-<h2>故障模式与回退<a class="headerlink" href="#id12" title="Link to this heading">#</a></h2>
-<ul class="simple">
-<li><p>过期映射：在连接/拒绝时，刷新拓扑并使用更新后的映射重试。</p></li>
-<li><p>工作线程故障转移：如果工作线程宕机，拓扑将重新分配分区 —— 客户端必须重新解析并重新连接。</p></li>
-<li><p>保守回退：如果拓扑不可用，客户端可以通过管理/网关工作线程路由请求，该工作线程代理请求，接受更高的延迟。</p></li>
-</ul>
-</section>
-<section id="id13">
-<h2>运维关注<a class="headerlink" href="#id13" title="Link to this heading">#</a></h2>
-<ul class="simple">
-<li><p>重新分片：在工作线程之间移动分区需要更新拓扑并排空连接。客户端必须处理重新分片期间的瞬态故障。</p></li>
-<li><p>监控：暴露分区到工作线程的映射和每个分区的指标，以检测热分区。</p></li>
-</ul>
-</section>
-<section id="id14">
-<h2>性能与调优<a class="headerlink" href="#id14" title="Link to this heading">#</a></h2>
-<ul class="simple">
-<li><p>分区粒度：较小的分区增加路由分辨率，但增加元数据开销。</p></li>
-<li><p>连接复用：为每个 worker_oid 保持持久会话，以摊销会话打开成本。</p></li>
-<li><p>async_session_loop：在高并发场景下使用适配器异步循环，以避免在会话管理上阻塞。</p></li>
-</ul>
-</section>
-<section id="id15">
-<h2>故障排除<a class="headerlink" href="#id15" title="Link to this heading">#</a></h2>
-<ul class="simple">
-<li><p>常见错误：NoSuchPartition、ConnectionRefused、NotAuthorized。</p></li>
-<li><p>诊断：获取拓扑、验证分区分配、确认工作线程网络可达性、检查分片端口可用性。</p></li>
-</ul>
-<hr class="docutils" />
-<p>分区文档结束（EN）。</p>
+<section id="placement">
+<h2>Placement 与路由<a class="headerlink" href="#placement" title="Link to this heading">#</a></h2>
+<p>通过 <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">PARTITION</span> <span class="pre">PLACEMENT</span> <span class="pre">FOR</span> <span class="pre">RULE</span> <span class="pre">r_orders</span> <span class="pre">(PARTITION</span> <span class="pre">p0</span> <span class="pre">ON</span> <span class="pre">WORKER</span> <span class="pre">&lt;worker_id&gt;,</span> <span class="pre">PARTITION</span> <span class="pre">p1</span> <span class="pre">ON</span> <span class="pre">WORKER</span> <span class="pre">&lt;worker_id&gt;);</span></code> 分配各分区。请使用 topology 返回的实际数值 worker OID 替换占位符，worker ID 不是简单的数组下标。管理类 DDL 应通过具有管理能力的会话执行。</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mcli<span class="w"> </span>--http-addr<span class="w"> </span><span class="m">127</span>.0.0.1:8300<span class="w"> </span>server-topology
+mcli<span class="w"> </span>--http-addr<span class="w"> </span><span class="m">127</span>.0.0.1:8300<span class="w"> </span>partition-route<span class="w"> </span>--rule-name<span class="w"> </span>r_orders<span class="w"> </span>--key<span class="w"> </span><span class="m">1001</span>,50001
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">PartitionRouter</span></code> 解析表绑定，将键与范围边界比较，再由 placement 元数据确定 worker。范围请求可能覆盖多个分区。适配器可以利用 topology 直连 worker 并建立绑定会话。</p>
+<p>对键取哈希再模 worker 数量不能替代已配置的 RANGE 规则。topology 反映当前 placement，不代表自动重新分配 worker 或在线重分片。跨 worker 写入可被转发，但分布式两阶段原子提交尚未实现。</p>
+<p>实现依据：<code class="docutils literal notranslate"><span class="pre">crates/common/sql_parser/src/ast/stmt_create_partition_rule.rs</span></code>、<code class="docutils literal notranslate"><span class="pre">stmt_create_partition_placement.rs</span></code> 和 <code class="docutils literal notranslate"><span class="pre">crates/db-kernel/xengine/src/partition_router.rs</span></code>。</p>
 </section>
 </section>
 
@@ -766,7 +662,7 @@ mcli<span class="w"> </span>--http-addr<span class="w"> </span><span class="m">1
        title="下一页">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">下一页</p>
-        <p class="prev-next-title">每核心工作线程模型</p>
+        <p class="prev-next-title">每核 Worker 模型</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -788,20 +684,8 @@ mcli<span class="w"> </span>--http-addr<span class="w"> </span><span class="m">1
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">概览</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">设计原理</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">术语</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">模型与语法</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">路由工作原理</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">拓扑发现</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">后端映射与缓存</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">分片端口与工作线程连接</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">获取拓扑并直接连接</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">使用示例</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id12">故障模式与回退</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id13">运维关注</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id14">性能与调优</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id15">故障排除</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">规则与表</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#placement">Placement 与路由</a></li>
 </ul>
   </nav></div>
 

@@ -55,7 +55,7 @@
     <link rel="icon" href="../_static/favicon.svg"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="WebAssembly Integration" href="wasm.html" />
+    <link rel="next" title="Suspendable Procedure Execution" href="suspendable-execution.html" />
     <link rel="prev" title="Adapters" href="adapter.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -475,21 +475,29 @@
 <li class="toctree-l2"><a class="reference internal" href="../administration/client.html">Client</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../administration/server.html">Server Management</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../administration/configuration.html">Configuration Reference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../administration/replication.html">Replication and Raft Fault Tolerance</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../administration/packages.html">Application Packages</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../administration/toolchain.html">Toolchain</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../administration/backup.html">Backup and Restore</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../programming/index.html">Programming</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../programming/mudu_procedure.html">Mudu Procedure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../programming/sdk.html">SDKs and Execution Modes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../programming/filesystem.html">Filesystem Object Types</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../programming/churcuring.html">Churcuring and CQL</a></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../programming/syscalls.html">Syscalls</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/open.html">open</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/close.html">close</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/read.html">read</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/write.html">write</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/range-scan.html">range-scan</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/batch.html">batch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/query.html">query</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/command.html">command</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/batch.html">batch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/get.html">get</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/put.html">put</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/delete.html">delete</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/range.html">range</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/fs.html">fs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/relation.html">Relation Syscalls</a></li>
 </ul>
 </details></li>
 </ul>
@@ -498,9 +506,11 @@
 <li class="toctree-l2"><a class="reference internal" href="kernel.html">Kernel</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapter.html">Adapters</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">Procedure Runtime</a></li>
+<li class="toctree-l2"><a class="reference internal" href="suspendable-execution.html">Suspendable Procedure Execution</a></li>
 <li class="toctree-l2"><a class="reference internal" href="wasm.html">WebAssembly Integration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="partitioning.html">Partitioning and Worker Mapping</a></li>
+<li class="toctree-l2"><a class="reference internal" href="partitioning.html">Partitioning</a></li>
 <li class="toctree-l2"><a class="reference internal" href="per_core_worker.html">Per-core Worker Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="replication.html">Replication Architecture</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../reference/index.html">Reference</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -640,6 +650,7 @@
 <li><p>data-local execution that avoids repeated client-server round trips.</p></li>
 </ul>
 <p>See <a class="reference internal" href="../programming/mudu_procedure.html"><span class="std std-doc">Mudu Procedure</span></a> for the programming model, <a class="reference internal" href="../programming/syscalls.html"><span class="std std-doc">System Call Reference</span></a> for the syscall API, and <a class="reference internal" href="wasm.html"><span class="std std-doc">WebAssembly Integration</span></a> for the component runtime details.</p>
+<p>See <a class="reference internal" href="suspendable-execution.html"><span class="std std-doc">Suspendable Procedure Execution</span></a> for fresh Store creation, bounded synchronous execution and cancellation/commit boundaries. The interface also includes <a class="reference internal" href="../programming/syscalls/fs.html"><span class="std std-doc">filesystem</span></a> and <a class="reference internal" href="../programming/syscalls/relation.html"><span class="std std-doc">relation</span></a> operations; low-level WIT signatures differ from the workspace Rust facade.</p>
 </section>
 </section>
 
@@ -664,11 +675,11 @@
       </div>
     </a>
     <a class="right-next"
-       href="wasm.html"
+       href="suspendable-execution.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">WebAssembly Integration</p>
+        <p class="prev-next-title">Suspendable Procedure Execution</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

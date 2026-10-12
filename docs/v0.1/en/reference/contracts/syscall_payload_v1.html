@@ -475,21 +475,29 @@
 <li class="toctree-l2"><a class="reference internal" href="../../administration/client.html">Client</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../administration/server.html">Server Management</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../administration/configuration.html">Configuration Reference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../administration/replication.html">Replication and Raft Fault Tolerance</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../administration/packages.html">Application Packages</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../administration/toolchain.html">Toolchain</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../administration/backup.html">Backup and Restore</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../programming/index.html">Programming</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../programming/mudu_procedure.html">Mudu Procedure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../programming/sdk.html">SDKs and Execution Modes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../programming/filesystem.html">Filesystem Object Types</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../programming/churcuring.html">Churcuring and CQL</a></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../programming/syscalls.html">Syscalls</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/open.html">open</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/close.html">close</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/read.html">read</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/write.html">write</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/range-scan.html">range-scan</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/batch.html">batch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/query.html">query</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/command.html">command</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/batch.html">batch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/get.html">get</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/put.html">put</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/delete.html">delete</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/range.html">range</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/fs.html">fs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/relation.html">Relation Syscalls</a></li>
 </ul>
 </details></li>
 </ul>
@@ -498,9 +506,11 @@
 <li class="toctree-l2"><a class="reference internal" href="../../internal/kernel.html">Kernel</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../internal/adapter.html">Adapters</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../internal/procedure-runtime.html">Procedure Runtime</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../internal/suspendable-execution.html">Suspendable Procedure Execution</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../internal/wasm.html">WebAssembly Integration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../internal/partitioning.html">Partitioning and Worker Mapping</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../internal/partitioning.html">Partitioning</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../internal/per_core_worker.html">Per-core Worker Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../internal/replication.html">Replication Architecture</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../index.html">Reference</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
@@ -584,6 +594,7 @@
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#version-history">Version history</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#payload-layout">Payload layout</a><ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#header">Header</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#current-syscall-kinds">Current syscall kinds</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#body-encoding">Body encoding</a><ul class="pst-show_toc_level nav section-nav flex-column">
@@ -594,7 +605,7 @@
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#composite-type-layouts">Composite type layouts</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#relationship-to-the-current-session-codec">Relationship to the current session codec</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#relationship-to-the-legacy-session-codec">Relationship to the legacy session codec</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#integrity-mechanisms">Integrity mechanisms</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#compatibility-matrix">Compatibility matrix</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#upgrade-and-rollback-rules">Upgrade and rollback rules</a></li>
@@ -622,8 +633,8 @@ message body with <strong>MessagePack</strong>. The MessagePack layout is <stron
 it is derived from the canonical WIT definitions in
 <code class="docutils literal notranslate"><span class="pre">mudu_binding/wit/</span></code> and generated by <code class="docutils literal notranslate"><span class="pre">mgen</span></code> into
 custom <code class="docutils literal notranslate"><span class="pre">serde</span></code> implementations for Rust and custom MessagePack formatters for C#.
-The implementation uses <code class="docutils literal notranslate"><span class="pre">rmp_serde</span></code> (or an equivalent MessagePack library on the
-C#/AssemblyScript side) only as the low-level encoder/decoder; it does <strong>not</strong>
+The implementation uses <code class="docutils literal notranslate"><span class="pre">rmp_serde</span></code> (or an equivalent MessagePack runtime on the
+C#/AssemblyScript/Python side) only as the low-level encoder/decoder; it does <strong>not</strong>
 use the default <code class="docutils literal notranslate"><span class="pre">rmp_serde</span></code> derive behavior, which would serialize Rust enum
 variants as maps or strings and would not be stable across guest languages.</p>
 <p>The canonical syscall boundary is the WIT function interface declared in
@@ -633,6 +644,12 @@ those WIT function calls; guest code should call the WIT functions directly and
 let the generated bindings handle the wire format.</p>
 <p>The logical data model is the existing <code class="docutils literal notranslate"><span class="pre">mudu_binding::universal</span></code> type family;
 this contract defines the <strong>wire encoding</strong> of those types.</p>
+<p><strong>Status: implemented and stable.</strong> All 23 message kinds are encoded and
+decoded by the host router in
+<code class="docutils literal notranslate"><span class="pre">mudu_binding/src/codec/syscall_payload/</span></code>
+and dispatched in <code class="docutils literal notranslate"><span class="pre">runtime_wasm</span></code> (<code class="docutils literal notranslate"><span class="pre">kernel_sync</span></code> / <code class="docutils literal notranslate"><span class="pre">kernel_async</span></code>). Guest-side
+implementations exist for workspace Rust guests, the standalone Rust SDK, the
+C# SDK, AssemblyScript, and Python.</p>
 <p>The obsolete <code class="docutils literal notranslate"><span class="pre">UniDatTypeId</span></code> / <code class="docutils literal notranslate"><span class="pre">UniMuTypeFamily</span></code> enumerations are not part of
 this contract and have been removed from the binding layer. When a type-family
 value needs to cross the boundary, it is carried inside <code class="docutils literal notranslate"><span class="pre">UniDataType</span></code> /
@@ -669,6 +686,16 @@ value needs to cross the boundary, it is carried inside <code class="docutils li
 with <code class="docutils literal notranslate"><span class="pre">ErrorCode::UnsupportedFormatVersion</span></code>. When the format version changes, MPK
 packages are rebuilt for the matching runtime; the runtime does <strong>not</strong> retain
 legacy decoders.</p>
+<p>The same version is pinned into every MPK package: <code class="docutils literal notranslate"><span class="pre">package.manifest.json</span></code>
+carries a <code class="docutils literal notranslate"><span class="pre">syscall_abi_version:</span> <span class="pre">u32</span></code> field. The package writer (<code class="docutils literal notranslate"><span class="pre">mpm_build</span></code>)
+always emits <code class="docutils literal notranslate"><span class="pre">SYSCALL_PAYLOAD_CURRENT_VERSION</span></code> (<code class="docutils literal notranslate"><span class="pre">1</span></code>); the loader in
+<code class="docutils literal notranslate"><span class="pre">runtime_wasm/src/service/app_package.rs</span></code>
+defaults a missing field to <code class="docutils literal notranslate"><span class="pre">1</span></code> and rejects any mismatch with
+<code class="docutils literal notranslate"><span class="pre">ErrorCode::UnsupportedFormatVersion</span></code>. <code class="docutils literal notranslate"><span class="pre">FormatKind::SyscallPayload</span></code> is
+registered in the global <code class="docutils literal notranslate"><span class="pre">CompatibilityRouter</span></code> (<code class="docutils literal notranslate"><span class="pre">mudu_kernel/src/compat.rs</span></code>)
+with an identity v1 migration handler in
+<code class="docutils literal notranslate"><span class="pre">mudu_binding/src/codec/syscall_payload/migrate/</span></code>;
+migrate units are complete frames (16-byte header included).</p>
 </section>
 <section id="version-history">
 <h2>Version history<a class="headerlink" href="#version-history" title="Link to this heading">#</a></h2>
@@ -683,6 +710,10 @@ legacy decoders.</p>
 <tr class="row-even"><td><p>1</p></td>
 <td><p>2026-07-01</p></td>
 <td><p>16-byte header (magic, version, flags, message kind) plus a MessagePack body. The MessagePack layout is generated from WIT by <code class="docutils literal notranslate"><span class="pre">mgen</span></code> and is project-controlled, not the default <code class="docutils literal notranslate"><span class="pre">rmp_serde</span></code> derive output.</p></td>
+</tr>
+<tr class="row-odd"><td><p>1 (in-place revision)</p></td>
+<td><p>2026-09-11</p></td>
+<td><p>Record/request bodies changed from positional arrays to <strong>integer-keyed MessagePack maps</strong> (field/parameter numbers = 1-based WIT declaration order, protobuf-style); decoding made lenient (any integer width accepted, unknown map keys skipped, missing fields defaulted — proto3 semantics). Variant <code class="docutils literal notranslate"><span class="pre">[tag,payload]</span></code>, the result envelope <code class="docutils literal notranslate"><span class="pre">[0,v]</span></code>/<code class="docutils literal notranslate"><span class="pre">[1,e]</span></code>, and frame-level checks are unchanged. <strong>The version number was not bumped</strong>: there was no deployed external ecosystem at revision time and every MPK was rebuilt with the revision; the version mechanism is reserved for future genuine cross-version scenarios (see <a class="reference internal" href="#upgrade-and-rollback-rules">Upgrade and rollback rules</a>).</p></td>
 </tr>
 </tbody>
 </table>
@@ -736,12 +767,99 @@ delivers the exact byte range.</p>
 </tbody>
 </table>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">version</span></code> is the <strong>payload format version</strong>, not the WIT interface version.</p>
+<p><code class="docutils literal notranslate"><span class="pre">version</span></code> is the <strong>payload format version</strong>, not the WIT interface version. It
+increments only when the <strong>encoding rules themselves</strong> change — for example
+integer semantics, the header layout, or the map/array structural rules.
+Schema evolution (appended fields, appended <code class="docutils literal notranslate"><span class="pre">message_kind</span></code>s, appended variant
+tags) is absorbed in-version by the field-number mechanism and does not bump
+<code class="docutils literal notranslate"><span class="pre">version</span></code>.</p>
 <p>The WIT function interface in <code class="docutils literal notranslate"><span class="pre">uni-syscall.wit</span></code> is the authoritative definition
 of which syscalls exist and what their request/response types are. The runtime
 maps each WIT function to the same internal header + MessagePack path; the
 <code class="docutils literal notranslate"><span class="pre">message_kind</span></code> discriminant is therefore an implementation detail retained for
 runtime routing.</p>
+</section>
+<section id="current-syscall-kinds">
+<h3>Current syscall kinds<a class="headerlink" href="#current-syscall-kinds" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Kind</p></th>
+<th class="head"><p>WIT function</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">query</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>2</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">command</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>3</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">batch</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>4</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">open-session</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>5</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">close-session</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>6</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">get</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>7</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">put</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>8</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">delete</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>9</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">range</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>10</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">fs-open</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>11</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">fs-close</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>12</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">fs-read</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>13</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">fs-write</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>14</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">fs-pread</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>15</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">fs-pwrite</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>16</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">fs-lseek</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>17</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">fs-fstat</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>18</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">fs-stat</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>19</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">fs-fsync</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>20</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">fs-readdir</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>21</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">relation-get</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>22</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">relation-update</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>23</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">relation-insert</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
 </section>
 </section>
 <section id="body-encoding">
@@ -807,7 +925,16 @@ the <code class="docutils literal notranslate"><span class="pre">mgen</span></co
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">uni-oid.wit</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">UniOid</span></code></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">uni-syscall.wit</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">uni-fs-open-argv.wit</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">UniFsOpenArgv</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">uni-fs-stat.wit</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">UniFsStat</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">uni-fs-dirent.wit</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">UniFsDirent</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">uni-syscall.wit</span></code></p></td>
 <td><p>syscall function interface</p></td>
 </tr>
 </tbody>
@@ -830,48 +957,56 @@ it uses the templates in
 </thead>
 <tbody>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">record</span></code></p></td>
-<td><p>Fixed-length MessagePack array, one element per field, in declaration order.</p></td>
+<td><p>MessagePack <strong>map</strong> keyed by the 1-based field numbers (declaration order); values are the encoded fields. Encoding writes all fields in ascending key order.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">variant</span></code></p></td>
+<tr class="row-odd"><td><p>WIT func parameter list</p></td>
+<td><p>Same as a record: a MessagePack map keyed by the 1-based parameter numbers.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">variant</span></code></p></td>
 <td><p>Two-element MessagePack array <code class="docutils literal notranslate"><span class="pre">[tag,</span> <span class="pre">payload]</span></code>. <code class="docutils literal notranslate"><span class="pre">tag</span></code> is a <code class="docutils literal notranslate"><span class="pre">u32</span></code> discriminator assigned by declaration order (starting at <code class="docutils literal notranslate"><span class="pre">0</span></code>). If a case has no payload, <code class="docutils literal notranslate"><span class="pre">payload</span></code> is a dummy <code class="docutils literal notranslate"><span class="pre">0u8</span></code> so the array always has length <code class="docutils literal notranslate"><span class="pre">2</span></code>.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">enum</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">enum</span></code></p></td>
 <td><p>Bare <code class="docutils literal notranslate"><span class="pre">u32</span></code> discriminant, assigned by declaration order (starting at <code class="docutils literal notranslate"><span class="pre">0</span></code>).</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">list&lt;T&gt;</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">list&lt;T&gt;</span></code></p></td>
 <td><p>MessagePack array of encoded <code class="docutils literal notranslate"><span class="pre">T</span></code>.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">option&lt;T&gt;</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">option&lt;T&gt;</span></code></p></td>
 <td><p>MessagePack nil for <code class="docutils literal notranslate"><span class="pre">none</span></code>; otherwise the encoded <code class="docutils literal notranslate"><span class="pre">T</span></code> for <code class="docutils literal notranslate"><span class="pre">some</span></code>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">result&lt;T,</span> <span class="pre">E&gt;</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">result&lt;T,</span> <span class="pre">E&gt;</span></code></p></td>
 <td><p>MessagePack array <code class="docutils literal notranslate"><span class="pre">[ok_tag,</span> <span class="pre">value]</span></code> where <code class="docutils literal notranslate"><span class="pre">ok_tag</span></code> is <code class="docutils literal notranslate"><span class="pre">0u8</span></code> for <code class="docutils literal notranslate"><span class="pre">ok</span></code> and <code class="docutils literal notranslate"><span class="pre">1u8</span></code> for <code class="docutils literal notranslate"><span class="pre">err</span></code>, followed by the encoded <code class="docutils literal notranslate"><span class="pre">T</span></code> or <code class="docutils literal notranslate"><span class="pre">E</span></code>.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">string</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">string</span></code></p></td>
 <td><p>MessagePack str.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">list&lt;u8&gt;</span></code> / <code class="docutils literal notranslate"><span class="pre">blob</span></code></p></td>
-<td><p>MessagePack bin.</p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">list&lt;u8&gt;</span></code> / <code class="docutils literal notranslate"><span class="pre">blob</span></code></p></td>
+<td><p>MessagePack bin at the func level; a MessagePack integer array in the record context (this is why <code class="docutils literal notranslate"><span class="pre">UniError.err_details</span></code> and <code class="docutils literal notranslate"><span class="pre">UniResultSet.cursor</span></code> are arrays).</p></td>
 </tr>
-<tr class="row-even"><td><p>Primitive scalars (<code class="docutils literal notranslate"><span class="pre">u8</span></code>, <code class="docutils literal notranslate"><span class="pre">i32</span></code>, <code class="docutils literal notranslate"><span class="pre">u64</span></code>, <code class="docutils literal notranslate"><span class="pre">f32</span></code>, <code class="docutils literal notranslate"><span class="pre">bool</span></code>, <code class="docutils literal notranslate"><span class="pre">char</span></code>, …)</p></td>
+<tr class="row-odd"><td><p>Primitive scalars (<code class="docutils literal notranslate"><span class="pre">u8</span></code>, <code class="docutils literal notranslate"><span class="pre">i32</span></code>, <code class="docutils literal notranslate"><span class="pre">u64</span></code>, <code class="docutils literal notranslate"><span class="pre">f32</span></code>, <code class="docutils literal notranslate"><span class="pre">bool</span></code>, <code class="docutils literal notranslate"><span class="pre">char</span></code>, …)</p></td>
 <td><p>Standard MessagePack integer/float/bool/str representations.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">box&lt;T&gt;</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">box&lt;T&gt;</span></code></p></td>
 <td><p>Same encoding as <code class="docutils literal notranslate"><span class="pre">T</span></code>; the box is transparent on the wire.</p></td>
 </tr>
 </tbody>
 </table>
 </div>
-<p>Because the layout is generated from WIT, the same rules apply to the C# and
-AssemblyScript guests. The Rust side uses <code class="docutils literal notranslate"><span class="pre">rmp_serde</span></code> with custom
-<code class="docutils literal notranslate"><span class="pre">Serialize</span></code>/<code class="docutils literal notranslate"><span class="pre">Deserialize</span></code> implementations; the C# side uses custom
-<code class="docutils literal notranslate"><span class="pre">IMessagePackFormatter&lt;T&gt;</span></code> implementations generated from the same WIT.</p>
+<p>All body values go through <strong>one hand-written generic runtime per language</strong>
+(on Rust, <code class="docutils literal notranslate"><span class="pre">mudu_binding::universal::mp_wire</span></code>): it encodes canonically exactly
+like <code class="docutils literal notranslate"><span class="pre">rmp_serde</span></code> 1.3.1 (minimal-width integers, str8/bin8 thresholds) and
+decodes leniently — integers of any MessagePack width are accepted (with a
+range check on narrowing), unknown map keys are skipped, missing fields
+decode to the type default (proto3 semantics) and map key order is free.
+Structure stays strict: a record/request body must be a map, tuple lengths
+are exact and unknown variant tags are rejected. The C#, AssemblyScript, and
+Python sides generate equivalent runtime code from the same WIT.</p>
 </section>
 <section id="oid-unioid">
 <h3><code class="docutils literal notranslate"><span class="pre">OID</span></code> / <code class="docutils literal notranslate"><span class="pre">UniOid</span></code><a class="headerlink" href="#oid-unioid" title="Link to this heading">#</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">OID</span></code> is the logical 128-bit object identifier (<code class="docutils literal notranslate"><span class="pre">mudu::common::id::OID</span></code>). On
-the wire it is encoded as a <code class="docutils literal notranslate"><span class="pre">record</span></code> with two <code class="docutils literal notranslate"><span class="pre">u64</span></code> fields, <code class="docutils literal notranslate"><span class="pre">h</span></code> and <code class="docutils literal notranslate"><span class="pre">l</span></code>, which
-yields a two-element MessagePack array <code class="docutils literal notranslate"><span class="pre">[h,</span> <span class="pre">l]</span></code>. Decoders reconstruct the logical
+the wire it is encoded as a <code class="docutils literal notranslate"><span class="pre">record</span></code> with two <code class="docutils literal notranslate"><span class="pre">u64</span></code> fields, the MessagePack
+map <code class="docutils literal notranslate"><span class="pre">{1:</span> <span class="pre">h,</span> <span class="pre">2:</span> <span class="pre">l}</span></code>. Decoders reconstruct the logical
 OID as <code class="docutils literal notranslate"><span class="pre">((h</span> <span class="pre">as</span> <span class="pre">u128)</span> <span class="pre">&lt;&lt;</span> <span class="pre">64)</span> <span class="pre">|</span> <span class="pre">(l</span> <span class="pre">as</span> <span class="pre">u128)</span></code>.</p>
 </section>
 <section id="variant-tag-tables">
@@ -1007,7 +1142,7 @@ native 128-bit integer MessagePack type.</p>
 </tbody>
 </table>
 </div>
-<p>A <code class="docutils literal notranslate"><span class="pre">UniDataValueField</span></code> is a <code class="docutils literal notranslate"><span class="pre">record</span></code> of <code class="docutils literal notranslate"><span class="pre">[field_name:</span> <span class="pre">string,</span> <span class="pre">field_value:</span> <span class="pre">UniDataValue]</span></code>.</p>
+<p>A <code class="docutils literal notranslate"><span class="pre">UniDataValueField</span></code> is a <code class="docutils literal notranslate"><span class="pre">record</span></code> of <code class="docutils literal notranslate"><span class="pre">{1:</span> <span class="pre">field_name:</span> <span class="pre">string,</span> <span class="pre">2:</span> <span class="pre">field_value:</span> <span class="pre">UniDataValue}</span></code>.</p>
 <p><strong><code class="docutils literal notranslate"><span class="pre">UniDataType</span></code></strong> — <code class="docutils literal notranslate"><span class="pre">variant</span></code> tags:</p>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
@@ -1140,39 +1275,42 @@ wire.</p>
 <section id="composite-type-layouts">
 <h3>Composite type layouts<a class="headerlink" href="#composite-type-layouts" title="Link to this heading">#</a></h3>
 <p>The MessagePack encoding of each record/variant follows the generic rules above.
-For reference, the field order and payload shapes are:</p>
+For reference, the field numbers and payload shapes are (record keys are the
+1-based field numbers in declaration order):</p>
 <ul class="simple">
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">UniOid</span></code></strong> — <code class="docutils literal notranslate"><span class="pre">[h:</span> <span class="pre">u64,</span> <span class="pre">l:</span> <span class="pre">u64]</span></code> (record).</p></li>
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">UniSqlStmt</span></code></strong> — <code class="docutils literal notranslate"><span class="pre">[sql_string:</span> <span class="pre">string]</span></code> (record).</p></li>
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">UniSqlParam</span></code></strong> — <code class="docutils literal notranslate"><span class="pre">[params:</span> <span class="pre">list&lt;UniDataValue&gt;]</span></code> (record).</p></li>
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">UniTupleRow</span></code></strong> — <code class="docutils literal notranslate"><span class="pre">[fields:</span> <span class="pre">list&lt;UniDataValue&gt;]</span></code> (record).</p></li>
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">UniFieldAttr</span></code></strong> — <code class="docutils literal notranslate"><span class="pre">[attr_name:</span> <span class="pre">string,</span> <span class="pre">attr_value:</span> <span class="pre">string]</span></code> (record).</p></li>
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">UniRecordField</span></code></strong> — <code class="docutils literal notranslate"><span class="pre">[field_name:</span> <span class="pre">string,</span> <span class="pre">field_type:</span> <span class="pre">UniDataType,</span> <span class="pre">field_attrs:</span> <span class="pre">list&lt;UniFieldAttr&gt;]</span></code> (record).</p></li>
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">UniRecordType</span></code></strong> — <code class="docutils literal notranslate"><span class="pre">[record_name:</span> <span class="pre">string,</span> <span class="pre">record_fields:</span> <span class="pre">list&lt;UniRecordField&gt;]</span></code> (record).</p></li>
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">UniResultType</span></code></strong> — <code class="docutils literal notranslate"><span class="pre">[ok:</span> <span class="pre">option&lt;UniDataType&gt;,</span> <span class="pre">err:</span> <span class="pre">option&lt;UniDataType&gt;]</span></code> (record).</p></li>
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">UniResultSet</span></code></strong> — <code class="docutils literal notranslate"><span class="pre">[eof:</span> <span class="pre">bool,</span> <span class="pre">row_set:</span> <span class="pre">list&lt;UniTupleRow&gt;,</span> <span class="pre">cursor:</span> <span class="pre">list&lt;u8&gt;]</span></code> (record).</p></li>
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">UniError</span></code></strong> — <code class="docutils literal notranslate"><span class="pre">[err_code:</span> <span class="pre">u32,</span> <span class="pre">err_msg:</span> <span class="pre">string,</span> <span class="pre">err_src:</span> <span class="pre">string,</span> <span class="pre">err_loc:</span> <span class="pre">string,</span> <span class="pre">err_details:</span> <span class="pre">list&lt;u8&gt;]</span></code> (record).</p></li>
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">UniQueryArgv</span></code></strong> — <code class="docutils literal notranslate"><span class="pre">[oid:</span> <span class="pre">UniOid,</span> <span class="pre">query:</span> <span class="pre">UniSqlStmt,</span> <span class="pre">param_list:</span> <span class="pre">UniSqlParam]</span></code> (record).</p></li>
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">UniCommandArgv</span></code></strong> — <code class="docutils literal notranslate"><span class="pre">[oid:</span> <span class="pre">UniOid,</span> <span class="pre">command:</span> <span class="pre">UniSqlStmt,</span> <span class="pre">param_list:</span> <span class="pre">UniSqlParam]</span></code> (record).</p></li>
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">UniQueryResult</span></code></strong> — <code class="docutils literal notranslate"><span class="pre">[tuple_desc:</span> <span class="pre">UniRecordType,</span> <span class="pre">result_set:</span> <span class="pre">UniResultSet]</span></code> (record).</p></li>
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">UniCommandResult</span></code></strong> — <code class="docutils literal notranslate"><span class="pre">[affected_rows:</span> <span class="pre">u64]</span></code> (record).</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">UniOid</span></code></strong> — <code class="docutils literal notranslate"><span class="pre">{1:</span> <span class="pre">h:</span> <span class="pre">u64,</span> <span class="pre">2:</span> <span class="pre">l:</span> <span class="pre">u64}</span></code>.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">UniSqlStmt</span></code></strong> — <code class="docutils literal notranslate"><span class="pre">{1:</span> <span class="pre">sql_string:</span> <span class="pre">string}</span></code>.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">UniSqlParam</span></code></strong> — <code class="docutils literal notranslate"><span class="pre">{1:</span> <span class="pre">params:</span> <span class="pre">list&lt;UniDataValue&gt;,</span> <span class="pre">2:</span> <span class="pre">param_names:</span> <span class="pre">option&lt;list&lt;string&gt;&gt;}</span></code>.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">UniTupleRow</span></code></strong> — <code class="docutils literal notranslate"><span class="pre">{1:</span> <span class="pre">fields:</span> <span class="pre">list&lt;UniDataValue&gt;}</span></code>.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">UniFieldAttr</span></code></strong> — <code class="docutils literal notranslate"><span class="pre">{1:</span> <span class="pre">attr_name:</span> <span class="pre">string,</span> <span class="pre">2:</span> <span class="pre">attr_value:</span> <span class="pre">string}</span></code>.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">UniRecordField</span></code></strong> — <code class="docutils literal notranslate"><span class="pre">{1:</span> <span class="pre">field_name:</span> <span class="pre">string,</span> <span class="pre">2:</span> <span class="pre">field_type:</span> <span class="pre">UniDataType,</span> <span class="pre">3:</span> <span class="pre">field_attrs:</span> <span class="pre">list&lt;UniFieldAttr&gt;}</span></code>.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">UniRecordType</span></code></strong> — <code class="docutils literal notranslate"><span class="pre">{1:</span> <span class="pre">record_name:</span> <span class="pre">string,</span> <span class="pre">2:</span> <span class="pre">record_fields:</span> <span class="pre">list&lt;UniRecordField&gt;}</span></code>.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">UniResultType</span></code></strong> — <code class="docutils literal notranslate"><span class="pre">{1:</span> <span class="pre">ok:</span> <span class="pre">option&lt;UniDataType&gt;,</span> <span class="pre">2:</span> <span class="pre">err:</span> <span class="pre">option&lt;UniDataType&gt;}</span></code>.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">UniResultSet</span></code></strong> — <code class="docutils literal notranslate"><span class="pre">{1:</span> <span class="pre">eof:</span> <span class="pre">bool,</span> <span class="pre">2:</span> <span class="pre">row_set:</span> <span class="pre">list&lt;UniTupleRow&gt;,</span> <span class="pre">3:</span> <span class="pre">cursor:</span> <span class="pre">list&lt;u8&gt;}</span></code>.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">UniError</span></code></strong> — <code class="docutils literal notranslate"><span class="pre">{1:</span> <span class="pre">err_code:</span> <span class="pre">u32,</span> <span class="pre">2:</span> <span class="pre">err_msg:</span> <span class="pre">string,</span> <span class="pre">3:</span> <span class="pre">err_src:</span> <span class="pre">string,</span> <span class="pre">4:</span> <span class="pre">err_loc:</span> <span class="pre">string,</span> <span class="pre">5:</span> <span class="pre">err_details:</span> <span class="pre">list&lt;u8&gt;}</span></code>.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">UniQueryArgv</span></code></strong> — <code class="docutils literal notranslate"><span class="pre">{1:</span> <span class="pre">oid:</span> <span class="pre">UniOid,</span> <span class="pre">2:</span> <span class="pre">query:</span> <span class="pre">UniSqlStmt,</span> <span class="pre">3:</span> <span class="pre">param_list:</span> <span class="pre">UniSqlParam,</span> <span class="pre">4:</span> <span class="pre">param_desc:</span> <span class="pre">option&lt;UniRecordType&gt;}</span></code>.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">UniCommandArgv</span></code></strong> — <code class="docutils literal notranslate"><span class="pre">{1:</span> <span class="pre">oid:</span> <span class="pre">UniOid,</span> <span class="pre">2:</span> <span class="pre">command:</span> <span class="pre">UniSqlStmt,</span> <span class="pre">3:</span> <span class="pre">param_list:</span> <span class="pre">UniSqlParam,</span> <span class="pre">4:</span> <span class="pre">param_desc:</span> <span class="pre">option&lt;UniRecordType&gt;}</span></code>.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">UniQueryResult</span></code></strong> — <code class="docutils literal notranslate"><span class="pre">{1:</span> <span class="pre">tuple_desc:</span> <span class="pre">UniRecordType,</span> <span class="pre">2:</span> <span class="pre">result_set:</span> <span class="pre">UniResultSet}</span></code>.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">UniCommandResult</span></code></strong> — <code class="docutils literal notranslate"><span class="pre">{1:</span> <span class="pre">affected_rows:</span> <span class="pre">u64}</span></code>.</p></li>
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">UniCommandReturn</span></code></strong> — variant: <code class="docutils literal notranslate"><span class="pre">ok(UniCommandResult)</span></code> or <code class="docutils literal notranslate"><span class="pre">err(UniError)</span></code>.</p></li>
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">UniQueryReturn</span></code></strong> — variant: <code class="docutils literal notranslate"><span class="pre">ok(UniQueryResult)</span></code> or <code class="docutils literal notranslate"><span class="pre">err(UniError)</span></code>.</p></li>
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">UniSessionOpenArgv</span></code></strong> — currently a hand-written Rust record; its wire shape
-is <code class="docutils literal notranslate"><span class="pre">[worker_id:</span> <span class="pre">UniOid]</span></code>. It does not yet have a dedicated WIT file; if it is
+is <code class="docutils literal notranslate"><span class="pre">{1:</span> <span class="pre">worker_id:</span> <span class="pre">UniOid}</span></code>. It does not yet have a dedicated WIT file; if it is
 moved into WIT in the future it will follow the same encoding rules as above.</p></li>
 </ul>
 </section>
 </section>
-<section id="relationship-to-the-current-session-codec">
-<h2>Relationship to the current session codec<a class="headerlink" href="#relationship-to-the-current-session-codec" title="Link to this heading">#</a></h2>
-<p>The KV syscalls (<code class="docutils literal notranslate"><span class="pre">Open</span></code>…<code class="docutils literal notranslate"><span class="pre">Range</span></code>) are currently hand-written binary in
-<code class="docutils literal notranslate"><span class="pre">handle_sys_session.rs</span></code>.
-Their existing conventions match this contract’s primitives. v1 wraps those
-payloads in the 16-byte header and uses the project-controlled MessagePack
-<code class="docutils literal notranslate"><span class="pre">Result&lt;T,</span> <span class="pre">E&gt;</span></code> encoding for errors, instead of the legacy <code class="docutils literal notranslate"><span class="pre">MERR</span></code> magic escape.
-Unifying the session codec onto the same <code class="docutils literal notranslate"><span class="pre">mgen</span></code>-generated MessagePack path is
-Phase 2 work.</p>
+<section id="relationship-to-the-legacy-session-codec">
+<h2>Relationship to the legacy session codec<a class="headerlink" href="#relationship-to-the-legacy-session-codec" title="Link to this heading">#</a></h2>
+<p>All 23 kinds — including the KV syscalls (<code class="docutils literal notranslate"><span class="pre">Open</span></code>…<code class="docutils literal notranslate"><span class="pre">Range</span></code>) — are now encoded
+and decoded through the framed MessagePack path in
+<code class="docutils literal notranslate"><span class="pre">mudu_binding/src/codec/syscall_payload/</span></code>,
+wrapping each payload in the 16-byte header and using the project-controlled
+MessagePack <code class="docutils literal notranslate"><span class="pre">Result&lt;T,</span> <span class="pre">E&gt;</span></code> encoding for errors instead of the legacy <code class="docutils literal notranslate"><span class="pre">MERR</span></code>
+magic escape. The earlier hand-written binary session codec in
+<code class="docutils literal notranslate"><span class="pre">handle_sys_session.rs</span></code> followed conventions matching this contract’s
+primitives; the Phase 2 unification onto the project-controlled MessagePack
+path is complete.</p>
 </section>
 <section id="integrity-mechanisms">
 <h2>Integrity mechanisms<a class="headerlink" href="#integrity-mechanisms" title="Link to this heading">#</a></h2>
@@ -1184,7 +1322,10 @@ Phase 2 work.</p>
 <li><p><strong>Message-kind validation:</strong> decoders reject unknown/<code class="docutils literal notranslate"><span class="pre">0</span></code> <code class="docutils literal notranslate"><span class="pre">message_kind</span></code> values.</p></li>
 <li><p><strong>Length checks:</strong> decoders require at least 16 bytes for the header.</p></li>
 <li><p><strong>MessagePack structural validation:</strong> decoders reject malformed MessagePack
-payloads, unknown variant tags, and record arrays of unexpected length.</p></li>
+payloads, trailing bytes after the body, unknown variant tags, and
+record/request bodies that are not maps. Decoding inside a map is lenient
+(unknown keys skipped, missing fields defaulted, any integer width), but
+narrowing overflow and type mismatches are still rejected.</p></li>
 <li><p><strong>UTF-8 validation:</strong> <code class="docutils literal notranslate"><span class="pre">string</span></code> fields must be valid UTF-8.</p></li>
 </ul>
 <p>Structural body decode failures map to <code class="docutils literal notranslate"><span class="pre">ErrorCode::Decode</span></code>. Magic mismatches map
@@ -1209,26 +1350,41 @@ to <code class="docutils literal notranslate"><span class="pre">ErrorCode::Corru
 </section>
 <section id="upgrade-and-rollback-rules">
 <h2>Upgrade and rollback rules<a class="headerlink" href="#upgrade-and-rollback-rules" title="Link to this heading">#</a></h2>
+<p>Two kinds of change are distinguished first:</p>
 <ul class="simple">
-<li><p><strong>Upgrade:</strong> A future v2 changes the header <code class="docutils literal notranslate"><span class="pre">version</span></code> and/or the body layout.
-When v2 is introduced, MPK packages are rebuilt for the matching runtime and
-offline migration handlers convert stored fixtures/test data.</p></li>
+<li><p><strong>Encoding-rule changes</strong> (integer semantics, header layout, the map/array
+structural rules, etc.) — bump <code class="docutils literal notranslate"><span class="pre">version</span></code> and follow the upgrade flow below.</p></li>
+<li><p><strong>Schema evolution</strong> (appended fields/parameters, appended <code class="docutils literal notranslate"><span class="pre">message_kind</span></code>s,
+appended variant tags) — absorbed in-version by the field-number mechanism;
+does <strong>not</strong> bump <code class="docutils literal notranslate"><span class="pre">version</span></code> and does <strong>not</strong> require rebuilding deployed
+MPKs: old and new packages keep interoperating through lenient decoding
+(unknown keys skipped, missing fields defaulted). Only guests that want to
+use a new field regenerate their bindings and repackage.</p></li>
+</ul>
+<p>Rules:</p>
+<ul class="simple">
+<li><p><strong>Upgrade (encoding-rule change):</strong> A future v2 changes the header
+<code class="docutils literal notranslate"><span class="pre">version</span></code>. When v2 is introduced, MPK packages are rebuilt for the matching
+runtime and offline migration handlers convert stored fixtures/test data.</p></li>
 <li><p><strong>No legacy decoders:</strong> the runtime decodes only the current version. A
 message with an unsupported version fails fast with
 <code class="docutils literal notranslate"><span class="pre">ErrorCode::UnsupportedFormatVersion</span></code>.</p></li>
-<li><p><strong>No legacy MPK support:</strong> packages are rebuilt per ABI version bump;
-versioning exists to make future upgrades explicit and controllable, not to
-preserve cross-version compatibility.</p></li>
+<li><p><strong>No cross-encoding-version MPK support:</strong> packages are rebuilt per ABI
+version bump; versioning exists to make future encoding-rule upgrades
+explicit and controllable, not to preserve cross-version compatibility.</p></li>
 </ul>
 </section>
 <section id="deprecation-policy">
 <h2>Deprecation policy<a class="headerlink" href="#deprecation-policy" title="Link to this heading">#</a></h2>
 <p>Version <code class="docutils literal notranslate"><span class="pre">1</span></code> may be deprecated only after:</p>
 <ol class="arabic simple">
-<li><p>All guest bindings (Rust, C#, AssemblyScript) emit and accept the new version.</p></li>
+<li><p>All guest bindings (Rust, C#, AssemblyScript, Python) emit and accept the
+successor encoding version (v2).</p></li>
 <li><p>The new version has been the default for at least one release cycle.</p></li>
 <li><p>MPK packages have been rebuilt against the new runtime.</p></li>
 </ol>
+<p>Deprecation applies to encoding versions; in-version schema evolution
+(field-number appends) produces no deprecatable old version.</p>
 </section>
 <section id="references">
 <h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
@@ -1236,13 +1392,14 @@ preserve cross-version compatibility.</p></li>
 <li><p>Registry: <code class="docutils literal notranslate"><span class="pre">mudu/src/compat/mod.rs</span></code></p></li>
 <li><p>WIT schema source: <code class="docutils literal notranslate"><span class="pre">mudu_binding/wit/</span></code></p></li>
 <li><p>Syscall function interface: <code class="docutils literal notranslate"><span class="pre">mudu_binding/wit/uni-syscall.wit</span></code></p></li>
+<li><p>Host framed codec (authoritative): <code class="docutils literal notranslate"><span class="pre">mudu_binding/src/codec/syscall_payload/</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">mgen</span></code> Rust templates: <code class="docutils literal notranslate"><span class="pre">mudu_gen/templates/rust/</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">mgen</span></code> C# templates: <code class="docutils literal notranslate"><span class="pre">mudu_gen/templates/csharp/</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">universal</span></code> type family (Rust): <code class="docutils literal notranslate"><span class="pre">mudu_binding/src/universal/</span></code></p></li>
-<li><p>Existing hand-written KV codec: <code class="docutils literal notranslate"><span class="pre">mudu_binding/src/codec/handle_sys_session.rs</span></code></p></li>
+<li><p>Legacy hand-written KV codec: <code class="docutils literal notranslate"><span class="pre">mudu_binding/src/codec/handle_sys_session.rs</span></code></p></li>
 <li><p>SQL request/response codec: <code class="docutils literal notranslate"><span class="pre">mudu_binding/src/codec/handle_sys_incoming.rs</span></code>, <code class="docutils literal notranslate"><span class="pre">handle_sys_outcoming.rs</span></code></p></li>
-<li><p>Host syscall entry points: <code class="docutils literal notranslate"><span class="pre">mudu_runtime/src/interface/kernel.rs</span></code></p></li>
-<li><p>Design plan: <code class="docutils literal notranslate"><span class="pre">doc/cn/todo/project-controlled-guest-host-abi.md</span></code></p></li>
+<li><p>Host syscall entry points: <code class="docutils literal notranslate"><span class="pre">runtime_wasm/src/interface/kernel_sync.rs</span></code>, <code class="docutils literal notranslate"><span class="pre">kernel_async.rs</span></code></p></li>
+<li><p>Integration guide: <code class="docutils literal notranslate"><span class="pre">doc/en/abi/guest_host_abi.md</span></code></p></li>
 </ul>
 </section>
 </section>
@@ -1299,6 +1456,7 @@ preserve cross-version compatibility.</p></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#version-history">Version history</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#payload-layout">Payload layout</a><ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#header">Header</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#current-syscall-kinds">Current syscall kinds</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#body-encoding">Body encoding</a><ul class="pst-show_toc_level nav section-nav flex-column">
@@ -1309,7 +1467,7 @@ preserve cross-version compatibility.</p></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#composite-type-layouts">Composite type layouts</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#relationship-to-the-current-session-codec">Relationship to the current session codec</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#relationship-to-the-legacy-session-codec">Relationship to the legacy session codec</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#integrity-mechanisms">Integrity mechanisms</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#compatibility-matrix">Compatibility matrix</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#upgrade-and-rollback-rules">Upgrade and rollback rules</a></li>

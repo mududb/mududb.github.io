@@ -55,7 +55,7 @@
     <link rel="icon" href="../_static/favicon.svg"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Churcuring and CQL" href="churcuring.html" />
+    <link rel="next" title="SDKs and Execution Modes" href="sdk.html" />
     <link rel="prev" title="Programming" href="index.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -475,21 +475,29 @@
 <li class="toctree-l2"><a class="reference internal" href="../administration/client.html">Client</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../administration/server.html">Server Management</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../administration/configuration.html">Configuration Reference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../administration/replication.html">Replication and Raft Fault Tolerance</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../administration/packages.html">Application Packages</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../administration/toolchain.html">Toolchain</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../administration/backup.html">Backup and Restore</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">Programming</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">Mudu Procedure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sdk.html">SDKs and Execution Modes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filesystem.html">Filesystem Object Types</a></li>
 <li class="toctree-l2"><a class="reference internal" href="churcuring.html">Churcuring and CQL</a></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="syscalls.html">Syscalls</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="syscalls/open.html">open</a></li>
 <li class="toctree-l3"><a class="reference internal" href="syscalls/close.html">close</a></li>
-<li class="toctree-l3"><a class="reference internal" href="syscalls/read.html">read</a></li>
-<li class="toctree-l3"><a class="reference internal" href="syscalls/write.html">write</a></li>
-<li class="toctree-l3"><a class="reference internal" href="syscalls/range-scan.html">range-scan</a></li>
-<li class="toctree-l3"><a class="reference internal" href="syscalls/batch.html">batch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="syscalls/query.html">query</a></li>
 <li class="toctree-l3"><a class="reference internal" href="syscalls/command.html">command</a></li>
+<li class="toctree-l3"><a class="reference internal" href="syscalls/batch.html">batch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="syscalls/get.html">get</a></li>
+<li class="toctree-l3"><a class="reference internal" href="syscalls/put.html">put</a></li>
+<li class="toctree-l3"><a class="reference internal" href="syscalls/delete.html">delete</a></li>
+<li class="toctree-l3"><a class="reference internal" href="syscalls/range.html">range</a></li>
+<li class="toctree-l3"><a class="reference internal" href="syscalls/fs.html">fs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="syscalls/relation.html">Relation Syscalls</a></li>
 </ul>
 </details></li>
 </ul>
@@ -498,9 +506,11 @@
 <li class="toctree-l2"><a class="reference internal" href="../internal/kernel.html">Kernel</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../internal/adapter.html">Adapters</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../internal/procedure-runtime.html">Procedure Runtime</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../internal/suspendable-execution.html">Suspendable Procedure Execution</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../internal/wasm.html">WebAssembly Integration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../internal/partitioning.html">Partitioning and Worker Mapping</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../internal/partitioning.html">Partitioning</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../internal/per_core_worker.html">Per-core Worker Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../internal/replication.html">Replication Architecture</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../reference/index.html">Reference</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -582,9 +592,12 @@
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#design-goals">1. Design goals</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#interactive-execution-vs-stored-procedures-and-the-unified-model">2. Interactive execution vs stored procedures — and the unified model</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#webassembly-wasi-compilation-and-runtime">3. WebAssembly / WASI compilation and runtime</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#multi-language-support">4. Multi-language support</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#color-bind-async-await-language-ergonomics-and-runtime">5. Color-bind async/await: language ergonomics and runtime</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#other-considerations">6. Other considerations</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#procedure-specification">4. Procedure specification</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#transactions">5. Transactions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#entity-mapping">6. Entity mapping</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#multi-language-support">7. Multi-language support</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#color-bind-async-await-language-ergonomics-and-runtime">8. Color-bind async/await: language ergonomics and runtime</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#runtime-constraints">9. Runtime constraints</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references-examples">References &amp; examples</a></li>
 </ul>
             </nav>
@@ -632,7 +645,7 @@
 </section>
 <section id="webassembly-wasi-compilation-and-runtime">
 <h2>3. WebAssembly / WASI compilation and runtime<a class="headerlink" href="#webassembly-wasi-compilation-and-runtime" title="Link to this heading">#</a></h2>
-<p>Mudu compiles procedures to WebAssembly (WASI) modules and executes them inside a sandboxed runtime.</p>
+<p>Mudu compiles procedures to WebAssembly (WASI) components and executes them inside a sandboxed runtime.</p>
 <p>Why WASI?</p>
 <ul class="simple">
 <li><p>Portability: WASI modules are platform-neutral and language-agnostic.</p></li>
@@ -641,25 +654,98 @@
 </ul>
 <p>Typical toolchain flow:</p>
 <ol class="arabic simple">
-<li><p>Author procedure in a supported language (currently Rust examples exist).</p></li>
-<li><p>Build/compile to a WASI module (wasm-ld / rust + wasm32-wasi target).</p></li>
-<li><p>Optionally run through mudu-transpiler to apply color-bind transformations (see below).</p></li>
+<li><p>Author procedure in a supported language (this guide uses the Rust facade).</p></li>
+<li><p>Run <code class="docutils literal notranslate"><span class="pre">mtp</span></code> to generate wrappers and apply the selected sync/async transformation.</p></li>
+<li><p>Compile the generated source to a WASM component; use the example build tasks to preserve this order.</p></li>
 <li><p>Deploy the module (put the mpk/package into mpk_path) and register it with the kernel.</p></li>
 <li><p>Invoke interactively or as stored procedure; the kernel handles syscalls, transactions, and routing.</p></li>
 </ol>
 <p>The runtime exposes a compact syscall set (open session, get/put/range/query/command/batch, etc.). Procedures use these syscalls to interact with database state; all network and storage access is mediated by the kernel.</p>
 </section>
-<section id="multi-language-support">
-<h2>4. Multi-language support<a class="headerlink" href="#multi-language-support" title="Link to this heading">#</a></h2>
-<p>Unlike many traditional stored-procedure environments that bind to an embedded language (SQL/PLSQL/PLpgSQL), Mudu Procedure plans to support multiple high-level languages by targeting WASI.</p>
+<section id="procedure-specification">
+<h2>4. Procedure specification<a class="headerlink" href="#procedure-specification" title="Link to this heading">#</a></h2>
+<p>A Mudu Procedure is a function marked with the <code class="docutils literal notranslate"><span class="pre">/**mudu-proc**/</span></code> marker, which tells the transpiler to expose the following function as a procedure:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/**mudu-proc**/
+fn {procedure_name}(
+    oid: OID,
+    {argument_list...}
+) -&gt; RS&lt;{return_value_type}&gt;
+</pre></div>
+</div>
 <ul class="simple">
-<li><p>Current supported implementation examples: Rust.</p></li>
-<li><p>Future: other languages that can emit WASI modules (C/C++, Zig, AssemblyScript, Go (wasi support pending), and more).</p></li>
+<li><p><strong>Procedure name</strong> — a valid Rust function name.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">oid</span></code></strong> — the current system session ID passed into the procedure.</p></li>
+<li><p><strong>Arguments</strong> — each argument must be representable by Mudu’s datum / tuple conversion system. Commonly used forms include scalars such as <code class="docutils literal notranslate"><span class="pre">i32</span></code>, <code class="docutils literal notranslate"><span class="pre">i64</span></code>, <code class="docutils literal notranslate"><span class="pre">String</span></code>, <code class="docutils literal notranslate"><span class="pre">f32</span></code>, and <code class="docutils literal notranslate"><span class="pre">f64</span></code>, as well as container forms such as <code class="docutils literal notranslate"><span class="pre">Vec&lt;String&gt;</span></code>; the exact supported surface is defined by the <code class="docutils literal notranslate"><span class="pre">mudu_type</span></code> conversion and the transpiler rather than a fixed whitelist.</p></li>
+<li><p><strong>Return value</strong> — must be representable by the same conversion system; current implementations support scalar values, tuple return values, and <code class="docutils literal notranslate"><span class="pre">Vec&lt;T&gt;</span></code> style result containers.</p></li>
+</ul>
+<p>The result alias <code class="docutils literal notranslate"><span class="pre">RS</span></code> used by procedure code is defined as:</p>
+<div class="highlight-rust notranslate"><div class="highlight"><pre><span></span><span class="k">use</span><span class="w"> </span><span class="n">mudu</span><span class="p">::</span><span class="n">error</span><span class="p">::</span><span class="n">err</span><span class="p">::</span><span class="n">MError</span><span class="p">;</span>
+<span class="k">pub</span><span class="w"> </span><span class="k">type</span><span class="w"> </span><span class="nc">RS</span><span class="o">&lt;</span><span class="n">X</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Result</span><span class="o">&lt;</span><span class="n">X</span><span class="p">,</span><span class="w"> </span><span class="n">MError</span><span class="o">&gt;</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Inside a procedure, code interacts with the database through the <a class="reference internal" href="syscalls.html"><span class="std std-doc">syscalls</span></a>: SQL syscalls (<code class="docutils literal notranslate"><span class="pre">mudu_query</span></code> / <code class="docutils literal notranslate"><span class="pre">mudu_command</span></code> / <code class="docutils literal notranslate"><span class="pre">mudu_batch</span></code>) and key/value syscalls (<code class="docutils literal notranslate"><span class="pre">mudu_get</span></code> / <code class="docutils literal notranslate"><span class="pre">mudu_put</span></code> / <code class="docutils literal notranslate"><span class="pre">mudu_range</span></code>).</p>
+</section>
+<section id="transactions">
+<h2>5. Transactions<a class="headerlink" href="#transactions" title="Link to this heading">#</a></h2>
+<p>Mudu Procedures support two transaction execution modes.</p>
+<p><strong>Automatic mode (current).</strong> Each procedure invocation runs as an independent transaction:</p>
+<ul class="simple">
+<li><p>the transaction commits automatically when the procedure returns <code class="docutils literal notranslate"><span class="pre">Ok</span></code>;</p></li>
+<li><p>it rolls back automatically when the procedure returns <code class="docutils literal notranslate"><span class="pre">Err</span></code>.</p></li>
+</ul>
+<p><strong>Manual mode (planned).</strong> Passing a shared session <code class="docutils literal notranslate"><span class="pre">oid</span></code> across multiple procedures for explicit transaction control is a planned capability. The current procedure API exposes no <code class="docutils literal notranslate"><span class="pre">commit</span></code> / <code class="docutils literal notranslate"><span class="pre">rollback</span></code>; the pseudocode below is illustrative only:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>procedure1(oid);
+procedure2(oid);
+commit(oid); // explicit commit; or rollback(oid) for explicit rollback
+</pre></div>
+</div>
+</section>
+<section id="entity-mapping">
+<h2>6. Entity mapping<a class="headerlink" href="#entity-mapping" title="Link to this heading">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">mudu_query</span></code> automatically performs R2O (relation-to-object) mapping: it returns an <code class="docutils literal notranslate"><span class="pre">EntitySet&lt;R&gt;</span></code> whose rows are decoded into the entity type <code class="docutils literal notranslate"><span class="pre">R</span></code>. <code class="docutils literal notranslate"><span class="pre">R</span></code> must implement the <code class="docutils literal notranslate"><span class="pre">Entity</span></code> trait:</p>
+<div class="highlight-rust notranslate"><div class="highlight"><pre><span></span><span class="k">pub</span><span class="w"> </span><span class="k">trait</span><span class="w"> </span><span class="n">Entity</span><span class="p">:</span><span class="w"> </span><span class="nc">Datum</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">tuple_desc</span><span class="p">()</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kp">&amp;</span><span class="o">'</span><span class="nb">static</span><span class="w"> </span><span class="nc">TupleFieldDesc</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">table_name</span><span class="p">()</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kp">&amp;</span><span class="o">'</span><span class="nb">static</span><span class="w"> </span><span class="kt">str</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">from_tuple</span><span class="p">(</span><span class="n">row</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="nc">TupleField</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">RS</span><span class="o">&lt;</span><span class="bp">Self</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">from_tuple_value</span><span class="p">(</span><span class="n">row</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="nc">TupleValue</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">RS</span><span class="o">&lt;</span><span class="bp">Self</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">to_tuple</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">RS</span><span class="o">&lt;</span><span class="n">TupleField</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">to_tuple_value</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">RS</span><span class="o">&lt;</span><span class="n">TupleValue</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Entity implementations are normally generated, not hand-written: for each table in <code class="docutils literal notranslate"><span class="pre">sql/ddl.sql</span></code>, <code class="docutils literal notranslate"><span class="pre">mgen</span> <span class="pre">entity</span></code> generates a Rust module containing:</p>
+<ul class="simple">
+<li><p>the row struct (e.g. <code class="docutils literal notranslate"><span class="pre">Wallets</span></code>) implementing <code class="docutils literal notranslate"><span class="pre">Entity</span></code>, plus <code class="docutils literal notranslate"><span class="pre">TABLE_NAME</span></code> and <code class="docutils literal notranslate"><span class="pre">columns::*</span></code> name constants;</p></li>
+<li><p>pre-built SQL text constants <code class="docutils literal notranslate"><span class="pre">SQL_GET_BY_PK</span></code>, <code class="docutils literal notranslate"><span class="pre">SQL_INSERT</span></code>, and <code class="docutils literal notranslate"><span class="pre">SQL_DELETE_BY_PK</span></code> for tables with a primary key, and <code class="docutils literal notranslate"><span class="pre">insert_params()</span></code> returning the typed bind tuple for <code class="docutils literal notranslate"><span class="pre">SQL_INSERT</span></code>;</p></li>
+<li><p>a partial-update changeset <code class="docutils literal notranslate"><span class="pre">&lt;Table&gt;Change</span></code> holding one <code class="docutils literal notranslate"><span class="pre">FieldChange&lt;T&gt;</span></code> per non-key column: <code class="docutils literal notranslate"><span class="pre">Unchanged</span></code> (the default) leaves the column out of the update, <code class="docutils literal notranslate"><span class="pre">Set(v)</span></code> sets it, and for a nullable column <code class="docutils literal notranslate"><span class="pre">Set(None)</span></code> writes a SQL <code class="docutils literal notranslate"><span class="pre">NULL</span></code>.</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">update_by_pk(...)</span></code> builds the <code class="docutils literal notranslate"><span class="pre">UPDATE</span> <span class="pre">...</span> <span class="pre">SET</span> <span class="pre">...</span> <span class="pre">WHERE</span> <span class="pre">&lt;pk&gt;</span> <span class="pre">=</span> <span class="pre">?</span></code> statement and its bind parameters, and returns <code class="docutils literal notranslate"><span class="pre">None</span></code> when no column is marked:</p>
+<div class="highlight-rust notranslate"><div class="highlight"><pre><span></span><span class="kd">let</span><span class="w"> </span><span class="n">change</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">WalletsChange</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">balance</span><span class="p">:</span><span class="w"> </span><span class="nc">FieldChange</span><span class="p">::</span><span class="n">Set</span><span class="p">(</span><span class="nb">Some</span><span class="p">(</span><span class="mi">200</span><span class="p">)),</span>
+<span class="w">    </span><span class="o">..</span><span class="n">WalletsChange</span><span class="p">::</span><span class="n">default</span><span class="p">()</span>
+<span class="p">};</span>
+<span class="k">if</span><span class="w"> </span><span class="kd">let</span><span class="w"> </span><span class="nb">Some</span><span class="p">((</span><span class="n">sql</span><span class="p">,</span><span class="w"> </span><span class="n">params</span><span class="p">))</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">change</span><span class="p">.</span><span class="n">update_by_pk</span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">mudu_command</span><span class="p">(</span><span class="n">oid</span><span class="p">,</span><span class="w"> </span><span class="n">sql_stmt</span><span class="o">!</span><span class="p">(</span><span class="o">&amp;</span><span class="n">sql</span><span class="p">),</span><span class="w"> </span><span class="n">sql_params</span><span class="o">!</span><span class="p">(</span><span class="o">&amp;</span><span class="n">params</span><span class="p">))</span><span class="o">?</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="multi-language-support">
+<h2>7. Multi-language support<a class="headerlink" href="#multi-language-support" title="Link to this heading">#</a></h2>
+<p>Unlike many traditional stored-procedure environments that bind to an embedded language (SQL/PLSQL/PLpgSQL), Mudu Procedure supports multiple high-level languages by compiling them to WASM components.</p>
+<ul class="simple">
+<li><p>Currently supported guest languages: Rust, AssemblyScript, C#, Python, C, and Go. This guide uses the Rust facade, the reference implementation of the procedure API.</p></li>
+<li><p>Future: other languages that can emit WASM components (Zig and more).</p></li>
 </ul>
 <p>This opens the door to leveraging modern language ecosystems, package managers, and developer tools while keeping execution safe and portable.</p>
 </section>
 <section id="color-bind-async-await-language-ergonomics-and-runtime">
-<h2>5. Color-bind async/await: language ergonomics and runtime<a class="headerlink" href="#color-bind-async-await-language-ergonomics-and-runtime" title="Link to this heading">#</a></h2>
+<h2>8. Color-bind async/await: language ergonomics and runtime<a class="headerlink" href="#color-bind-async-await-language-ergonomics-and-runtime" title="Link to this heading">#</a></h2>
 <p>Mudu adopts a “color-bind” model where asynchrony is a runtime feature rather than a mandatory language construct:</p>
 <ul class="simple">
 <li><p>Developers write sequential, synchronous-looking code for clarity and maintainability.</p></li>
@@ -673,19 +759,17 @@
 </ul>
 <p>The transpiler rewrites syscall calls into async syscall invocations under the hood so that the runtime can yield when waiting for I/O or remote RPCs.</p>
 </section>
-<section id="other-considerations">
-<h2>6. Other considerations<a class="headerlink" href="#other-considerations" title="Link to this heading">#</a></h2>
-<ul class="simple">
-<li><p>Debugging &amp; testing: developer workflows include local WASI execution, unit tests, and interactive session debugging. The tooling aims to provide source-level debugging aids when possible.</p></li>
-<li><p>Resource limits &amp; quotas: the kernel enforces CPU, memory, and syscall quotas per procedure to maintain isolation.</p></li>
-<li><p>Permissions &amp; auditing: procedures are registered with metadata (owner, version) and can be limited via capability sets; auditing captures invocation and syscall traces.</p></li>
-<li><p>Versioning &amp; hot-swap: modules are versioned in the mpk packaging model; operator workflows support rolling deployment and graceful draining of sessions.</p></li>
-</ul>
+<section id="runtime-constraints">
+<h2>9. Runtime constraints<a class="headerlink" href="#runtime-constraints" title="Link to this heading">#</a></h2>
+<p>Invocation limits are enabled by default and configured in <code class="docutils literal notranslate"><span class="pre">[invocation_limits]</span></code>: memory, fuel, wall-clock timeout, input/output sizes, host calls, resources and admission concurrency. See <a class="reference internal" href="../administration/configuration.html"><span class="std std-doc">Configuration Reference</span></a>.</p>
+<p>Automatic transaction handling describes the hosted invocation path. Native adapter calls follow the selected backend’s transaction semantics; cross-worker distributed atomic commit is not implemented. Do not infer rolling upgrades, session draining, per-procedure capability policies or a complete audit trail from MPK packaging alone.</p>
+<p>See <a class="reference internal" href="sdk.html"><span class="std std-doc">SDKs and Execution Modes</span></a> for choosing hosted versus local execution, and <a class="reference internal" href="../internal/suspendable-execution.html"><span class="std std-doc">Suspendable Procedure Execution</span></a> for async-world suspension and per-invocation isolation.</p>
 </section>
 <section id="references-examples">
 <h2>References &amp; examples<a class="headerlink" href="#references-examples" title="Link to this heading">#</a></h2>
 <ul class="simple">
 <li><p>See the <a class="reference internal" href="syscalls.html"><span class="std std-doc">system call reference</span></a> for <code class="docutils literal notranslate"><span class="pre">mudu_open</span></code>, <code class="docutils literal notranslate"><span class="pre">mudu_get</span></code>, <code class="docutils literal notranslate"><span class="pre">mudu_put</span></code>, <code class="docutils literal notranslate"><span class="pre">mudu_query</span></code>, <code class="docutils literal notranslate"><span class="pre">mudu_command</span></code>, and more.</p></li>
+<li><p>See <a class="reference internal" href="filesystem.html"><span class="std std-doc">Filesystem Object Types</span></a> for fs object DDL and the <code class="docutils literal notranslate"><span class="pre">mudu_fs_*</span></code> syscalls.</p></li>
 <li><p>See <a class="reference internal" href="../internal/wasm.html"><span class="std std-doc">WebAssembly Integration</span></a> for the component model and WASI sandbox.</p></li>
 <li><p>See <a class="reference internal" href="../administration/packages.html"><span class="std std-doc">Application Packages</span></a> for how to build and install an <code class="docutils literal notranslate"><span class="pre">.mpk</span></code> package.</p></li>
 <li><p>See architecture diagrams in the docs (<code class="docutils literal notranslate"><span class="pre">/_static/procedural_tx.png</span></code>) for visual flow between client, kernel, and worker.</p></li>
@@ -715,11 +799,11 @@
       </div>
     </a>
     <a class="right-next"
-       href="churcuring.html"
+       href="sdk.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Churcuring and CQL</p>
+        <p class="prev-next-title">SDKs and Execution Modes</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -744,9 +828,12 @@
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#design-goals">1. Design goals</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#interactive-execution-vs-stored-procedures-and-the-unified-model">2. Interactive execution vs stored procedures — and the unified model</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#webassembly-wasi-compilation-and-runtime">3. WebAssembly / WASI compilation and runtime</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#multi-language-support">4. Multi-language support</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#color-bind-async-await-language-ergonomics-and-runtime">5. Color-bind async/await: language ergonomics and runtime</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#other-considerations">6. Other considerations</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#procedure-specification">4. Procedure specification</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#transactions">5. Transactions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#entity-mapping">6. Entity mapping</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#multi-language-support">7. Multi-language support</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#color-bind-async-await-language-ergonomics-and-runtime">8. Color-bind async/await: language ergonomics and runtime</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#runtime-constraints">9. Runtime constraints</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references-examples">References &amp; examples</a></li>
 </ul>
   </nav></div>

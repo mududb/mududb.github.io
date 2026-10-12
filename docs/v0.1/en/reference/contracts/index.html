@@ -475,21 +475,29 @@
 <li class="toctree-l2"><a class="reference internal" href="../../administration/client.html">Client</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../administration/server.html">Server Management</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../administration/configuration.html">Configuration Reference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../administration/replication.html">Replication and Raft Fault Tolerance</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../administration/packages.html">Application Packages</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../administration/toolchain.html">Toolchain</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../administration/backup.html">Backup and Restore</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../programming/index.html">Programming</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../programming/mudu_procedure.html">Mudu Procedure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../programming/sdk.html">SDKs and Execution Modes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../programming/filesystem.html">Filesystem Object Types</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../programming/churcuring.html">Churcuring and CQL</a></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../programming/syscalls.html">Syscalls</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/open.html">open</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/close.html">close</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/read.html">read</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/write.html">write</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/range-scan.html">range-scan</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/batch.html">batch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/query.html">query</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/command.html">command</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/batch.html">batch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/get.html">get</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/put.html">put</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/delete.html">delete</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/range.html">range</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/fs.html">fs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/relation.html">Relation Syscalls</a></li>
 </ul>
 </details></li>
 </ul>
@@ -498,9 +506,11 @@
 <li class="toctree-l2"><a class="reference internal" href="../../internal/kernel.html">Kernel</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../internal/adapter.html">Adapters</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../internal/procedure-runtime.html">Procedure Runtime</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../internal/suspendable-execution.html">Suspendable Procedure Execution</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../internal/wasm.html">WebAssembly Integration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../internal/partitioning.html">Partitioning and Worker Mapping</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../internal/partitioning.html">Partitioning</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../internal/per_core_worker.html">Per-core Worker Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../internal/replication.html">Replication Architecture</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../index.html">Reference</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
@@ -609,7 +619,7 @@
 <tr class="row-even"><td><p>Page Header</p></td>
 <td><p><a class="reference internal" href="page_header_v1.html"><span class="std std-doc">v1</span></a></p></td>
 <td><p>Stable</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">mudu_kernel/src/storage/page/format/latest.rs</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">storage/src/page/format/latest.rs</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p>Tuple Binary Format</p></td>
 <td><p><a class="reference internal" href="tuple_binary_v1.html"><span class="std std-doc">v1</span></a></p></td>
@@ -619,7 +629,7 @@
 <tr class="row-even"><td><p>Log Frame (WAL/XL/PL)</p></td>
 <td><p><a class="reference internal" href="log_frame_v1.html"><span class="std std-doc">v1</span></a></p></td>
 <td><p>Stable</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">mudu_kernel/src/wal/format/latest.rs</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">wal/src/format/latest.rs</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p>TCP Protocol Frame</p></td>
 <td><p><a class="reference internal" href="protocol_frame_v1.html"><span class="std std-doc">v1</span></a></p></td>
@@ -629,22 +639,22 @@
 <tr class="row-even"><td><p>MPK Package Manifest</p></td>
 <td><p><a class="reference internal" href="mpk_manifest_v1.html"><span class="std std-doc">v1</span></a></p></td>
 <td><p>Stable</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">mudu_runtime/src/service/app_package.rs</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">runtime_wasm/src/service/app_package.rs</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p>Server Configuration</p></td>
 <td><p><a class="reference internal" href="mudud_cfg_v1.html"><span class="std std-doc">v1</span></a></p></td>
 <td><p>Stable</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">mudu_runtime/src/backend/mudud_cfg.rs</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">mudu_runtime/src/backend/mudud_cfg/mod.rs</span></code></p></td>
 </tr>
 <tr class="row-even"><td><p>File Layout</p></td>
 <td><p><a class="reference internal" href="file_layout_v1.html"><span class="std std-doc">v1</span></a></p></td>
 <td><p>Stable</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">mudu_kernel/src/storage/time_series/time_series_file.rs</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">storage/src/time_series/time_series_file.rs</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p>Guest→Host Syscall Payload</p></td>
 <td><p><a class="reference internal" href="syscall_payload_v1.html"><span class="std std-doc">v1</span></a></p></td>
-<td><p>Draft</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">mudu/src/compat/mod.rs</span></code> (registry; codec pending Phase 2)</p></td>
+<td><p>Stable</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">mudu_binding/src/codec/syscall_payload/</span></code> (host router; registry in <code class="docutils literal notranslate"><span class="pre">mudu/src/compat/mod.rs</span></code>)</p></td>
 </tr>
 </tbody>
 </table>

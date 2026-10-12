@@ -55,7 +55,7 @@
     <link rel="icon" href="../_static/favicon.svg"/>
     <link rel="index" title="索引" href="../genindex.html" />
     <link rel="search" title="搜索" href="../search.html" />
-    <link rel="next" title="Churcuring 与 CQL" href="churcuring.html" />
+    <link rel="next" title="SDK 与执行模式" href="sdk.html" />
     <link rel="prev" title="编程" href="index.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="zh-cn"/>
@@ -475,21 +475,29 @@
 <li class="toctree-l2"><a class="reference internal" href="../administration/client.html">客户端</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../administration/server.html">服务端管理</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../administration/configuration.html">配置参考</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../administration/replication.html">复制与 Raft 容错</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../administration/packages.html">应用包</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../administration/toolchain.html">工具链</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../administration/backup.html">备份与恢复</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">编程</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">Mudu 过程</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sdk.html">SDK 与执行模式</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filesystem.html">文件系统对象类型</a></li>
 <li class="toctree-l2"><a class="reference internal" href="churcuring.html">Churcuring 与 CQL</a></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="syscalls.html">系统调用</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="syscalls/open.html">open</a></li>
 <li class="toctree-l3"><a class="reference internal" href="syscalls/close.html">close</a></li>
-<li class="toctree-l3"><a class="reference internal" href="syscalls/read.html">read</a></li>
-<li class="toctree-l3"><a class="reference internal" href="syscalls/write.html">write</a></li>
-<li class="toctree-l3"><a class="reference internal" href="syscalls/range-scan.html">range-scan</a></li>
-<li class="toctree-l3"><a class="reference internal" href="syscalls/batch.html">batch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="syscalls/query.html">query</a></li>
 <li class="toctree-l3"><a class="reference internal" href="syscalls/command.html">command</a></li>
+<li class="toctree-l3"><a class="reference internal" href="syscalls/batch.html">batch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="syscalls/get.html">get</a></li>
+<li class="toctree-l3"><a class="reference internal" href="syscalls/put.html">put</a></li>
+<li class="toctree-l3"><a class="reference internal" href="syscalls/delete.html">delete</a></li>
+<li class="toctree-l3"><a class="reference internal" href="syscalls/range.html">range</a></li>
+<li class="toctree-l3"><a class="reference internal" href="syscalls/fs.html">fs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="syscalls/relation.html">Relation 系统调用</a></li>
 </ul>
 </details></li>
 </ul>
@@ -498,9 +506,11 @@
 <li class="toctree-l2"><a class="reference internal" href="../internal/kernel.html">内核</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../internal/adapter.html">适配器</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../internal/procedure-runtime.html">过程运行时</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../internal/suspendable-execution.html">可挂起的过程执行</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../internal/wasm.html">WebAssembly 集成</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../internal/partitioning.html">分区与工作线程映射</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../internal/per_core_worker.html">每核心工作线程模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../internal/partitioning.html">分区</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../internal/per_core_worker.html">每核 Worker 模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../internal/replication.html">复制架构</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../reference/index.html">参考资料</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -582,10 +592,13 @@
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">1. 设计目标</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">2. 交互式执行与存储过程——以及统一模型</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#webassembly-wasi">3. WebAssembly / WASI 编译与运行时</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">4. 多语言支持</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#color-bind-async-await">5. Color-bind async/await：语言体验与运行时</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">6. 其他注意事项</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">参考与示例</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">4. 过程规范</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">5. 事务</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#entity">6. Entity 映射</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">7. 多语言支持</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#color-bind-async-await">8. Color-bind async/await：语言体验与运行时</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">9. 运行时约束</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">参考与示例</a></li>
 </ul>
             </nav>
         </div>
@@ -632,7 +645,7 @@
 </section>
 <section id="webassembly-wasi">
 <h2>3. WebAssembly / WASI 编译与运行时<a class="headerlink" href="#webassembly-wasi" title="Link to this heading">#</a></h2>
-<p>Mudu 将过程编译为 WebAssembly（WASI）模块，并在沙箱化运行时中执行它们。</p>
+<p>Mudu 将过程编译为 WebAssembly（WASI）组件，并在沙箱化运行时中执行它们。</p>
 <p>为什么选择 WASI？</p>
 <ul class="simple">
 <li><p>可移植性：WASI 模块与平台无关、与语言无关。</p></li>
@@ -641,25 +654,98 @@
 </ul>
 <p>典型工具链流程：</p>
 <ol class="arabic simple">
-<li><p>使用支持的语言编写过程（目前已有 Rust 示例）。</p></li>
-<li><p>构建/编译为 WASI 模块（wasm-ld / rust + wasm32-wasi 目标）。</p></li>
-<li><p>可选地通过 mudu-transpiler 运行以应用 color-bind 转换（见下文）。</p></li>
+<li><p>使用支持的语言编写过程（本指南以 Rust facade 为例）。</p></li>
+<li><p>运行 <code class="docutils literal notranslate"><span class="pre">mtp</span></code> 生成包装代码并执行所选的同步/异步转换。</p></li>
+<li><p>将生成源码编译为 WASM 组件；使用示例构建任务可确保该顺序。</p></li>
 <li><p>部署模块（将 mpk/包放入 mpk_path）并向内核注册。</p></li>
 <li><p>以交互方式或作为存储过程调用；内核处理系统调用、事务和路由。</p></li>
 </ol>
 <p>运行时暴露了一组紧凑的系统调用（打开会话、get/put/range/query/command/batch 等）。过程使用这些系统调用与数据库状态交互；所有网络和存储访问都由内核中介。</p>
 </section>
 <section id="id3">
-<h2>4. 多语言支持<a class="headerlink" href="#id3" title="Link to this heading">#</a></h2>
-<p>与许多绑定到嵌入式语言（SQL/PLSQL/PLpgSQL）的传统存储过程环境不同，Mudu 过程计划通过面向 WASI 来支持多种高级语言。</p>
+<h2>4. 过程规范<a class="headerlink" href="#id3" title="Link to this heading">#</a></h2>
+<p>Mudu 过程是带有 <code class="docutils literal notranslate"><span class="pre">/**mudu-proc**/</span></code> 标记的函数，该标记告知转译器将紧随其后的函数暴露为过程：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/**mudu-proc**/
+fn {procedure_name}(
+    oid: OID,
+    {argument_list...}
+) -&gt; RS&lt;{return_value_type}&gt;
+</pre></div>
+</div>
 <ul class="simple">
-<li><p>当前支持的实现示例：Rust。</p></li>
-<li><p>未来：其他可以生成 WASI 模块的语言（C/C++、Zig、AssemblyScript、Go（wasi 支持待定）等）。</p></li>
+<li><p><strong>过程名称</strong> —— 一个合法的 Rust 函数名。</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">oid</span></code></strong> —— 传入过程的当前系统会话 ID。</p></li>
+<li><p><strong>参数</strong> —— 每个参数都必须能够被 Mudu 的 datum / tuple 转换体系表示。常见可用形式包括 <code class="docutils literal notranslate"><span class="pre">i32</span></code>、<code class="docutils literal notranslate"><span class="pre">i64</span></code>、<code class="docutils literal notranslate"><span class="pre">String</span></code>、<code class="docutils literal notranslate"><span class="pre">f32</span></code>、<code class="docutils literal notranslate"><span class="pre">f64</span></code> 等标量，以及 <code class="docutils literal notranslate"><span class="pre">Vec&lt;String&gt;</span></code> 等容器形式；精确支持范围以 <code class="docutils literal notranslate"><span class="pre">mudu_type</span></code> 转换体系和转译器实现为准，而非固定白名单。</p></li>
+<li><p><strong>返回值</strong> —— 同样必须能够被该转换体系表示；当前实现支持标量值、tuple 返回值以及 <code class="docutils literal notranslate"><span class="pre">Vec&lt;T&gt;</span></code> 形式的结果容器。</p></li>
+</ul>
+<p>过程代码使用的结果别名 <code class="docutils literal notranslate"><span class="pre">RS</span></code> 定义如下：</p>
+<div class="highlight-rust notranslate"><div class="highlight"><pre><span></span><span class="k">use</span><span class="w"> </span><span class="n">mudu</span><span class="p">::</span><span class="n">error</span><span class="p">::</span><span class="n">err</span><span class="p">::</span><span class="n">MError</span><span class="p">;</span>
+<span class="k">pub</span><span class="w"> </span><span class="k">type</span><span class="w"> </span><span class="nc">RS</span><span class="o">&lt;</span><span class="n">X</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Result</span><span class="o">&lt;</span><span class="n">X</span><span class="p">,</span><span class="w"> </span><span class="n">MError</span><span class="o">&gt;</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>在过程内部，代码通过<a class="reference internal" href="syscalls.html"><span class="std std-doc">系统调用</span></a>与数据库交互：SQL 系统调用（<code class="docutils literal notranslate"><span class="pre">mudu_query</span></code> / <code class="docutils literal notranslate"><span class="pre">mudu_command</span></code> / <code class="docutils literal notranslate"><span class="pre">mudu_batch</span></code>）和键值系统调用（<code class="docutils literal notranslate"><span class="pre">mudu_get</span></code> / <code class="docutils literal notranslate"><span class="pre">mudu_put</span></code> / <code class="docutils literal notranslate"><span class="pre">mudu_range</span></code>）。</p>
+</section>
+<section id="id4">
+<h2>5. 事务<a class="headerlink" href="#id4" title="Link to this heading">#</a></h2>
+<p>Mudu 过程支持两种事务执行模式。</p>
+<p><strong>自动模式（当前）。</strong> 每次过程调用都作为一个独立事务运行：</p>
+<ul class="simple">
+<li><p>过程返回 <code class="docutils literal notranslate"><span class="pre">Ok</span></code> 时事务自动提交；</p></li>
+<li><p>过程返回 <code class="docutils literal notranslate"><span class="pre">Err</span></code> 时事务自动回滚。</p></li>
+</ul>
+<p><strong>手动模式（规划中）。</strong> 跨多个过程传递共享会话 <code class="docutils literal notranslate"><span class="pre">oid</span></code> 以进行显式事务控制是一项规划中的能力。当前过程 API 不暴露 <code class="docutils literal notranslate"><span class="pre">commit</span></code> / <code class="docutils literal notranslate"><span class="pre">rollback</span></code>；下面的伪代码仅用于示意：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>procedure1(oid);
+procedure2(oid);
+commit(oid); // 显式提交；或使用 rollback(oid) 显式回滚
+</pre></div>
+</div>
+</section>
+<section id="entity">
+<h2>6. Entity 映射<a class="headerlink" href="#entity" title="Link to this heading">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">mudu_query</span></code> 自动执行 R2O（关系到对象）映射：它返回 <code class="docutils literal notranslate"><span class="pre">EntitySet&lt;R&gt;</span></code>，其中的行被解码为实体类型 <code class="docutils literal notranslate"><span class="pre">R</span></code>。<code class="docutils literal notranslate"><span class="pre">R</span></code> 必须实现 <code class="docutils literal notranslate"><span class="pre">Entity</span></code> trait：</p>
+<div class="highlight-rust notranslate"><div class="highlight"><pre><span></span><span class="k">pub</span><span class="w"> </span><span class="k">trait</span><span class="w"> </span><span class="n">Entity</span><span class="p">:</span><span class="w"> </span><span class="nc">Datum</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">tuple_desc</span><span class="p">()</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kp">&amp;</span><span class="o">'</span><span class="nb">static</span><span class="w"> </span><span class="nc">TupleFieldDesc</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">table_name</span><span class="p">()</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kp">&amp;</span><span class="o">'</span><span class="nb">static</span><span class="w"> </span><span class="kt">str</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">from_tuple</span><span class="p">(</span><span class="n">row</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="nc">TupleField</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">RS</span><span class="o">&lt;</span><span class="bp">Self</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">from_tuple_value</span><span class="p">(</span><span class="n">row</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="nc">TupleValue</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">RS</span><span class="o">&lt;</span><span class="bp">Self</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">to_tuple</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">RS</span><span class="o">&lt;</span><span class="n">TupleField</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">to_tuple_value</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">RS</span><span class="o">&lt;</span><span class="n">TupleValue</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Entity 实现通常是生成而非手写的：对于 <code class="docutils literal notranslate"><span class="pre">sql/ddl.sql</span></code> 中的每张表，<code class="docutils literal notranslate"><span class="pre">mgen</span> <span class="pre">entity</span></code> 生成一个 Rust 模块，包含：</p>
+<ul class="simple">
+<li><p>实现 <code class="docutils literal notranslate"><span class="pre">Entity</span></code> 的行结构体（如 <code class="docutils literal notranslate"><span class="pre">Wallets</span></code>），以及 <code class="docutils literal notranslate"><span class="pre">TABLE_NAME</span></code> 与 <code class="docutils literal notranslate"><span class="pre">columns::*</span></code> 列名常量；</p></li>
+<li><p>针对含主键表的预构建 SQL 文本常量 <code class="docutils literal notranslate"><span class="pre">SQL_GET_BY_PK</span></code>、<code class="docutils literal notranslate"><span class="pre">SQL_INSERT</span></code>、<code class="docutils literal notranslate"><span class="pre">SQL_DELETE_BY_PK</span></code>，以及返回 <code class="docutils literal notranslate"><span class="pre">SQL_INSERT</span></code> 类型化绑定元组的 <code class="docutils literal notranslate"><span class="pre">insert_params()</span></code>；</p></li>
+<li><p>部分更新变更集 <code class="docutils literal notranslate"><span class="pre">&lt;Table&gt;Change</span></code>，每个非键列对应一个 <code class="docutils literal notranslate"><span class="pre">FieldChange&lt;T&gt;</span></code>：<code class="docutils literal notranslate"><span class="pre">Unchanged</span></code>（默认）不更新该列，<code class="docutils literal notranslate"><span class="pre">Set(v)</span></code> 更新该列；对于可空列，<code class="docutils literal notranslate"><span class="pre">Set(None)</span></code> 写入 SQL <code class="docutils literal notranslate"><span class="pre">NULL</span></code>。</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">update_by_pk(...)</span></code> 构造 <code class="docutils literal notranslate"><span class="pre">UPDATE</span> <span class="pre">...</span> <span class="pre">SET</span> <span class="pre">...</span> <span class="pre">WHERE</span> <span class="pre">&lt;pk&gt;</span> <span class="pre">=</span> <span class="pre">?</span></code> 语句及其绑定参数；当没有任何列被标记时返回 <code class="docutils literal notranslate"><span class="pre">None</span></code>：</p>
+<div class="highlight-rust notranslate"><div class="highlight"><pre><span></span><span class="kd">let</span><span class="w"> </span><span class="n">change</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">WalletsChange</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">balance</span><span class="p">:</span><span class="w"> </span><span class="nc">FieldChange</span><span class="p">::</span><span class="n">Set</span><span class="p">(</span><span class="nb">Some</span><span class="p">(</span><span class="mi">200</span><span class="p">)),</span>
+<span class="w">    </span><span class="o">..</span><span class="n">WalletsChange</span><span class="p">::</span><span class="n">default</span><span class="p">()</span>
+<span class="p">};</span>
+<span class="k">if</span><span class="w"> </span><span class="kd">let</span><span class="w"> </span><span class="nb">Some</span><span class="p">((</span><span class="n">sql</span><span class="p">,</span><span class="w"> </span><span class="n">params</span><span class="p">))</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">change</span><span class="p">.</span><span class="n">update_by_pk</span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">mudu_command</span><span class="p">(</span><span class="n">oid</span><span class="p">,</span><span class="w"> </span><span class="n">sql_stmt</span><span class="o">!</span><span class="p">(</span><span class="o">&amp;</span><span class="n">sql</span><span class="p">),</span><span class="w"> </span><span class="n">sql_params</span><span class="o">!</span><span class="p">(</span><span class="o">&amp;</span><span class="n">params</span><span class="p">))</span><span class="o">?</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="id5">
+<h2>7. 多语言支持<a class="headerlink" href="#id5" title="Link to this heading">#</a></h2>
+<p>与许多绑定到嵌入式语言（SQL/PLSQL/PLpgSQL）的传统存储过程环境不同，Mudu 过程通过编译为 WASM 组件来支持多种高级语言。</p>
+<ul class="simple">
+<li><p>当前支持的 Guest 语言：Rust、AssemblyScript、C#、Python、C 和 Go。本指南以 Rust facade 为例，它是过程 API 的参考实现。</p></li>
+<li><p>未来：其他可以生成 WASM 组件的语言（Zig 等）。</p></li>
 </ul>
 <p>这为利用现代语言生态系统、包管理器和开发者工具打开了大门，同时保持执行的安全性和可移植性。</p>
 </section>
 <section id="color-bind-async-await">
-<h2>5. Color-bind async/await：语言体验与运行时<a class="headerlink" href="#color-bind-async-await" title="Link to this heading">#</a></h2>
+<h2>8. Color-bind async/await：语言体验与运行时<a class="headerlink" href="#color-bind-async-await" title="Link to this heading">#</a></h2>
 <p>Mudu 采用“color-bind”模型，其中异步是运行时特性而非强制的语言构造：</p>
 <ul class="simple">
 <li><p>开发者编写顺序的、看起来同步的代码，以提高清晰度和可维护性。</p></li>
@@ -673,19 +759,17 @@
 </ul>
 <p>转译器在底层将系统调用重写为异步系统调用，以便运行时可以在等待 I/O 或远程 RPC 时让出执行权。</p>
 </section>
-<section id="id4">
-<h2>6. 其他注意事项<a class="headerlink" href="#id4" title="Link to this heading">#</a></h2>
-<ul class="simple">
-<li><p>调试与测试：开发者工作流包括本地 WASI 执行、单元测试和交互式会话调试。工具链尽可能提供源码级调试辅助。</p></li>
-<li><p>资源限制与配额：内核对每个过程强制执行 CPU、内存和系统调用配额，以维持隔离。</p></li>
-<li><p>权限与审计：过程通过元数据（所有者、版本）注册，并可以通过能力集进行限制；审计捕获调用和系统调用跟踪。</p></li>
-<li><p>版本控制与热交换：模块在 mpk 打包模型中进行版本控制；运维工作流支持滚动部署和会话的优雅排空。</p></li>
-</ul>
+<section id="id6">
+<h2>9. 运行时约束<a class="headerlink" href="#id6" title="Link to this heading">#</a></h2>
+<p>调用预算默认启用，通过 <code class="docutils literal notranslate"><span class="pre">[invocation_limits]</span></code> 配置内存、fuel、执行超时、输入输出大小、宿主调用次数、资源数和并发准入，见<a class="reference internal" href="../administration/configuration.html"><span class="std std-doc">配置参考</span></a>。</p>
+<p>自动事务处理描述的是宿主过程调用路径。本地适配器使用所选后端的事务语义；跨 worker 的分布式原子提交尚未实现。不能仅由 MPK 打包能力推断滚动升级、会话排空、逐过程 capability 策略或完整审计能力。</p>
+<p>选择宿主或本地执行模式见 <a class="reference internal" href="sdk.html"><span class="std std-doc">SDK 与执行模式</span></a>；异步 world 的挂起与逐调用隔离见<a class="reference internal" href="../internal/suspendable-execution.html"><span class="std std-doc">可挂起的过程执行</span></a>。</p>
 </section>
-<section id="id5">
-<h2>参考与示例<a class="headerlink" href="#id5" title="Link to this heading">#</a></h2>
+<section id="id7">
+<h2>参考与示例<a class="headerlink" href="#id7" title="Link to this heading">#</a></h2>
 <ul class="simple">
 <li><p>系统调用参考请参见 <a class="reference internal" href="syscalls.html"><span class="std std-doc">系统调用参考</span></a>，包括 <code class="docutils literal notranslate"><span class="pre">mudu_open</span></code>、<code class="docutils literal notranslate"><span class="pre">mudu_get</span></code>、<code class="docutils literal notranslate"><span class="pre">mudu_put</span></code>、<code class="docutils literal notranslate"><span class="pre">mudu_query</span></code>、<code class="docutils literal notranslate"><span class="pre">mudu_command</span></code> 等。</p></li>
+<li><p>fs 对象 DDL 与 <code class="docutils literal notranslate"><span class="pre">mudu_fs_*</span></code> 系统调用请参见 <a class="reference internal" href="filesystem.html"><span class="std std-doc">文件系统对象类型</span></a>。</p></li>
 <li><p>WebAssembly 组件模型与 WASI 沙箱请参见 <a class="reference internal" href="../internal/wasm.html"><span class="std std-doc">WebAssembly 集成</span></a>。</p></li>
 <li><p>如何构建与安装 <code class="docutils literal notranslate"><span class="pre">.mpk</span></code> 包请参见 <a class="reference internal" href="../administration/packages.html"><span class="std std-doc">应用包</span></a>。</p></li>
 <li><p>客户端、内核和工作者之间的可视化流程请参见文档中的架构图（<code class="docutils literal notranslate"><span class="pre">/_static/procedural_tx.png</span></code>）。</p></li>
@@ -715,11 +799,11 @@
       </div>
     </a>
     <a class="right-next"
-       href="churcuring.html"
+       href="sdk.html"
        title="下一页">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">下一页</p>
-        <p class="prev-next-title">Churcuring 与 CQL</p>
+        <p class="prev-next-title">SDK 与执行模式</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -744,10 +828,13 @@
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">1. 设计目标</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">2. 交互式执行与存储过程——以及统一模型</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#webassembly-wasi">3. WebAssembly / WASI 编译与运行时</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">4. 多语言支持</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#color-bind-async-await">5. Color-bind async/await：语言体验与运行时</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">6. 其他注意事项</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">参考与示例</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">4. 过程规范</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">5. 事务</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#entity">6. Entity 映射</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">7. 多语言支持</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#color-bind-async-await">8. Color-bind async/await：语言体验与运行时</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">9. 运行时约束</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">参考与示例</a></li>
 </ul>
   </nav></div>
 

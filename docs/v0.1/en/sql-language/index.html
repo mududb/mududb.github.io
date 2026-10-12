@@ -273,6 +273,10 @@
   
 
   
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
 </div>
 
     </header>
@@ -471,21 +475,29 @@
 <li class="toctree-l2"><a class="reference internal" href="../administration/client.html">Client</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../administration/server.html">Server Management</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../administration/configuration.html">Configuration Reference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../administration/replication.html">Replication and Raft Fault Tolerance</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../administration/packages.html">Application Packages</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../administration/toolchain.html">Toolchain</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../administration/backup.html">Backup and Restore</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../programming/index.html">Programming</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../programming/mudu_procedure.html">Mudu Procedure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../programming/sdk.html">SDKs and Execution Modes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../programming/filesystem.html">Filesystem Object Types</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../programming/churcuring.html">Churcuring and CQL</a></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../programming/syscalls.html">Syscalls</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/open.html">open</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/close.html">close</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/read.html">read</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/write.html">write</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/range-scan.html">range-scan</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/batch.html">batch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/query.html">query</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/command.html">command</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/batch.html">batch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/get.html">get</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/put.html">put</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/delete.html">delete</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/range.html">range</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/fs.html">fs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/relation.html">Relation Syscalls</a></li>
 </ul>
 </details></li>
 </ul>
@@ -494,9 +506,11 @@
 <li class="toctree-l2"><a class="reference internal" href="../internal/kernel.html">Kernel</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../internal/adapter.html">Adapters</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../internal/procedure-runtime.html">Procedure Runtime</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../internal/suspendable-execution.html">Suspendable Procedure Execution</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../internal/wasm.html">WebAssembly Integration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../internal/partitioning.html">Partitioning and Worker Mapping</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../internal/partitioning.html">Partitioning</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../internal/per_core_worker.html">Per-core Worker Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../internal/replication.html">Replication Architecture</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../reference/index.html">Reference</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -547,7 +561,20 @@
           <div class="bd-content">
             <div class="bd-article-container">
               
-              <div class="bd-header-article d-print-none"></div>
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item"><button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button></div>
+      
+    </div>
+  
+</div>
+</div>
               
               
 
@@ -557,6 +584,14 @@
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#compatibility-and-pitfalls">Compatibility and Pitfalls</a></li>
+</ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -573,6 +608,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="ddl/index.html">Data Definition</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="ddl/index.html#table-basics">Table Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ddl/index.html#filesystem-types">Filesystem Types</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ddl/index.html#unsupported-ddl">Unsupported DDL</a></li>
 </ul>
 </li>
@@ -596,6 +632,16 @@
 </li>
 </ul>
 </div>
+<section id="compatibility-and-pitfalls">
+<h2>Compatibility and Pitfalls<a class="headerlink" href="#compatibility-and-pitfalls" title="Link to this heading">#</a></h2>
+<p>The following syntax is accepted by the grammar, but the v0.1 engine silently ignores its semantics (no error is raised and the meaning does not take effect):</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">TABLE</span> <span class="pre">IF</span> <span class="pre">NOT</span> <span class="pre">EXISTS</span></code> — <code class="docutils literal notranslate"><span class="pre">IF</span> <span class="pre">NOT</span> <span class="pre">EXISTS</span></code> is ignored: creating an existing table still fails.</p></li>
+<li><p>Column-level <code class="docutils literal notranslate"><span class="pre">DEFAULT</span></code> constraints — parsed but ignored; no default value is filled in for the column.</p></li>
+<li><p>Table-level <code class="docutils literal notranslate"><span class="pre">FOREIGN</span> <span class="pre">KEY</span> <span class="pre">...</span> <span class="pre">REFERENCES</span></code> constraints — parsed but not enforced.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SELECT</span> <span class="pre">DISTINCT</span></code> — <code class="docutils literal notranslate"><span class="pre">DISTINCT</span></code> is ignored; the result is not deduplicated.</p></li>
+</ul>
+</section>
 </section>
 
 
@@ -633,6 +679,23 @@
             </div>
             
             
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#compatibility-and-pitfalls">Compatibility and Pitfalls</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>

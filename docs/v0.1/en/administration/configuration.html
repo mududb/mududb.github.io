@@ -55,7 +55,7 @@
     <link rel="icon" href="../_static/favicon.svg"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Application Packages" href="packages.html" />
+    <link rel="next" title="Replication and Raft Fault Tolerance" href="replication.html" />
     <link rel="prev" title="Server Management" href="server.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -475,21 +475,29 @@
 <li class="toctree-l2"><a class="reference internal" href="client.html">Client</a></li>
 <li class="toctree-l2"><a class="reference internal" href="server.html">Server Management</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">Configuration Reference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="replication.html">Replication and Raft Fault Tolerance</a></li>
 <li class="toctree-l2"><a class="reference internal" href="packages.html">Application Packages</a></li>
 <li class="toctree-l2"><a class="reference internal" href="toolchain.html">Toolchain</a></li>
+<li class="toctree-l2"><a class="reference internal" href="backup.html">Backup and Restore</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../programming/index.html">Programming</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../programming/mudu_procedure.html">Mudu Procedure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../programming/sdk.html">SDKs and Execution Modes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../programming/filesystem.html">Filesystem Object Types</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../programming/churcuring.html">Churcuring and CQL</a></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../programming/syscalls.html">Syscalls</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/open.html">open</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/close.html">close</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/read.html">read</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/write.html">write</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/range-scan.html">range-scan</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/batch.html">batch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/query.html">query</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/command.html">command</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/batch.html">batch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/get.html">get</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/put.html">put</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/delete.html">delete</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/range.html">range</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/fs.html">fs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/relation.html">Relation Syscalls</a></li>
 </ul>
 </details></li>
 </ul>
@@ -498,9 +506,11 @@
 <li class="toctree-l2"><a class="reference internal" href="../internal/kernel.html">Kernel</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../internal/adapter.html">Adapters</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../internal/procedure-runtime.html">Procedure Runtime</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../internal/suspendable-execution.html">Suspendable Procedure Execution</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../internal/wasm.html">WebAssembly Integration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../internal/partitioning.html">Partitioning and Worker Mapping</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../internal/partitioning.html">Partitioning</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../internal/per_core_worker.html">Per-core Worker Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../internal/replication.html">Replication Architecture</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../reference/index.html">Reference</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -583,6 +593,9 @@
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#generate-a-default-config">Generate a default config</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#configuration-fields">Configuration fields</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#server-and-routing-modes">Server and routing modes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#procedure-resource-limits">Procedure resource limits</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#replication">Replication</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#backup">Backup</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-mudud-cfg">Example <code class="docutils literal notranslate"><span class="pre">mudud.cfg</span></code></a></li>
 </ul>
             </nav>
@@ -600,13 +613,7 @@
 <p><code class="docutils literal notranslate"><span class="pre">mudud</span></code> reads its configuration from a TOML file. The file controls listen ports, execution mode, storage paths, and io_uring behavior.</p>
 <section id="file-location">
 <h2>File location<a class="headerlink" href="#file-location" title="Link to this heading">#</a></h2>
-<p>The server loads the first file that exists, in this order:</p>
-<ol class="arabic simple">
-<li><p>The path provided by <code class="docutils literal notranslate"><span class="pre">--cfg</span> <span class="pre">/path/to/mudud.cfg</span></code> (or <code class="docutils literal notranslate"><span class="pre">-c</span> <span class="pre">/path/to/mudud.cfg</span></code>), if given.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">./mudud.cfg</span></code> in the current working directory.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">~/.mududb/mudud.cfg</span></code> in the user’s home directory.</p></li>
-</ol>
-<p>If none of these files exist, <code class="docutils literal notranslate"><span class="pre">mudud</span></code> returns a <code class="docutils literal notranslate"><span class="pre">NotFound</span></code> error. Use <code class="docutils literal notranslate"><span class="pre">mudud</span> <span class="pre">init-cfg</span></code> to create a default <code class="docutils literal notranslate"><span class="pre">./mudud.cfg</span></code> before starting the server.</p>
+<p>An explicit <code class="docutils literal notranslate"><span class="pre">--cfg</span></code> / <code class="docutils literal notranslate"><span class="pre">-c</span></code> path is used exclusively: a missing or invalid file fails without fallback. Without that option, the server tries <code class="docutils literal notranslate"><span class="pre">./mudud.cfg</span></code>, then <code class="docutils literal notranslate"><span class="pre">~/.mududb/mudud.cfg</span></code>; if neither exists it returns <code class="docutils literal notranslate"><span class="pre">NotFound</span></code>. Relative storage paths are resolved from the server process working directory.</p>
 </section>
 <section id="generate-a-default-config">
 <h2>Generate a default config<a class="headerlink" href="#generate-a-default-config" title="Link to this heading">#</a></h2>
@@ -616,6 +623,7 @@
 </section>
 <section id="configuration-fields">
 <h2>Configuration fields<a class="headerlink" href="#configuration-fields" title="Link to this heading">#</a></h2>
+<p>The table lists generated configuration values and defaults for optional fields. <code class="docutils literal notranslate"><span class="pre">mpk_path</span></code>, <code class="docutils literal notranslate"><span class="pre">db_path</span></code>, <code class="docutils literal notranslate"><span class="pre">listen_ip</span></code>, <code class="docutils literal notranslate"><span class="pre">http_listen_port</span></code>, <code class="docutils literal notranslate"><span class="pre">pg_listen_port</span></code>, and <code class="docutils literal notranslate"><span class="pre">enable_async</span></code> are required in a hand-written TOML file; the parser does not fill them in. <code class="docutils literal notranslate"><span class="pre">mudud</span> <span class="pre">init-cfg</span></code> writes <code class="docutils literal notranslate"><span class="pre">./mudud.cfg</span></code> and overwrites an existing file.</p>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Field</p></th>
@@ -653,7 +661,7 @@
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">pg_listen_port</span></code></p></td>
 <td><p>u16</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">5432</span></code></p></td>
-<td><p>PostgreSQL wire protocol port.</p></td>
+<td><p>PostgreSQL wire protocol port (Legacy only).</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">component_target</span></code></p></td>
 <td><p>string</p></td>
@@ -667,7 +675,7 @@
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">server_mode</span></code></p></td>
 <td><p>string</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">&quot;IOUring&quot;</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&quot;Tokio&quot;</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">&quot;Legacy&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;IOUring&quot;</span></code>, or <code class="docutils literal notranslate"><span class="pre">&quot;Tokio&quot;</span></code>.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">tcp_listen_port</span></code></p></td>
@@ -725,6 +733,21 @@
 <td><p><code class="docutils literal notranslate"><span class="pre">4096</span></code></p></td>
 <td><p>Database page size in bytes. Persistent: changing it for an existing database requires migration or re-initialization.</p></td>
 </tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">wal_flush_max_wait_us</span></code></p></td>
+<td><p>u64</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">200</span></code></p></td>
+<td><p>Group-commit batching window in microseconds: how long a queued WAL commit batch may age before the flush driver flushes it.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">wal_sync_mode</span></code></p></td>
+<td><p>string</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&quot;commit&quot;</span></code></p></td>
+<td><p>WAL durability mode: <code class="docutils literal notranslate"><span class="pre">&quot;commit&quot;</span></code> fsyncs every flush round before the commit is acknowledged; <code class="docutils literal notranslate"><span class="pre">&quot;periodic&quot;</span></code> acknowledges once the WAL write lands in the page cache and fsyncs at most once per <code class="docutils literal notranslate"><span class="pre">wal_sync_interval_ms</span></code>. Unknown values fail startup.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">wal_sync_interval_ms</span></code></p></td>
+<td><p>u64</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">10</span></code></p></td>
+<td><p>WAL fsync interval in milliseconds for <code class="docutils literal notranslate"><span class="pre">wal_sync_mode</span> <span class="pre">=</span> <span class="pre">&quot;periodic&quot;</span></code>. A power loss may lose acknowledged commits from the last interval.</p></td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -747,6 +770,201 @@
 </ul>
 </li>
 </ul>
+</section>
+<section id="procedure-resource-limits">
+<h2>Procedure resource limits<a class="headerlink" href="#procedure-resource-limits" title="Link to this heading">#</a></h2>
+<p>The optional <code class="docutils literal notranslate"><span class="pre">[invocation_limits]</span></code> table caps WASM procedure execution. Omitted fields use the defaults below; changes require a restart. Every value must be positive, <code class="docutils literal notranslate"><span class="pre">memory_bytes</span></code> must not exceed <code class="docutils literal notranslate"><span class="pre">total_memory_bytes</span></code>, and <code class="docutils literal notranslate"><span class="pre">max_concurrent_per_app</span></code> must not exceed <code class="docutils literal notranslate"><span class="pre">max_concurrent</span></code>. Unknown fields in this table are rejected.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Field</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">memory_bytes</span></code></p></td>
+<td><p>usize</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">134217728</span></code></p></td>
+<td><p>Total linear-memory bytes across all memories in one invocation.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">fuel</span></code></p></td>
+<td><p>u64</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">1000000000</span></code></p></td>
+<td><p>Wasm instruction fuel, including component initialization.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">timeout_ms</span></code></p></td>
+<td><p>u64</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">30000</span></code></p></td>
+<td><p>Wall-clock execution budget in milliseconds, including transaction setup.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">max_input_bytes</span></code></p></td>
+<td><p>usize</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">8388608</span></code></p></td>
+<td><p>Maximum encoded procedure or host-call input size.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">max_output_bytes</span></code></p></td>
+<td><p>usize</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">8388608</span></code></p></td>
+<td><p>Maximum encoded procedure or host-call output size.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">max_host_calls</span></code></p></td>
+<td><p>u64</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">10000</span></code></p></td>
+<td><p>Maximum host calls, including resource-opening calls.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">max_resources</span></code></p></td>
+<td><p>usize</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">256</span></code></p></td>
+<td><p>Maximum simultaneously open worker sessions and file handles.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">table_elements</span></code></p></td>
+<td><p>usize</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">100000</span></code></p></td>
+<td><p>Maximum total table elements in one invocation.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">max_concurrent</span></code></p></td>
+<td><p>usize</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">4</span></code></p></td>
+<td><p>Process-wide maximum admitted procedure calls.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">max_concurrent_per_app</span></code></p></td>
+<td><p>usize</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">2</span></code></p></td>
+<td><p>Maximum admitted calls sharing an application name.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">total_memory_bytes</span></code></p></td>
+<td><p>usize</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">536870912</span></code></p></td>
+<td><p>Process-wide reserved guest linear-memory budget.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="replication">
+<h2>Replication<a class="headerlink" href="#replication" title="Link to this heading">#</a></h2>
+<p>The optional <code class="docutils literal notranslate"><span class="pre">[replication]</span></code> table configures primary-replica streaming replication or Raft fault tolerance. When absent, the server runs as a single node. Replication currently requires <code class="docutils literal notranslate"><span class="pre">server_mode</span> <span class="pre">=</span> <span class="pre">&quot;Tokio&quot;</span></code>; <code class="docutils literal notranslate"><span class="pre">Legacy</span></code> and <code class="docutils literal notranslate"><span class="pre">IOUring</span></code> reject it at startup. Exactly one of the <code class="docutils literal notranslate"><span class="pre">[replication.stream]</span></code> / <code class="docutils literal notranslate"><span class="pre">[replication.raft]</span></code> subsections must be present — the present subsection selects the mode.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Field</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">node_id</span></code></p></td>
+<td><p>u64</p></td>
+<td><p>required</p></td>
+<td><p>Identifier of this node. Persisted to <code class="docutils literal notranslate"><span class="pre">&lt;db_path&gt;/node_id</span></code> on first boot; a mismatch with the persisted value is a startup error.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">listen_port</span></code></p></td>
+<td><p>u16</p></td>
+<td><p>required</p></td>
+<td><p>Port the replication and Raft channel listens on; must not collide with <code class="docutils literal notranslate"><span class="pre">http_listen_port</span></code>, <code class="docutils literal notranslate"><span class="pre">pg_listen_port</span></code>, or <code class="docutils literal notranslate"><span class="pre">tcp_listen_port</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">repl_flow_window_segments</span></code></p></td>
+<td><p>u64</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">64</span></code></p></td>
+<td><p>Flow-control window of the replication stream, in segments.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">snapshot_wal_threshold_bytes</span></code></p></td>
+<td><p>u64</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">1073741824</span></code></p></td>
+<td><p>Committed WAL bytes beyond the last snapshot that trigger the next per-worker snapshot. Must be greater than zero.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">gc_check_interval_secs</span></code></p></td>
+<td><p>u64</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">60</span></code></p></td>
+<td><p>Interval between WAL/staging GC watermark evaluations, in seconds. Must be greater than zero.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">[replication.stream]</span></code> — primary-replica streaming replication without Raft:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Field</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">primary</span></code></p></td>
+<td><p>boolean</p></td>
+<td><p>required</p></td>
+<td><p>Whether this node is the configured primary; exactly one cluster member sets <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">sync</span></code></p></td>
+<td><p>boolean</p></td>
+<td><p>required</p></td>
+<td><p>Whether the primary waits for a replica’s durable ack before answering a commit.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">sync_timeout_ms</span></code></p></td>
+<td><p>u64</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">10000</span></code></p></td>
+<td><p>Synchronous replication wait timeout in milliseconds.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">[replication.raft]</span></code> — Raft consensus fault tolerance:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Field</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">raft_tick_ms</span></code></p></td>
+<td><p>u64</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">50</span></code></p></td>
+<td><p>Raft state machine tick interval in milliseconds.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">election_timeout_ticks</span></code></p></td>
+<td><p>u64</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">500</span></code></p></td>
+<td><p>Raft election timeout in ticks.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Cluster members are listed as <code class="docutils literal notranslate"><span class="pre">[[replication.peers]]</span></code> entries with <code class="docutils literal notranslate"><span class="pre">node_id</span></code>, <code class="docutils literal notranslate"><span class="pre">host</span></code>, and <code class="docutils literal notranslate"><span class="pre">port</span></code>. The peer list must be non-empty, contain no duplicate node ids or addresses, and include this node’s own <code class="docutils literal notranslate"><span class="pre">node_id</span></code>. Stream mode requires at least two peers.</p>
+</section>
+<section id="backup">
+<h2>Backup<a class="headerlink" href="#backup" title="Link to this heading">#</a></h2>
+<p>The optional <code class="docutils literal notranslate"><span class="pre">[backup]</span></code> table configures base backups and WAL archiving. When absent, the server runs backup-free: WAL prefix GC reclaims chunks without archiving them. See <a class="reference internal" href="backup.html"><span class="std std-doc">Backup and Restore</span></a> for the backup workflow.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Field</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">backup_dir</span></code></p></td>
+<td><p>string</p></td>
+<td><p>unset</p></td>
+<td><p>Directory base backups are written to; required by the <code class="docutils literal notranslate"><span class="pre">mcli</span> <span class="pre">backup</span></code> commands.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">archive_dir</span></code></p></td>
+<td><p>string</p></td>
+<td><p>unset</p></td>
+<td><p>Directory sealed WAL chunks are continuously archived to.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">archive_mode</span></code></p></td>
+<td><p>string</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&quot;on&quot;</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&quot;off&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;on&quot;</span></code>, or <code class="docutils literal notranslate"><span class="pre">&quot;always&quot;</span></code>. Archiving is active only when <code class="docutils literal notranslate"><span class="pre">archive_dir</span></code> is set and the mode is not <code class="docutils literal notranslate"><span class="pre">&quot;off&quot;</span></code>; an unknown mode fails startup.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
 </section>
 <section id="example-mudud-cfg">
 <h2>Example <code class="docutils literal notranslate"><span class="pre">mudud.cfg</span></code><a class="headerlink" href="#example-mudud-cfg" title="Link to this heading">#</a></h2>
@@ -772,6 +990,8 @@
 </pre></div>
 </div>
 <p>See the <a class="reference internal" href="../reference/contracts/mudud_cfg_v1.html"><span class="std std-doc">Server Configuration Contract</span></a> for compatibility and upgrade rules.</p>
+<p>WAL archiving from <code class="docutils literal notranslate"><span class="pre">[backup]</span></code> is wired into the <code class="docutils literal notranslate"><span class="pre">Tokio</span></code> backend’s worker configuration. The current <code class="docutils literal notranslate"><span class="pre">IOUring</span></code> startup path does not pass that configuration to workers: its base-backup and logical-dump management endpoints do not imply continuous WAL archiving. Use <code class="docutils literal notranslate"><span class="pre">Tokio</span></code> for the documented archive/PITR workflow. <code class="docutils literal notranslate"><span class="pre">archive_mode</span> <span class="pre">=</span> <span class="pre">&quot;always&quot;</span></code> currently does not gate commit acknowledgements on archive durability.</p>
+<p>See <a class="reference internal" href="replication.html"><span class="std std-doc">Replication and Raft Fault Tolerance</span></a> for complete cluster examples and <a class="reference internal" href="server.html"><span class="std std-doc">Server Management</span></a> for listeners by mode.</p>
 </section>
 </section>
 
@@ -796,11 +1016,11 @@
       </div>
     </a>
     <a class="right-next"
-       href="packages.html"
+       href="replication.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Application Packages</p>
+        <p class="prev-next-title">Replication and Raft Fault Tolerance</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -826,6 +1046,9 @@
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#generate-a-default-config">Generate a default config</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#configuration-fields">Configuration fields</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#server-and-routing-modes">Server and routing modes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#procedure-resource-limits">Procedure resource limits</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#replication">Replication</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#backup">Backup</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-mudud-cfg">Example <code class="docutils literal notranslate"><span class="pre">mudud.cfg</span></code></a></li>
 </ul>
   </nav></div>

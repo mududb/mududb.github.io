@@ -1,5 +1,10 @@
 # Churcuring and CQL
 
+```{note}
+This chapter describes an external language project and design material. It is not an implemented MuduDB installation or API contract. The current MuduDB checkout does not ship `cqlc`; use the supported MPK/SDK paths in this guide for runnable examples. The external compiler status has not been revalidated by this documentation update.
+```
+
+
 ## 1. Overview
 
 Churcuring is a declarative programming toolchain targeting MuduDB. Its core language is

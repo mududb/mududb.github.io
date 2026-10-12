@@ -475,21 +475,29 @@
 <li class="toctree-l2"><a class="reference internal" href="../../administration/client.html">客户端</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../administration/server.html">服务端管理</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../administration/configuration.html">配置参考</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../administration/replication.html">复制与 Raft 容错</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../administration/packages.html">应用包</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../administration/toolchain.html">工具链</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../administration/backup.html">备份与恢复</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../programming/index.html">编程</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../programming/mudu_procedure.html">Mudu 过程</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../programming/sdk.html">SDK 与执行模式</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../programming/filesystem.html">文件系统对象类型</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../programming/churcuring.html">Churcuring 与 CQL</a></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../programming/syscalls.html">系统调用</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/open.html">open</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/close.html">close</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/read.html">read</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/write.html">write</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/range-scan.html">range-scan</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/batch.html">batch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/query.html">query</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/command.html">command</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/batch.html">batch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/get.html">get</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/put.html">put</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/delete.html">delete</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/range.html">range</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/fs.html">fs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/relation.html">Relation 系统调用</a></li>
 </ul>
 </details></li>
 </ul>
@@ -498,9 +506,11 @@
 <li class="toctree-l2"><a class="reference internal" href="../../internal/kernel.html">内核</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../internal/adapter.html">适配器</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../internal/procedure-runtime.html">过程运行时</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../internal/suspendable-execution.html">可挂起的过程执行</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../internal/wasm.html">WebAssembly 集成</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../internal/partitioning.html">分区与工作线程映射</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../internal/per_core_worker.html">每核心工作线程模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../internal/partitioning.html">分区</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../internal/per_core_worker.html">每核 Worker 模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../internal/replication.html">复制架构</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../index.html">参考资料</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
@@ -662,10 +672,10 @@
 </thead>
 <tbody>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Page</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">mudu_kernel/src/storage/page/migrate/</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">storage/src/page/migrate/</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">LogFrame</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">mudu_kernel/src/wal/migrate/</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">wal/src/migrate/</span></code></p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ProtocolFrame</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">mudu_contract/src/protocol/migrate/</span></code></p></td>
@@ -686,7 +696,7 @@
 </table>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">FormatKind::Page</span></code> 的 migrate handler 输入/输出必须是<strong>完整的 page binary</strong>（按当前配置的页面大小，默认 4 KiB），而不是仅 128 字节的 page header。页格式升级时，slot 数组、tailer、记录数据都可能变化。</p>
-<p>在对应的 <code class="docutils literal notranslate"><span class="pre">migrate/mod.rs</span></code> 中新增 <code class="docutils literal notranslate"><span class="pre">v{n}_to_v{n+1}</span></code> 函数，返回 [<code class="docutils literal notranslate"><span class="pre">MigrateHandler</span></code>]：</p>
+<p>在对应的 <code class="docutils literal notranslate"><span class="pre">migrate/mod.rs</span></code> 中新增 <code class="docutils literal notranslate"><span class="pre">v{n}_to_v{n+1}</span></code> 函数，返回 <code class="docutils literal notranslate"><span class="pre">MigrateHandler</span></code>：</p>
 <div class="highlight-rust notranslate"><div class="highlight"><pre><span></span><span class="k">use</span><span class="w"> </span><span class="n">mudu_compat_migrate</span><span class="p">::</span><span class="n">handler</span><span class="p">::{</span><span class="n">MigrateHandler</span><span class="p">,</span><span class="w"> </span><span class="n">MigrateOption</span><span class="p">};</span>
 <span class="k">use</span><span class="w"> </span><span class="n">mudu_compat_migrate</span><span class="p">::</span><span class="n">MigrateError</span><span class="p">;</span>
 <span class="k">use</span><span class="w"> </span><span class="n">mudu</span><span class="p">::</span><span class="n">compat</span><span class="p">::</span><span class="n">FormatKind</span><span class="p">;</span>
@@ -728,7 +738,7 @@
 </section>
 <section id="compatibilityrouter">
 <h2>5. 注册到 CompatibilityRouter<a class="headerlink" href="#compatibilityrouter" title="Link to this heading">#</a></h2>
-<p>全局 [<code class="docutils literal notranslate"><span class="pre">CompatibilityRouter</span></code>] 由 <code class="docutils literal notranslate"><span class="pre">mudu_kernel::compat::install_compatibility_router()</span></code> 安装。当新增格式升级时，需要更新该函数：</p>
+<p>全局 <code class="docutils literal notranslate"><span class="pre">CompatibilityRouter</span></code> 由 <code class="docutils literal notranslate"><span class="pre">mudu_kernel::compat::install_compatibility_router()</span></code> 安装。当新增格式升级时，需要更新该函数：</p>
 <div class="highlight-rust notranslate"><div class="highlight"><pre><span></span><span class="c1">// mudu_kernel/src/compat.rs</span>
 <span class="n">router</span><span class="p">.</span><span class="n">register</span><span class="p">(</span><span class="n">FormatKind</span><span class="p">::</span><span class="n">Page</span><span class="p">,</span><span class="w"> </span><span class="n">page_migrate</span><span class="p">::</span><span class="n">v1_to_v2</span><span class="p">());</span>
 </pre></div>
@@ -744,11 +754,11 @@
 <div class="highlight-rust notranslate"><div class="highlight"><pre><span></span><span class="k">pub</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">PAGE_CURRENT_VERSION</span><span class="p">:</span><span class="w"> </span><span class="kt">u32</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
 </pre></div>
 </div>
-<p>升级时先把对应常量改为 <code class="docutils literal notranslate"><span class="pre">n+1</span></code>，[<code class="docutils literal notranslate"><span class="pre">CompatibilityMatrix</span></code>] 会自动跟随：</p>
+<p>升级时先把对应常量改为 <code class="docutils literal notranslate"><span class="pre">n+1</span></code>，<code class="docutils literal notranslate"><span class="pre">CompatibilityMatrix</span></code> 会自动跟随：</p>
 <div class="highlight-rust notranslate"><div class="highlight"><pre><span></span><span class="k">pub</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">PAGE_CURRENT_VERSION</span><span class="p">:</span><span class="w"> </span><span class="kt">u32</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
 </pre></div>
 </div>
-<p>[<code class="docutils literal notranslate"><span class="pre">CompatibilityMatrix::supported_versions</span></code>] 和 [<code class="docutils literal notranslate"><span class="pre">CompatibilityMatrix::latest_version</span></code>] 均引用这些常量，无需再手动修改每个 match 分支。</p>
+<p><code class="docutils literal notranslate"><span class="pre">CompatibilityMatrix::supported_versions</span></code> 和 <code class="docutils literal notranslate"><span class="pre">CompatibilityMatrix::latest_version</span></code> 均引用这些常量，无需再手动修改每个 match 分支。</p>
 </section>
 <section id="id4">
 <h2>7. 添加测试<a class="headerlink" href="#id4" title="Link to this heading">#</a></h2>

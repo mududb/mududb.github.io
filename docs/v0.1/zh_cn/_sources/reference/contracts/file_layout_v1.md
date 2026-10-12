@@ -18,15 +18,15 @@
 - 一个或多个 **time-series 文件**：存储时序数据。
 - **WAL chunk 文件**（`*.xl`）：存储 write-ahead log frame。
 - 可选的 **MPK 包**（`*.mpk`）：用于分发。
-- **服务端配置文件**（`mududb.toml`）。
+- **服务端配置文件**（`mudud.cfg`）。
 
 ## Relation 文件布局
 
 一个 relation 在物理上由一对 `TimeSeriesFile` 组成：
 
 ```text
-{base_path}_key   -> key 文件
-{base_path}_value -> value 文件
+{base_path}/relation/{partition_id}.{table_id}.0.dat  -> key 文件
+{base_path}/relation/{partition_id}.{table_id}.1.dat  -> value 文件
 ```
 
 每个文件都是一系列页面，页面大小在数据库创建时配置，默认为 4 KiB（`DEFAULT_PAGE_SIZE`）。
@@ -147,6 +147,6 @@ manifest 语义参见 [MPK Manifest Contract v1](mpk_manifest_v1.md)。包本身
 - MPK manifest：[mpk_manifest_v1.md](mpk_manifest_v1.md)
 - Server config：[mudud_cfg_v1.md](mudud_cfg_v1.md)
 - 实现：
-  - `mudu_kernel/src/storage/time_series/time_series_file.rs`
-  - `mudu_kernel/src/storage/relation/relation.rs`
-  - `mudu_kernel/src/wal/worker_wal_backend/layout.rs`
+  - `storage/src/time_series/time_series_file.rs`
+  - `storage/src/relation/relation/mod.rs`
+  - `wal/src/worker_wal_backend/layout.rs`

@@ -475,21 +475,29 @@
 <li class="toctree-l2"><a class="reference internal" href="../../administration/client.html">Client</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../administration/server.html">Server Management</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../administration/configuration.html">Configuration Reference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../administration/replication.html">Replication and Raft Fault Tolerance</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../administration/packages.html">Application Packages</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../administration/toolchain.html">Toolchain</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../administration/backup.html">Backup and Restore</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../programming/index.html">Programming</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../programming/mudu_procedure.html">Mudu Procedure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../programming/sdk.html">SDKs and Execution Modes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../programming/filesystem.html">Filesystem Object Types</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../programming/churcuring.html">Churcuring and CQL</a></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../programming/syscalls.html">Syscalls</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/open.html">open</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/close.html">close</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/read.html">read</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/write.html">write</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/range-scan.html">range-scan</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/batch.html">batch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/query.html">query</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/command.html">command</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/batch.html">batch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/get.html">get</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/put.html">put</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/delete.html">delete</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/range.html">range</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/fs.html">fs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/relation.html">Relation Syscalls</a></li>
 </ul>
 </details></li>
 </ul>
@@ -498,9 +506,11 @@
 <li class="toctree-l2"><a class="reference internal" href="../../internal/kernel.html">Kernel</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../internal/adapter.html">Adapters</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../internal/procedure-runtime.html">Procedure Runtime</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../internal/suspendable-execution.html">Suspendable Procedure Execution</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../internal/wasm.html">WebAssembly Integration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../internal/partitioning.html">Partitioning and Worker Mapping</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../internal/partitioning.html">Partitioning</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../internal/per_core_worker.html">Per-core Worker Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../internal/replication.html">Replication Architecture</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../reference/index.html">Reference</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -579,9 +589,8 @@
             </div>
             <nav aria-label="Page">
                 <ul class="pst-show_toc_level nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#install-with-mudup">Install with mudup</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#build-from-source">Build from Source</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#configuration-file">Configuration File</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#source-build">Source build</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#initial-configuration">Initial configuration</a></li>
 </ul>
             </nav>
         </div>
@@ -595,46 +604,44 @@
                   
   <section id="installation">
 <h1>Installation<a class="headerlink" href="#installation" title="Link to this heading">#</a></h1>
-<section id="install-with-mudup">
-<h2>Install with mudup<a class="headerlink" href="#install-with-mudup" title="Link to this heading">#</a></h2>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>--proto<span class="w"> </span><span class="s1">'=https'</span><span class="w"> </span>--tlsv1.2<span class="w"> </span>-fsSL<span class="w"> </span>https://github.com/scuptio/mudup/releases/download/latest/mudup-init.sh<span class="w"> </span><span class="p">|</span><span class="w"> </span>sh
-mudup<span class="w"> </span>install
+<p>Build from the MuduDB source checkout. <code class="docutils literal notranslate"><span class="pre">mudup</span></code> is a design proposal, not an available installation path in this repository.</p>
+<section id="source-build">
+<h2>Source build<a class="headerlink" href="#source-build" title="Link to this heading">#</a></h2>
+<p>The following commands target Ubuntu/Debian. Install Rust with rustup first, then run the repository commands from the MuduDB checkout root. The root is not a Cargo workspace; <code class="docutils literal notranslate"><span class="pre">cargo</span> <span class="pre">make</span></code> orchestrates the independent workspaces.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt-get<span class="w"> </span>update
+sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>git<span class="w"> </span>python3<span class="w"> </span>python3-pip<span class="w"> </span>python3-venv<span class="w"> </span>build-essential<span class="w"> </span>curl<span class="w"> </span>liburing-dev<span class="w"> </span>clang<span class="w"> </span>libclang-dev<span class="w"> </span>llvm-dev<span class="w"> </span>pkg-config
+<span class="c1"># Run these in the MuduDB source checkout:</span>
+rustup<span class="w"> </span>show
+rustup<span class="w"> </span>target<span class="w"> </span>add<span class="w"> </span>wasm32-wasip2
+cargo<span class="w"> </span>install<span class="w"> </span>cargo-make<span class="w"> </span>--locked
+python3<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>.venv/build
+.venv/build/bin/python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>toml<span class="w"> </span>tomli-w
+.venv/build/bin/python<span class="w"> </span>script/build/install_binaries.py<span class="w"> </span>--profile<span class="w"> </span>release
 </pre></div>
 </div>
-<p>Verify the installed tools:</p>
+<p><code class="docutils literal notranslate"><span class="pre">rust-toolchain.toml</span></code> currently pins Rust <code class="docutils literal notranslate"><span class="pre">1.99.0</span></code>; <code class="docutils literal notranslate"><span class="pre">rustup</span> <span class="pre">show</span></code> selects the checkout’s pinned toolchain. The install script installs <code class="docutils literal notranslate"><span class="pre">mudud</span></code>, <code class="docutils literal notranslate"><span class="pre">mcli</span></code>, <code class="docutils literal notranslate"><span class="pre">mgen</span></code>, <code class="docutils literal notranslate"><span class="pre">mtp</span></code>, <code class="docutils literal notranslate"><span class="pre">mpm</span></code>, <code class="docutils literal notranslate"><span class="pre">mpm-build</span></code>, <code class="docutils literal notranslate"><span class="pre">mpm-crate</span></code>, and <code class="docutils literal notranslate"><span class="pre">mpm-install</span></code> into Cargo’s binary directory. Ensure that directory is on <code class="docutils literal notranslate"><span class="pre">PATH</span></code>.</p>
+<p>For the full repository build, including the Rust Wallet package, activate the Python environment and run <code class="docutils literal notranslate"><span class="pre">cargo</span> <span class="pre">make</span></code>. Additional guest languages have their own toolchains; see <a class="reference internal" href="../../programming/sdk.html"><span class="std std-doc">SDKs and Execution Modes</span></a>.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mudud<span class="w"> </span>--version
 mcli<span class="w"> </span>--version
-mpk<span class="w"> </span>--version
+mpm<span class="w"> </span>--help
+mpm-build<span class="w"> </span>--version
+mpm-crate<span class="w"> </span>--version
+mpm-install<span class="w"> </span>--version
 mgen<span class="w"> </span>--version
 mtp<span class="w"> </span>--version
 </pre></div>
 </div>
 </section>
-<section id="build-from-source">
-<h2>Build from Source<a class="headerlink" href="#build-from-source" title="Link to this heading">#</a></h2>
-<p>Ubuntu or Debian is recommended for development builds.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt-get<span class="w"> </span>update<span class="w"> </span>-y
-sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>python3<span class="w"> </span>python3-pip<span class="w"> </span>python-is-python3<span class="w"> </span>build-essential<span class="w"> </span>curl<span class="w"> </span>liburing-dev<span class="w"> </span>clang<span class="w"> </span>libclang-dev<span class="w"> </span>llvm-dev<span class="w"> </span>pkgconf
-curl<span class="w"> </span>--proto<span class="w"> </span><span class="s1">'=https'</span><span class="w"> </span>--tlsv1.2<span class="w"> </span>-sSf<span class="w"> </span>https://sh.rustup.rs<span class="w"> </span><span class="p">|</span><span class="w"> </span>sh
-rustup<span class="w"> </span>toolchain<span class="w"> </span>install<span class="w"> </span>nightly
-rustup<span class="w"> </span>default<span class="w"> </span>nightly
-rustup<span class="w"> </span>target<span class="w"> </span>add<span class="w"> </span>wasm32-wasip2
-python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>toml<span class="w"> </span>tomli-w
-cargo<span class="w"> </span>install<span class="w"> </span>cargo-make
+<section id="initial-configuration">
+<h2>Initial configuration<a class="headerlink" href="#initial-configuration" title="Link to this heading">#</a></h2>
+<p>In a new run directory:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir<span class="w"> </span>-p<span class="w"> </span>mudud-run
+<span class="nb">cd</span><span class="w"> </span>mudud-run
+mudud<span class="w"> </span>init-cfg
+mudud<span class="w"> </span>serve<span class="w"> </span>--cfg<span class="w"> </span>./mudud.cfg
 </pre></div>
 </div>
-<p>Install workspace binaries from the source repository:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>script/build/install_binaries.py
-</pre></div>
-</div>
-</section>
-<section id="configuration-file">
-<h2>Configuration File<a class="headerlink" href="#configuration-file" title="Link to this heading">#</a></h2>
-<p>The default configuration path is:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>${HOME}/.mududb/mududb_cfg.toml
-</pre></div>
-</div>
-<p>If the file does not exist, <code class="docutils literal notranslate"><span class="pre">mudud</span></code> creates a default file on first startup.</p>
+<p><code class="docutils literal notranslate"><span class="pre">init-cfg</span></code> overwrites <code class="docutils literal notranslate"><span class="pre">./mudud.cfg</span></code>, so run it before editing your configuration. It selects <code class="docutils literal notranslate"><span class="pre">Tokio</span></code> by default, with <code class="docutils literal notranslate"><span class="pre">./data</span></code> and <code class="docutils literal notranslate"><span class="pre">./mpk</span></code> paths. An explicit <code class="docutils literal notranslate"><span class="pre">--cfg</span></code> / <code class="docutils literal notranslate"><span class="pre">-c</span></code> path is exclusive: a missing file is an error. Without that option the server searches <code class="docutils literal notranslate"><span class="pre">./mudud.cfg</span></code>, then <code class="docutils literal notranslate"><span class="pre">~/.mududb/mudud.cfg</span></code>. The server does not generate a missing configuration automatically.</p>
 </section>
 </section>
 
@@ -685,9 +692,8 @@ cargo<span class="w"> </span>install<span class="w"> </span>cargo-make
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#install-with-mudup">Install with mudup</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#build-from-source">Build from Source</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#configuration-file">Configuration File</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#source-build">Source build</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#initial-configuration">Initial configuration</a></li>
 </ul>
   </nav></div>
 

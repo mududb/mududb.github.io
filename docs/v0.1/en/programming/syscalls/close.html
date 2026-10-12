@@ -55,7 +55,7 @@
     <link rel="icon" href="../../_static/favicon.svg"/>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="read" href="read.html" />
+    <link rel="next" title="query" href="query.html" />
     <link rel="prev" title="open" href="open.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -475,21 +475,29 @@
 <li class="toctree-l2"><a class="reference internal" href="../../administration/client.html">Client</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../administration/server.html">Server Management</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../administration/configuration.html">Configuration Reference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../administration/replication.html">Replication and Raft Fault Tolerance</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../administration/packages.html">Application Packages</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../administration/toolchain.html">Toolchain</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../administration/backup.html">Backup and Restore</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../index.html">Programming</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../mudu_procedure.html">Mudu Procedure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sdk.html">SDKs and Execution Modes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../filesystem.html">Filesystem Object Types</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../churcuring.html">Churcuring and CQL</a></li>
 <li class="toctree-l2 current active has-children"><a class="reference internal" href="../syscalls.html">Syscalls</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="open.html">open</a></li>
 <li class="toctree-l3 current active"><a class="current reference internal" href="#">close</a></li>
-<li class="toctree-l3"><a class="reference internal" href="read.html">read</a></li>
-<li class="toctree-l3"><a class="reference internal" href="write.html">write</a></li>
-<li class="toctree-l3"><a class="reference internal" href="range-scan.html">range-scan</a></li>
-<li class="toctree-l3"><a class="reference internal" href="batch.html">batch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="query.html">query</a></li>
 <li class="toctree-l3"><a class="reference internal" href="command.html">command</a></li>
+<li class="toctree-l3"><a class="reference internal" href="batch.html">batch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="get.html">get</a></li>
+<li class="toctree-l3"><a class="reference internal" href="put.html">put</a></li>
+<li class="toctree-l3"><a class="reference internal" href="delete.html">delete</a></li>
+<li class="toctree-l3"><a class="reference internal" href="range.html">range</a></li>
+<li class="toctree-l3"><a class="reference internal" href="fs.html">fs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="relation.html">Relation Syscalls</a></li>
 </ul>
 </details></li>
 </ul>
@@ -498,9 +506,11 @@
 <li class="toctree-l2"><a class="reference internal" href="../../internal/kernel.html">Kernel</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../internal/adapter.html">Adapters</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../internal/procedure-runtime.html">Procedure Runtime</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../internal/suspendable-execution.html">Suspendable Procedure Execution</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../internal/wasm.html">WebAssembly Integration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../internal/partitioning.html">Partitioning and Worker Mapping</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../internal/partitioning.html">Partitioning</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../internal/per_core_worker.html">Per-core Worker Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../internal/replication.html">Replication Architecture</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../reference/index.html">Reference</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -636,7 +646,7 @@
 <section id="errors">
 <h2>Errors<a class="headerlink" href="#errors" title="Link to this heading">#</a></h2>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">InvalidSession</span></code>: the provided <code class="docutils literal notranslate"><span class="pre">OID</span></code> does not identify an open session.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">EntityNotFound</span></code>: the provided <code class="docutils literal notranslate"><span class="pre">OID</span></code> does not identify an open session.</p></li>
 </ul>
 </section>
 <section id="transaction-semantics">
@@ -658,7 +668,7 @@
 <h2>Notes<a class="headerlink" href="#notes" title="Link to this heading">#</a></h2>
 <ul class="simple">
 <li><p>Procedures must close sessions they explicitly open to avoid resource leaks.</p></li>
-<li><p>Do not use a closed <code class="docutils literal notranslate"><span class="pre">OID</span></code> after <code class="docutils literal notranslate"><span class="pre">close</span></code>; doing so yields <code class="docutils literal notranslate"><span class="pre">InvalidSession</span></code>.</p></li>
+<li><p>Do not use a closed <code class="docutils literal notranslate"><span class="pre">OID</span></code> after <code class="docutils literal notranslate"><span class="pre">close</span></code>; doing so yields <code class="docutils literal notranslate"><span class="pre">EntityNotFound</span></code>.</p></li>
 </ul>
 </section>
 </section>
@@ -684,11 +694,11 @@
       </div>
     </a>
     <a class="right-next"
-       href="read.html"
+       href="query.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">read</p>
+        <p class="prev-next-title">query</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

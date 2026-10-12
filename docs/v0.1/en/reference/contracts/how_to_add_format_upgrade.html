@@ -475,21 +475,29 @@
 <li class="toctree-l2"><a class="reference internal" href="../../administration/client.html">Client</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../administration/server.html">Server Management</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../administration/configuration.html">Configuration Reference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../administration/replication.html">Replication and Raft Fault Tolerance</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../administration/packages.html">Application Packages</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../administration/toolchain.html">Toolchain</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../administration/backup.html">Backup and Restore</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../programming/index.html">Programming</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../programming/mudu_procedure.html">Mudu Procedure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../programming/sdk.html">SDKs and Execution Modes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../programming/filesystem.html">Filesystem Object Types</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../programming/churcuring.html">Churcuring and CQL</a></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../programming/syscalls.html">Syscalls</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/open.html">open</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/close.html">close</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/read.html">read</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/write.html">write</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/range-scan.html">range-scan</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/batch.html">batch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/query.html">query</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/command.html">command</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/batch.html">batch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/get.html">get</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/put.html">put</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/delete.html">delete</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/range.html">range</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/fs.html">fs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/relation.html">Relation Syscalls</a></li>
 </ul>
 </details></li>
 </ul>
@@ -498,9 +506,11 @@
 <li class="toctree-l2"><a class="reference internal" href="../../internal/kernel.html">Kernel</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../internal/adapter.html">Adapters</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../internal/procedure-runtime.html">Procedure Runtime</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../internal/suspendable-execution.html">Suspendable Procedure Execution</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../internal/wasm.html">WebAssembly Integration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../internal/partitioning.html">Partitioning and Worker Mapping</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../internal/partitioning.html">Partitioning</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../internal/per_core_worker.html">Per-core Worker Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../internal/replication.html">Replication Architecture</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../index.html">Reference</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
@@ -662,10 +672,10 @@ Add golden fixtures and round-trip tests
 </thead>
 <tbody>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Page</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">mudu_kernel/src/storage/page/migrate/</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">storage/src/page/migrate/</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">LogFrame</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">mudu_kernel/src/wal/migrate/</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">wal/src/migrate/</span></code></p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ProtocolFrame</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">mudu_contract/src/protocol/migrate/</span></code></p></td>
@@ -686,7 +696,7 @@ Add golden fixtures and round-trip tests
 </table>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">FormatKind::Page</span></code> migrate handler must operate on the <strong>complete page binary</strong> at the configured page size (default 4 KiB), not just the 128-byte page header.  When the page format evolves, the slot array, tailer, and record payloads may also change.</p>
-<p>Add a <code class="docutils literal notranslate"><span class="pre">v{n}_to_v{n+1}</span></code> function in the corresponding <code class="docutils literal notranslate"><span class="pre">migrate/mod.rs</span></code> that returns a [<code class="docutils literal notranslate"><span class="pre">MigrateHandler</span></code>]:</p>
+<p>Add a <code class="docutils literal notranslate"><span class="pre">v{n}_to_v{n+1}</span></code> function in the corresponding <code class="docutils literal notranslate"><span class="pre">migrate/mod.rs</span></code> that returns a <code class="docutils literal notranslate"><span class="pre">MigrateHandler</span></code>:</p>
 <div class="highlight-rust notranslate"><div class="highlight"><pre><span></span><span class="k">use</span><span class="w"> </span><span class="n">mudu_compat_migrate</span><span class="p">::</span><span class="n">handler</span><span class="p">::{</span><span class="n">MigrateHandler</span><span class="p">,</span><span class="w"> </span><span class="n">MigrateOption</span><span class="p">};</span>
 <span class="k">use</span><span class="w"> </span><span class="n">mudu_compat_migrate</span><span class="p">::</span><span class="n">MigrateError</span><span class="p">;</span>
 <span class="k">use</span><span class="w"> </span><span class="n">mudu</span><span class="p">::</span><span class="n">compat</span><span class="p">::</span><span class="n">FormatKind</span><span class="p">;</span>
@@ -728,7 +738,7 @@ Add golden fixtures and round-trip tests
 </section>
 <section id="register-with-the-compatibilityrouter">
 <h2>5. Register with the CompatibilityRouter<a class="headerlink" href="#register-with-the-compatibilityrouter" title="Link to this heading">#</a></h2>
-<p>The global [<code class="docutils literal notranslate"><span class="pre">CompatibilityRouter</span></code>] is installed by <code class="docutils literal notranslate"><span class="pre">mudu_kernel::compat::install_compatibility_router()</span></code>. When adding a format upgrade, update that function:</p>
+<p>The global <code class="docutils literal notranslate"><span class="pre">CompatibilityRouter</span></code> is installed by <code class="docutils literal notranslate"><span class="pre">mudu_kernel::compat::install_compatibility_router()</span></code>. When adding a format upgrade, update that function:</p>
 <div class="highlight-rust notranslate"><div class="highlight"><pre><span></span><span class="c1">// mudu_kernel/src/compat.rs</span>
 <span class="n">router</span><span class="p">.</span><span class="n">register</span><span class="p">(</span><span class="n">FormatKind</span><span class="p">::</span><span class="n">Page</span><span class="p">,</span><span class="w"> </span><span class="n">page_migrate</span><span class="p">::</span><span class="n">v1_to_v2</span><span class="p">());</span>
 </pre></div>
@@ -744,11 +754,11 @@ Add golden fixtures and round-trip tests
 <div class="highlight-rust notranslate"><div class="highlight"><pre><span></span><span class="k">pub</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">PAGE_CURRENT_VERSION</span><span class="p">:</span><span class="w"> </span><span class="kt">u32</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
 </pre></div>
 </div>
-<p>When bumping a format, update the corresponding constant to <code class="docutils literal notranslate"><span class="pre">n+1</span></code>; [<code class="docutils literal notranslate"><span class="pre">CompatibilityMatrix</span></code>] will follow automatically:</p>
+<p>When bumping a format, update the corresponding constant to <code class="docutils literal notranslate"><span class="pre">n+1</span></code>; <code class="docutils literal notranslate"><span class="pre">CompatibilityMatrix</span></code> will follow automatically:</p>
 <div class="highlight-rust notranslate"><div class="highlight"><pre><span></span><span class="k">pub</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">PAGE_CURRENT_VERSION</span><span class="p">:</span><span class="w"> </span><span class="kt">u32</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
 </pre></div>
 </div>
-<p>[<code class="docutils literal notranslate"><span class="pre">CompatibilityMatrix::supported_versions</span></code>] and [<code class="docutils literal notranslate"><span class="pre">CompatibilityMatrix::latest_version</span></code>] reference these constants, so you do not need to edit every match arm by hand.</p>
+<p><code class="docutils literal notranslate"><span class="pre">CompatibilityMatrix::supported_versions</span></code> and <code class="docutils literal notranslate"><span class="pre">CompatibilityMatrix::latest_version</span></code> reference these constants, so you do not need to edit every match arm by hand.</p>
 </section>
 <section id="add-tests">
 <h2>7. Add Tests<a class="headerlink" href="#add-tests" title="Link to this heading">#</a></h2>

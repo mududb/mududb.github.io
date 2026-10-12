@@ -1,0 +1,840 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Filesystem Object Types &#8212; MuduDB v0.1</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=4418a689" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=eb49b5eb" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../_static/scripts/fontawesome.js?digest=90905a2f556bf617f1a9"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
+
+    <script src="../_static/documentation_options.js?v=bf5e005e"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'programming/filesystem';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <script src="../_static/doc-switcher.js?v=437d132c"></script>
+    <link rel="icon" href="../_static/favicon.svg"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Churcuring and CQL" href="churcuring.html" />
+    <link rel="prev" title="SDKs and Execution Modes" href="sdk.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="v0.1" />
+  
+    
+    <script src="../_static/searchtools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+<aside class="bd-header-announcement" aria-label="Announcement">
+  <div class="bd-header-announcement__content"><div class="mududb-announcement" data-current-version="v0.1" data-current-language="en"><span class="mududb-announcement-title">MuduDB documentation</span><label class="mududb-doc-switch-group"><span class="mududb-doc-switch-label">Version</span><select class="mududb-doc-switcher" data-switch-kind="version"><option value="v0.1" data-language="en" selected>v0.1</option></select></label><label class="mududb-doc-switch-group"><span class="mududb-doc-switch-label">Language</span><select class="mududb-doc-switcher" data-switch-kind="language"><option value="en" data-version="v0.1" selected>English</option><option value="zh_cn" data-version="v0.1">简体中文</option></select></label></div></div>
+</aside>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/mudu_logo.png" class="logo__image only-light" alt="MuduDB v0.1 - Home"/>
+    <img src="../_static/mudu_logo.png" class="logo__image only-dark pst-js-only" alt="MuduDB v0.1 - Home"/>
+  
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../preface/index.html">
+    Preface
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../tutorial/index.html">
+    Tutorial
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../sql-language/index.html">
+    The SQL Language
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../administration/index.html">
+    Administration
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    Programming
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../internal/index.html">
+    Internal
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../reference/index.html">
+    Reference
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scuptio/mududb" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../preface/index.html">
+    Preface
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../tutorial/index.html">
+    Tutorial
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../sql-language/index.html">
+    The SQL Language
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../administration/index.html">
+    Administration
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    Programming
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../internal/index.html">
+    Internal
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../reference/index.html">
+    Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scuptio/mududb" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../index.html">
+                    MuduDB Documentation
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../preface/index.html">Preface</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../preface/overview.html">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../preface/data-model.html">Data Model</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../preface/release-notes/index.html">Release Notes</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../preface/release-notes/v0.1.html">v0.1 Release Notes</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../tutorial/index.html">Tutorial</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../tutorial/getting-started/index.html">Getting Started</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../tutorial/getting-started/install.html">Installation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../tutorial/getting-started/first-session.html">First Session</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../tutorial/tutorials/index.html">Tutorials</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../tutorial/tutorials/sql-crud.html">SQL CRUD Tutorial</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../tutorial/tutorials/wallet.html">Wallet Example</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../sql-language/index.html">The SQL Language</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../sql-language/ddl/index.html">Data Definition</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../sql-language/ddl/columns.html">Columns</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sql-language/ddl/create-table.html">Create Table</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sql-language/ddl/primary-key.html">Primary Key</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sql-language/ddl/drop-table.html">Drop Table</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../sql-language/dml/index.html">Data Manipulation</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../sql-language/dml/insert.html">Insert</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sql-language/dml/update.html">Update</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sql-language/dml/delete.html">Delete</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="../sql-language/query.html">Query</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../sql-language/data_types/index.html">Data Types</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../sql-language/data_types/integer.html">Integer Types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sql-language/data_types/floating-point.html">Floating-Point Types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sql-language/data_types/fixed-point.html">Fixed-Point Types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sql-language/data_types/string.html">String Types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sql-language/data_types/temporal.html">Temporal Types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sql-language/data_types/other.html">Other Types</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../administration/index.html">Administration</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../administration/client.html">Client</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../administration/server.html">Server Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../administration/configuration.html">Configuration Reference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../administration/replication.html">Replication and Raft Fault Tolerance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../administration/packages.html">Application Packages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../administration/toolchain.html">Toolchain</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../administration/backup.html">Backup and Restore</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">Programming</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="mudu_procedure.html">Mudu Procedure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sdk.html">SDKs and Execution Modes</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Filesystem Object Types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="churcuring.html">Churcuring and CQL</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="syscalls.html">Syscalls</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="syscalls/open.html">open</a></li>
+<li class="toctree-l3"><a class="reference internal" href="syscalls/close.html">close</a></li>
+<li class="toctree-l3"><a class="reference internal" href="syscalls/query.html">query</a></li>
+<li class="toctree-l3"><a class="reference internal" href="syscalls/command.html">command</a></li>
+<li class="toctree-l3"><a class="reference internal" href="syscalls/batch.html">batch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="syscalls/get.html">get</a></li>
+<li class="toctree-l3"><a class="reference internal" href="syscalls/put.html">put</a></li>
+<li class="toctree-l3"><a class="reference internal" href="syscalls/delete.html">delete</a></li>
+<li class="toctree-l3"><a class="reference internal" href="syscalls/range.html">range</a></li>
+<li class="toctree-l3"><a class="reference internal" href="syscalls/fs.html">fs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="syscalls/relation.html">Relation Syscalls</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../internal/index.html">Internal</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../internal/kernel.html">Kernel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../internal/adapter.html">Adapters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../internal/procedure-runtime.html">Procedure Runtime</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../internal/suspendable-execution.html">Suspendable Procedure Execution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../internal/wasm.html">WebAssembly Integration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../internal/partitioning.html">Partitioning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../internal/per_core_worker.html">Per-core Worker Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../internal/replication.html">Replication Architecture</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../reference/index.html">Reference</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../reference/contracts/index.html">MuduDB Format and Protocol Contracts</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/page_header_v1.html">Page Header Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/tuple_binary_v1.html">Tuple Binary Format Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/log_frame_v1.html">Log Frame Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/protocol_frame_v1.html">TCP Protocol Frame Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/mpk_manifest_v1.html">MPK Package Manifest Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/mudud_cfg_v1.html">MuduDB Server Configuration Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/file_layout_v1.html">MuduDB File Layout Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/syscall_payload_v1.html">Guest→Host Syscall Payload Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/how_to_add_format_upgrade.html">How to Add a Format Upgrade</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/mcli-admin.html">mcli Management Interface (HTTP)</a></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item"><nav class="sidebar-indices-items" aria-labelledby="pst-indices-navigation-heading-2">
+  <p id="pst-indices-navigation-heading-2" class="sidebar-indices-items__title" role="heading" aria-level="1">Indices</p>
+  <ul class="indices-link">
+        <li class="toctree-l1">
+          <a class="reference internal"
+             href="../genindex.html"
+             accesskey="I">General Index</a>
+        </li>
+  </ul>
+</nav></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item"><button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Filesystem Object Types</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#registering-filesystem-types">Registering filesystem types</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fs-columns">FS columns</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#accessing-objects-from-procedures">Accessing objects from procedures</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#filesystem-syscalls">Filesystem syscalls</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#generations-and-garbage-collection">Generations and garbage collection</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#standalone-adapters">Standalone adapters</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="filesystem-object-types">
+<h1>Filesystem Object Types<a class="headerlink" href="#filesystem-object-types" title="Link to this heading">#</a></h1>
+<p>MuduDB can store file content in the database through <strong>filesystem (fs) object types</strong>. An fs object type is registered by DDL, and the database organizes and manages all storage of its objects. Each object is identified by an OID, its content is stored as immutable <em>generation</em> files, and its metadata lives in the <code class="docutils literal notranslate"><span class="pre">_fs_object</span></code> system table, which shares the same concurrency control (MVCC) and WAL mechanisms as ordinary tables. Procedures access objects through a set of POSIX-style syscalls; guests only ever see OIDs and file descriptors, never host paths.</p>
+<section id="registering-filesystem-types">
+<h2>Registering filesystem types<a class="headerlink" href="#registering-filesystem-types" title="Link to this heading">#</a></h2>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">TYPE</span><span class="w"> </span><span class="n">FILESYSTEM</span><span class="w"> </span><span class="n">FILE</span><span class="w"> </span><span class="n">photo_fs</span><span class="p">;</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TYPE</span><span class="w"> </span><span class="n">FILESYSTEM</span><span class="w"> </span><span class="n">DIRECTORY</span><span class="w"> </span><span class="n">asset_fs</span><span class="p">;</span>
+<span class="k">DROP</span><span class="w"> </span><span class="k">TYPE</span><span class="w"> </span><span class="n">photo_fs</span><span class="p">;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">FILE</span></code> is a single-content object; <code class="docutils literal notranslate"><span class="pre">DIRECTORY</span></code> is an object holding an immutable tree of named entries.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">TYPE</span> <span class="pre">FILESYSTEM</span></code> / <code class="docutils literal notranslate"><span class="pre">DROP</span> <span class="pre">TYPE</span></code> require an admin session; other sessions fail with <code class="docutils literal notranslate"><span class="pre">PermissionDenied</span></code>.</p></li>
+<li><p>A duplicate type name fails with <code class="docutils literal notranslate"><span class="pre">AlreadyExists</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DROP</span> <span class="pre">TYPE</span></code> is refused with <code class="docutils literal notranslate"><span class="pre">InvalidState</span></code> while a table column still references the type.</p></li>
+<li><p>Using an unknown fs type name as a column type in <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">TABLE</span></code> fails with <code class="docutils literal notranslate"><span class="pre">EntityNotFound</span></code>.</p></li>
+</ul>
+</section>
+<section id="fs-columns">
+<h2>FS columns<a class="headerlink" href="#fs-columns" title="Link to this heading">#</a></h2>
+<p>A table binds an fs object type by using the type name as a column type:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">product</span><span class="w"> </span><span class="p">(</span>
+<span class="w">    </span><span class="n">id</span><span class="w"> </span><span class="nb">BIGINT</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
+<span class="w">    </span><span class="n">photo</span><span class="w"> </span><span class="n">photo_fs</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>The column physically stores the object OID (a <code class="docutils literal notranslate"><span class="pre">U128</span></code> value); the catalog records the column-to-fs-type binding.</p></li>
+<li><p>On <code class="docutils literal notranslate"><span class="pre">INSERT</span></code> / <code class="docutils literal notranslate"><span class="pre">UPDATE</span></code>, when the FS column is omitted or set to <code class="docutils literal notranslate"><span class="pre">NULL</span></code>, the kernel creates a new object for the row and assigns its OID automatically (the OID carries a <code class="docutils literal notranslate"><span class="pre">0xF5</span></code> tag in its top byte). Supplying an explicit FS column value is rejected with <code class="docutils literal notranslate"><span class="pre">InvalidArgument</span></code> — objects are created only through FS-column DML.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SELECT</span></code> of the FS column returns the object OID; visibility follows the same MVCC rules as ordinary columns, including rows not yet committed by the current transaction.</p></li>
+<li><p>Each row owns its object: a <code class="docutils literal notranslate"><span class="pre">FILE</span></code> column is strictly one object per row, and a <code class="docutils literal notranslate"><span class="pre">DIRECTORY</span></code> column is a per-row immutable subtree that is replaced as a whole.</p></li>
+</ul>
+</section>
+<section id="accessing-objects-from-procedures">
+<h2>Accessing objects from procedures<a class="headerlink" href="#accessing-objects-from-procedures" title="Link to this heading">#</a></h2>
+<p>Guests address content with two values: the object <code class="docutils literal notranslate"><span class="pre">oid</span></code> and an object-relative <code class="docutils literal notranslate"><span class="pre">path</span></code> (empty or <code class="docutils literal notranslate"><span class="pre">.</span></code> for <code class="docutils literal notranslate"><span class="pre">FILE</span></code> objects; an entry path for <code class="docutils literal notranslate"><span class="pre">DIRECTORY</span></code> objects). Paths are normalized inside the object: <code class="docutils literal notranslate"><span class="pre">..</span></code> escaping the object root is rejected with <code class="docutils literal notranslate"><span class="pre">PermissionDenied</span></code>, and absolute or otherwise illegal components with <code class="docutils literal notranslate"><span class="pre">InvalidFilename</span></code>.</p>
+<div class="highlight-rust notranslate"><div class="highlight"><pre><span></span><span class="c1">// Write: open a PENDING object created by the current transaction.</span>
+<span class="kd">let</span><span class="w"> </span><span class="n">fd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mudu_fs_open</span><span class="p">(</span><span class="n">session</span><span class="p">,</span><span class="w"> </span><span class="n">photo_oid</span><span class="p">,</span><span class="w"> </span><span class="s">""</span><span class="p">,</span><span class="w"> </span><span class="n">O_WRONLY</span><span class="p">)</span><span class="o">?</span><span class="p">;</span>
+<span class="n">mudu_fs_write</span><span class="p">(</span><span class="n">session</span><span class="p">,</span><span class="w"> </span><span class="n">fd</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">bytes</span><span class="p">)</span><span class="o">?</span><span class="p">;</span>
+<span class="n">mudu_fs_close</span><span class="p">(</span><span class="n">session</span><span class="p">,</span><span class="w"> </span><span class="n">fd</span><span class="p">)</span><span class="o">?</span><span class="p">;</span><span class="w"> </span><span class="c1">// fsync and seal the private generation</span>
+
+<span class="c1">// Read: anchor the generation visible at open time.</span>
+<span class="kd">let</span><span class="w"> </span><span class="n">fd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mudu_fs_open</span><span class="p">(</span><span class="n">session</span><span class="p">,</span><span class="w"> </span><span class="n">photo_oid</span><span class="p">,</span><span class="w"> </span><span class="s">""</span><span class="p">,</span><span class="w"> </span><span class="n">O_RDONLY</span><span class="p">)</span><span class="o">?</span><span class="p">;</span>
+<span class="kd">let</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mudu_fs_read</span><span class="p">(</span><span class="n">session</span><span class="p">,</span><span class="w"> </span><span class="n">fd</span><span class="p">,</span><span class="w"> </span><span class="mi">4096</span><span class="p">)</span><span class="o">?</span><span class="p">;</span>
+<span class="n">mudu_fs_close</span><span class="p">(</span><span class="n">session</span><span class="p">,</span><span class="w"> </span><span class="n">fd</span><span class="p">)</span><span class="o">?</span><span class="p">;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Open flags use libc <code class="docutils literal notranslate"><span class="pre">O_*</span></code> values (<code class="docutils literal notranslate"><span class="pre">O_RDONLY</span></code> / <code class="docutils literal notranslate"><span class="pre">O_WRONLY</span></code> / <code class="docutils literal notranslate"><span class="pre">O_RDWR</span></code>). <code class="docutils literal notranslate"><span class="pre">O_CREAT</span></code>, <code class="docutils literal notranslate"><span class="pre">O_TRUNC</span></code>, <code class="docutils literal notranslate"><span class="pre">O_APPEND</span></code>, and <code class="docutils literal notranslate"><span class="pre">O_EXCL</span></code> are rejected (<code class="docutils literal notranslate"><span class="pre">InvalidInput</span></code>): object creation goes through FS-column DML, and content replacement goes through a new generation.</p></li>
+<li><p>A write open is allowed only on a PENDING object created by the current transaction; it writes a new private generation that is invisible to other transactions. <code class="docutils literal notranslate"><span class="pre">mudu_fs_close</span></code> fsyncs the content and seals the generation; committing the surrounding transaction publishes it, rolling back discards it. Committed generations are read-only.</p></li>
+<li><p>A read open anchors the generation visible at open time, so the content does not change for the lifetime of the fd.</p></li>
+<li><p>File descriptors are session-scoped and are released when the session closes; operating on a closed fd fails with <code class="docutils literal notranslate"><span class="pre">BadFileDescriptor</span></code>.</p></li>
+</ul>
+</section>
+<section id="filesystem-syscalls">
+<h2>Filesystem syscalls<a class="headerlink" href="#filesystem-syscalls" title="Link to this heading">#</a></h2>
+<p>The fs family has eleven syscalls, exposed through <code class="docutils literal notranslate"><span class="pre">sys_interface::sync_api</span></code> and <code class="docutils literal notranslate"><span class="pre">sys_interface::async_api</span></code> under the same names:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Function</p></th>
+<th class="head"><p>Semantics</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">mudu_fs_open(session_id,</span> <span class="pre">oid,</span> <span class="pre">path,</span> <span class="pre">flags)</span> <span class="pre">-&gt;</span> <span class="pre">RS&lt;u32&gt;</span></code></p></td>
+<td><p>Open an object (or entry) and return an fd.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">mudu_fs_close(session_id,</span> <span class="pre">fd)</span> <span class="pre">-&gt;</span> <span class="pre">RS&lt;()&gt;</span></code></p></td>
+<td><p>Close an fd; closing a write fd seals its private generation.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">mudu_fs_read(session_id,</span> <span class="pre">fd,</span> <span class="pre">len)</span> <span class="pre">-&gt;</span> <span class="pre">RS&lt;Vec&lt;u8&gt;&gt;</span></code></p></td>
+<td><p>Read at the fd cursor, advancing it.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">mudu_fs_write(session_id,</span> <span class="pre">fd,</span> <span class="pre">data)</span> <span class="pre">-&gt;</span> <span class="pre">RS&lt;u32&gt;</span></code></p></td>
+<td><p>Write at the fd cursor, advancing it; returns bytes written.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">mudu_fs_pread(session_id,</span> <span class="pre">fd,</span> <span class="pre">offset,</span> <span class="pre">len)</span> <span class="pre">-&gt;</span> <span class="pre">RS&lt;Vec&lt;u8&gt;&gt;</span></code></p></td>
+<td><p>Read at <code class="docutils literal notranslate"><span class="pre">offset</span></code> without moving the cursor.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">mudu_fs_pwrite(session_id,</span> <span class="pre">fd,</span> <span class="pre">offset,</span> <span class="pre">data)</span> <span class="pre">-&gt;</span> <span class="pre">RS&lt;()&gt;</span></code></p></td>
+<td><p>Write at <code class="docutils literal notranslate"><span class="pre">offset</span></code> without moving the cursor.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">mudu_fs_lseek(session_id,</span> <span class="pre">fd,</span> <span class="pre">offset,</span> <span class="pre">whence)</span> <span class="pre">-&gt;</span> <span class="pre">RS&lt;u64&gt;</span></code></p></td>
+<td><p>Move the cursor (<code class="docutils literal notranslate"><span class="pre">whence</span></code> 0/1/2 = SET/CUR/END); returns the new cursor.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">mudu_fs_fstat(session_id,</span> <span class="pre">fd)</span> <span class="pre">-&gt;</span> <span class="pre">RS&lt;FsStat&gt;</span></code></p></td>
+<td><p>Stat an open fd.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">mudu_fs_stat(session_id,</span> <span class="pre">oid,</span> <span class="pre">path)</span> <span class="pre">-&gt;</span> <span class="pre">RS&lt;FsStat&gt;</span></code></p></td>
+<td><p>Stat an object or entry without opening an fd.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">mudu_fs_fsync(session_id,</span> <span class="pre">fd)</span> <span class="pre">-&gt;</span> <span class="pre">RS&lt;()&gt;</span></code></p></td>
+<td><p>Flush a write fd’s content to durable storage.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">mudu_fs_readdir(session_id,</span> <span class="pre">oid,</span> <span class="pre">path)</span> <span class="pre">-&gt;</span> <span class="pre">RS&lt;Vec&lt;FsDirEntry&gt;&gt;</span></code></p></td>
+<td><p>List the entries of a DIRECTORY object.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">FsStat</span></code> carries <code class="docutils literal notranslate"><span class="pre">{</span> <span class="pre">oid,</span> <span class="pre">generation,</span> <span class="pre">entry,</span> <span class="pre">length,</span> <span class="pre">state</span> <span class="pre">}</span></code> (<code class="docutils literal notranslate"><span class="pre">state</span></code>: 0 = PENDING, 1 = SEALED); <code class="docutils literal notranslate"><span class="pre">FsDirEntry</span></code> carries <code class="docutils literal notranslate"><span class="pre">{</span> <span class="pre">name,</span> <span class="pre">is_dir,</span> <span class="pre">length</span> <span class="pre">}</span></code>.</p>
+<ul class="simple">
+<li><p>A single <code class="docutils literal notranslate"><span class="pre">mudu_fs_read</span></code> / <code class="docutils literal notranslate"><span class="pre">mudu_fs_write</span></code> transfers at most 16 MiB; larger requests fail with <code class="docutils literal notranslate"><span class="pre">InvalidInput</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mtp</span> <span class="pre">rust</span> <span class="pre">--async</span></code> converts these calls like any other syscall: import them by bare name from <code class="docutils literal notranslate"><span class="pre">sys_interface::sync_api</span></code> so the transpiler can rewrite them.</p></li>
+</ul>
+</section>
+<section id="generations-and-garbage-collection">
+<h2>Generations and garbage collection<a class="headerlink" href="#generations-and-garbage-collection" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Object content lives under <code class="docutils literal notranslate"><span class="pre">{data_dir}/fs/{fs_id}</span></code> as <code class="docutils literal notranslate"><span class="pre">{oidhex}.{generation}[.{entry}]</span></code> files, where <code class="docutils literal notranslate"><span class="pre">oidhex</span></code> is the 32-character lowercase hex of the object OID.</p></li>
+<li><p>Writing an object produces a whole new generation. Committed generations are immutable, so content bytes never enter the WAL — only <code class="docutils literal notranslate"><span class="pre">_fs_object</span></code> metadata rows do.</p></li>
+<li><p>At startup, after WAL replay, a recovery scan deletes generations that no visible, sealed <code class="docutils literal notranslate"><span class="pre">_fs_object</span></code> row references.</p></li>
+<li><p>A periodic GC reclaims generations once they are no longer visible to the oldest active snapshot: deleting a row or rebinding its FS column makes the old generation collectable after it passes that horizon.</p></li>
+<li><p>GC and storage are per worker: each worker scans only its own storage root.</p></li>
+</ul>
+</section>
+<section id="standalone-adapters">
+<h2>Standalone adapters<a class="headerlink" href="#standalone-adapters" title="Link to this heading">#</a></h2>
+<p>On the standalone SQLite / PostgreSQL / MySQL adapter paths, the fs syscalls are emulated on the local filesystem under <code class="docutils literal notranslate"><span class="pre">{db_path}.fs/</span></code> with the same flat layout, pinned to a single generation (always <code class="docutils literal notranslate"><span class="pre">1</span></code>, with state reported as SEALED) and without MVCC, DDL, or catalog support. The standalone <code class="docutils literal notranslate"><span class="pre">mudud</span></code> driver path returns <code class="docutils literal notranslate"><span class="pre">NotImplemented</span></code>: fs frames are not yet wired into the mudud wire protocol.</p>
+<p>Filesystem content is stored outside WAL. The current worker snapshot copies relation <code class="docutils literal notranslate"><span class="pre">.dat</span></code> files and KV state, not the <code class="docutils literal notranslate"><span class="pre">fs/</span></code> generation files; logical dumps contain schema and table CSV rather than object-content files. These mechanisms alone therefore do not provide complete replication or recovery of filesystem object content. Preserve and validate that content separately when using FS columns.</p>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="sdk.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">SDKs and Execution Modes</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="churcuring.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Churcuring and CQL</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#registering-filesystem-types">Registering filesystem types</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fs-columns">FS columns</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#accessing-objects-from-procedures">Accessing objects from procedures</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#filesystem-syscalls">Filesystem syscalls</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#generations-and-garbage-collection">Generations and garbage collection</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#standalone-adapters">Standalone adapters</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By MuduDB contributors
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026, MuduDB contributors.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

@@ -474,21 +474,29 @@
 <li class="toctree-l2"><a class="reference internal" href="../administration/client.html">Client</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../administration/server.html">Server Management</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../administration/configuration.html">Configuration Reference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../administration/replication.html">Replication and Raft Fault Tolerance</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../administration/packages.html">Application Packages</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../administration/toolchain.html">Toolchain</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../administration/backup.html">Backup and Restore</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../programming/index.html">Programming</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../programming/mudu_procedure.html">Mudu Procedure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../programming/sdk.html">SDKs and Execution Modes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../programming/filesystem.html">Filesystem Object Types</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../programming/churcuring.html">Churcuring and CQL</a></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../programming/syscalls.html">Syscalls</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/open.html">open</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/close.html">close</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/read.html">read</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/write.html">write</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/range-scan.html">range-scan</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/batch.html">batch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/query.html">query</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/command.html">command</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/batch.html">batch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/get.html">get</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/put.html">put</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/delete.html">delete</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/range.html">range</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/fs.html">fs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/relation.html">Relation Syscalls</a></li>
 </ul>
 </details></li>
 </ul>
@@ -497,9 +505,11 @@
 <li class="toctree-l2"><a class="reference internal" href="../internal/kernel.html">Kernel</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../internal/adapter.html">Adapters</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../internal/procedure-runtime.html">Procedure Runtime</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../internal/suspendable-execution.html">Suspendable Procedure Execution</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../internal/wasm.html">WebAssembly Integration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../internal/partitioning.html">Partitioning and Worker Mapping</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../internal/partitioning.html">Partitioning</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../internal/per_core_worker.html">Per-core Worker Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../internal/replication.html">Replication Architecture</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">Reference</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
@@ -589,6 +599,34 @@
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#partition-route-query">Partition route query</a></li>
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-plane-commands-tcp">Data plane commands (TCP)</a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#run-a-sql-query-or-command">Run a SQL query or command</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#put-a-key-value-item">Put a key-value item</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#get-a-key">Get a key</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#scan-a-key-range">Scan a key range</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#invoke-a-procedure-with-a-raw-request">Invoke a procedure with a raw request</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#replication-administration">Replication administration</a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#add-a-node-to-the-raft-group">Add a node to the raft group</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#remove-a-node-from-the-raft-group">Remove a node from the raft group</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#promote-a-learner-to-voter">Promote a learner to voter</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#promote-this-node-to-stream-primary">Promote this node to stream primary</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#follow-a-new-stream-primary">Follow a new stream primary</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#show-replication-status">Show replication status</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#backup-and-restore">Backup and restore</a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#take-a-base-backup">Take a base backup</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#list-base-backups">List base backups</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#verify-a-base-backup">Verify a base backup</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#delete-a-base-backup">Delete a base backup</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#restore-a-base-backup-offline">Restore a base backup (offline)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#point-in-time-recovery-offline">Point-in-time recovery (offline)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#take-a-logical-dump">Take a logical dump</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#restore-a-logical-dump">Restore a logical dump</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#argument-constraints">Argument constraints</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#output">Output</a></li>
 </ul>
@@ -604,7 +642,7 @@
                   
   <section id="mcli-management-interface-http">
 <h1>mcli Management Interface (HTTP)<a class="headerlink" href="#mcli-management-interface-http" title="Link to this heading">#</a></h1>
-<p>This page describes the HTTP management commands available through <code class="docutils literal notranslate"><span class="pre">mcli</span></code> for application lifecycle management and partition routing queries.</p>
+<p>This page describes the HTTP management commands available through <code class="docutils literal notranslate"><span class="pre">mcli</span></code> for application lifecycle management and partition routing queries, the replication and backup administration commands, and the TCP data-plane commands.</p>
 <section id="prerequisites">
 <h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading">#</a></h2>
 <ul class="simple">
@@ -668,11 +706,155 @@
 </div>
 </section>
 </section>
+<section id="data-plane-commands-tcp">
+<h2>Data plane commands (TCP)<a class="headerlink" href="#data-plane-commands-tcp" title="Link to this heading">#</a></h2>
+<p>These commands connect to the TCP protocol endpoint (<code class="docutils literal notranslate"><span class="pre">--addr</span></code>, default <code class="docutils literal notranslate"><span class="pre">127.0.0.1:9527</span></code>). Each takes the request body as inline JSON (<code class="docutils literal notranslate"><span class="pre">--json</span></code>) or from a JSON file (<code class="docutils literal notranslate"><span class="pre">--json-file</span></code>; use <code class="docutils literal notranslate"><span class="pre">-</span></code> to read from stdin).</p>
+<p>The SQL example assumes an installed <code class="docutils literal notranslate"><span class="pre">demo</span></code> application with a <code class="docutils literal notranslate"><span class="pre">users(id)</span></code> table. Raw KV requests require an existing session OID as <code class="docutils literal notranslate"><span class="pre">{</span> <span class="pre">&quot;h&quot;:</span> <span class="pre">high_u64,</span> <span class="pre">&quot;l&quot;:</span> <span class="pre">low_u64</span> <span class="pre">}</span></code>; raw <code class="docutils literal notranslate"><span class="pre">invoke</span></code> requires <code class="docutils literal notranslate"><span class="pre">session_id</span></code> (u64 number or decimal u128 string) and encoded procedure parameters. The IDs and payloads below are placeholders, not session-creation commands. Prefer <code class="docutils literal notranslate"><span class="pre">app-invoke</span></code> for descriptor-based argument conversion and automatic session setup.</p>
+<section id="run-a-sql-query-or-command">
+<h3>Run a SQL query or command<a class="headerlink" href="#run-a-sql-query-or-command" title="Link to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mcli<span class="w"> </span>--addr<span class="w"> </span><span class="m">127</span>.0.0.1:9527<span class="w"> </span><span class="nb">command</span><span class="w"> </span>--json<span class="w"> </span><span class="s1">'{"app_name":"demo","sql":"SELECT id FROM users"}'</span>
+</pre></div>
+</div>
+</section>
+<section id="put-a-key-value-item">
+<h3>Put a key-value item<a class="headerlink" href="#put-a-key-value-item" title="Link to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mcli<span class="w"> </span>--addr<span class="w"> </span><span class="m">127</span>.0.0.1:9527<span class="w"> </span>put<span class="w"> </span>--json<span class="w"> </span><span class="s1">'{"oid":{"h":0,"l":1},"key":"k","value":"v"}'</span>
+</pre></div>
+</div>
+</section>
+<section id="get-a-key">
+<h3>Get a key<a class="headerlink" href="#get-a-key" title="Link to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mcli<span class="w"> </span>--addr<span class="w"> </span><span class="m">127</span>.0.0.1:9527<span class="w"> </span>get<span class="w"> </span>--json<span class="w"> </span><span class="s1">'{"oid":{"h":0,"l":1},"key":"k"}'</span>
+</pre></div>
+</div>
+</section>
+<section id="scan-a-key-range">
+<h3>Scan a key range<a class="headerlink" href="#scan-a-key-range" title="Link to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mcli<span class="w"> </span>--addr<span class="w"> </span><span class="m">127</span>.0.0.1:9527<span class="w"> </span>range<span class="w"> </span>--json<span class="w"> </span><span class="s1">'{"oid":{"h":0,"l":1},"start_key":"a","end_key":"z"}'</span>
+</pre></div>
+</div>
+</section>
+<section id="invoke-a-procedure-with-a-raw-request">
+<h3>Invoke a procedure with a raw request<a class="headerlink" href="#invoke-a-procedure-with-a-raw-request" title="Link to this heading">#</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">invoke</span></code> sends a raw procedure request over TCP. The typed variant is <code class="docutils literal notranslate"><span class="pre">app-invoke</span></code> (see <a class="reference internal" href="../administration/client.html"><span class="std std-doc">Client</span></a>), which fetches the procedure descriptor over HTTP before invoking over TCP.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mcli<span class="w"> </span>--addr<span class="w"> </span><span class="m">127</span>.0.0.1:9527<span class="w"> </span>invoke<span class="w"> </span>--json<span class="w"> </span><span class="s1">'{"session_id":"1","procedure_name":"app/mod/proc","procedure_parameters":{}}'</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="replication-administration">
+<h2>Replication administration<a class="headerlink" href="#replication-administration" title="Link to this heading">#</a></h2>
+<p>Raft membership and primary-replica failover commands. They target the HTTP management endpoint of the node being operated on.</p>
+<section id="add-a-node-to-the-raft-group">
+<h3>Add a node to the raft group<a class="headerlink" href="#add-a-node-to-the-raft-group" title="Link to this heading">#</a></h3>
+<p>Nodes join as voters by default; add <code class="docutils literal notranslate"><span class="pre">--learner</span></code> to join as a learner (replicates but never votes; promote later with <code class="docutils literal notranslate"><span class="pre">promote-learner</span></code>).</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mcli<span class="w"> </span>--http-addr<span class="w"> </span><span class="m">127</span>.0.0.1:8300<span class="w"> </span>repl<span class="w"> </span>add-node<span class="w"> </span>--node-id<span class="w"> </span><span class="m">4</span><span class="w"> </span>--host<span class="w"> </span><span class="m">10</span>.0.0.4<span class="w"> </span>--port<span class="w"> </span><span class="m">19530</span>
+mcli<span class="w"> </span>--http-addr<span class="w"> </span><span class="m">127</span>.0.0.1:8300<span class="w"> </span>repl<span class="w"> </span>add-node<span class="w"> </span>--node-id<span class="w"> </span><span class="m">4</span><span class="w"> </span>--host<span class="w"> </span><span class="m">10</span>.0.0.4<span class="w"> </span>--port<span class="w"> </span><span class="m">19530</span><span class="w"> </span>--learner
+</pre></div>
+</div>
+</section>
+<section id="remove-a-node-from-the-raft-group">
+<h3>Remove a node from the raft group<a class="headerlink" href="#remove-a-node-from-the-raft-group" title="Link to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mcli<span class="w"> </span>--http-addr<span class="w"> </span><span class="m">127</span>.0.0.1:8300<span class="w"> </span>repl<span class="w"> </span>remove-node<span class="w"> </span>--node-id<span class="w"> </span><span class="m">4</span>
+</pre></div>
+</div>
+</section>
+<section id="promote-a-learner-to-voter">
+<h3>Promote a learner to voter<a class="headerlink" href="#promote-a-learner-to-voter" title="Link to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mcli<span class="w"> </span>--http-addr<span class="w"> </span><span class="m">127</span>.0.0.1:8300<span class="w"> </span>repl<span class="w"> </span>promote-learner<span class="w"> </span>--node-id<span class="w"> </span><span class="m">4</span>
+</pre></div>
+</div>
+</section>
+<section id="promote-this-node-to-stream-primary">
+<h3>Promote this node to stream primary<a class="headerlink" href="#promote-this-node-to-stream-primary" title="Link to this heading">#</a></h3>
+<p>Promotion requires fencing proof: either <code class="docutils literal notranslate"><span class="pre">--fencing-cmd</span> <span class="pre">&lt;cmd&gt;</span></code>, which runs locally first (via <code class="docutils literal notranslate"><span class="pre">sh</span> <span class="pre">-c</span></code>) and aborts the promotion without contacting the server when it fails, or <code class="docutils literal notranslate"><span class="pre">--yes</span></code> to confirm explicitly that the old primary is fenced. The two options are mutually exclusive.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mcli<span class="w"> </span>--http-addr<span class="w"> </span><span class="m">127</span>.0.0.1:8301<span class="w"> </span>repl<span class="w"> </span>promote<span class="w"> </span>--fencing-cmd<span class="w"> </span>./fence-old-primary.sh
+mcli<span class="w"> </span>--http-addr<span class="w"> </span><span class="m">127</span>.0.0.1:8301<span class="w"> </span>repl<span class="w"> </span>promote<span class="w"> </span>--yes
+</pre></div>
+</div>
+</section>
+<section id="follow-a-new-stream-primary">
+<h3>Follow a new stream primary<a class="headerlink" href="#follow-a-new-stream-primary" title="Link to this heading">#</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">--primary</span></code> is the replication address (<code class="docutils literal notranslate"><span class="pre">host:port</span></code>) of the new primary.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mcli<span class="w"> </span>--http-addr<span class="w"> </span><span class="m">127</span>.0.0.1:8300<span class="w"> </span>repl<span class="w"> </span>follow<span class="w"> </span>--primary<span class="w"> </span><span class="m">10</span>.0.0.2:19527<span class="w"> </span>--primary-node-id<span class="w"> </span><span class="m">2</span>
+</pre></div>
+</div>
+</section>
+<section id="show-replication-status">
+<h3>Show replication status<a class="headerlink" href="#show-replication-status" title="Link to this heading">#</a></h3>
+<p>JSON by default; <code class="docutils literal notranslate"><span class="pre">--table</span></code> renders a sectioned table.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mcli<span class="w"> </span>--http-addr<span class="w"> </span><span class="m">127</span>.0.0.1:8300<span class="w"> </span>repl<span class="w"> </span>status
+mcli<span class="w"> </span>--http-addr<span class="w"> </span><span class="m">127</span>.0.0.1:8300<span class="w"> </span>repl<span class="w"> </span>status<span class="w"> </span>--table
+</pre></div>
+</div>
+</section>
+</section>
+<section id="backup-and-restore">
+<h2>Backup and restore<a class="headerlink" href="#backup-and-restore" title="Link to this heading">#</a></h2>
+<p>Base backups and logical dumps run on the live server through the HTTP management endpoint; <code class="docutils literal notranslate"><span class="pre">restore</span></code> and <code class="docutils literal notranslate"><span class="pre">pitr</span></code> are offline and do not contact a server. See <a class="reference internal" href="../administration/backup.html"><span class="std std-doc">Backup and Restore</span></a> for the <code class="docutils literal notranslate"><span class="pre">[backup]</span></code> configuration and the on-disk layout.</p>
+<section id="take-a-base-backup">
+<h3>Take a base backup<a class="headerlink" href="#take-a-base-backup" title="Link to this heading">#</a></h3>
+<p>Requires <code class="docutils literal notranslate"><span class="pre">[backup]</span> <span class="pre">backup_dir</span></code> on the server.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mcli<span class="w"> </span>--http-addr<span class="w"> </span><span class="m">127</span>.0.0.1:8300<span class="w"> </span>backup<span class="w"> </span>create<span class="w"> </span>--label<span class="w"> </span>daily-1
+</pre></div>
+</div>
+</section>
+<section id="list-base-backups">
+<h3>List base backups<a class="headerlink" href="#list-base-backups" title="Link to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mcli<span class="w"> </span>--http-addr<span class="w"> </span><span class="m">127</span>.0.0.1:8300<span class="w"> </span>backup<span class="w"> </span>list
+</pre></div>
+</div>
+</section>
+<section id="verify-a-base-backup">
+<h3>Verify a base backup<a class="headerlink" href="#verify-a-base-backup" title="Link to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mcli<span class="w"> </span>--http-addr<span class="w"> </span><span class="m">127</span>.0.0.1:8300<span class="w"> </span>backup<span class="w"> </span>verify<span class="w"> </span>--label<span class="w"> </span>daily-1
+</pre></div>
+</div>
+</section>
+<section id="delete-a-base-backup">
+<h3>Delete a base backup<a class="headerlink" href="#delete-a-base-backup" title="Link to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mcli<span class="w"> </span>--http-addr<span class="w"> </span><span class="m">127</span>.0.0.1:8300<span class="w"> </span>backup<span class="w"> </span>delete<span class="w"> </span>--label<span class="w"> </span>daily-1
+</pre></div>
+</div>
+</section>
+<section id="restore-a-base-backup-offline">
+<h3>Restore a base backup (offline)<a class="headerlink" href="#restore-a-base-backup-offline" title="Link to this heading">#</a></h3>
+<p>Replays the base backup plus archived WAL into <code class="docutils literal notranslate"><span class="pre">--target-dir</span></code>, up to the end of the archive.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mcli<span class="w"> </span>restore<span class="w"> </span>--label<span class="w"> </span>daily-1<span class="w"> </span>--backup-dir<span class="w"> </span>/backups<span class="w"> </span>--archive-dir<span class="w"> </span>/wal-archive<span class="w"> </span>--target-dir<span class="w"> </span>/restored
+</pre></div>
+</div>
+</section>
+<section id="point-in-time-recovery-offline">
+<h3>Point-in-time recovery (offline)<a class="headerlink" href="#point-in-time-recovery-offline" title="Link to this heading">#</a></h3>
+<p>Like <code class="docutils literal notranslate"><span class="pre">restore</span></code>, but stops at a target point. Exactly one of <code class="docutils literal notranslate"><span class="pre">--lsn</span></code>, <code class="docutils literal notranslate"><span class="pre">--time</span></code>, or <code class="docutils literal notranslate"><span class="pre">--xid</span></code> is required.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mcli<span class="w"> </span>pitr<span class="w"> </span>--label<span class="w"> </span>daily-1<span class="w"> </span>--backup-dir<span class="w"> </span>/backups<span class="w"> </span>--archive-dir<span class="w"> </span>/wal-archive<span class="w"> </span>--target-dir<span class="w"> </span>/recovered<span class="w"> </span>--time<span class="w"> </span><span class="m">1700000000000</span>
+</pre></div>
+</div>
+</section>
+<section id="take-a-logical-dump">
+<h3>Take a logical dump<a class="headerlink" href="#take-a-logical-dump" title="Link to this heading">#</a></h3>
+<p>Writes <code class="docutils literal notranslate"><span class="pre">&lt;dir&gt;/&lt;label&gt;.zip</span></code> on the server (<code class="docutils literal notranslate"><span class="pre">--dir</span></code> is a server-side path).</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mcli<span class="w"> </span>--http-addr<span class="w"> </span><span class="m">127</span>.0.0.1:8300<span class="w"> </span>dump<span class="w"> </span>--label<span class="w"> </span>daily-1<span class="w"> </span>--dir<span class="w"> </span>/dumps
+</pre></div>
+</div>
+</section>
+<section id="restore-a-logical-dump">
+<h3>Restore a logical dump<a class="headerlink" href="#restore-a-logical-dump" title="Link to this heading">#</a></h3>
+<p>Tables that already exist are skipped unless <code class="docutils literal notranslate"><span class="pre">--drop</span></code> is given (drop and recreate same-named tables).</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mcli<span class="w"> </span>--http-addr<span class="w"> </span><span class="m">127</span>.0.0.1:8300<span class="w"> </span>restore-logical<span class="w"> </span>--label<span class="w"> </span>daily-1<span class="w"> </span>--dir<span class="w"> </span>/dumps
+mcli<span class="w"> </span>--http-addr<span class="w"> </span><span class="m">127</span>.0.0.1:8300<span class="w"> </span>restore-logical<span class="w"> </span>--label<span class="w"> </span>daily-1<span class="w"> </span>--dir<span class="w"> </span>/dumps<span class="w"> </span>--drop
+</pre></div>
+</div>
+</section>
+</section>
 <section id="argument-constraints">
 <h2>Argument constraints<a class="headerlink" href="#argument-constraints" title="Link to this heading">#</a></h2>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">app-detail</span></code>: <code class="docutils literal notranslate"><span class="pre">--proc</span></code> requires <code class="docutils literal notranslate"><span class="pre">--module</span></code>.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">partition-route</span></code>: <code class="docutils literal notranslate"><span class="pre">--key</span></code> and <code class="docutils literal notranslate"><span class="pre">--start/--end</span></code> are mutually exclusive; provide one or the other.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">command</span></code> / <code class="docutils literal notranslate"><span class="pre">put</span></code> / <code class="docutils literal notranslate"><span class="pre">get</span></code> / <code class="docutils literal notranslate"><span class="pre">range</span></code> / <code class="docutils literal notranslate"><span class="pre">invoke</span></code> / <code class="docutils literal notranslate"><span class="pre">app-invoke</span></code>: exactly one of <code class="docutils literal notranslate"><span class="pre">--json</span></code> or <code class="docutils literal notranslate"><span class="pre">--json-file</span></code> is required.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">repl</span> <span class="pre">promote</span></code>: <code class="docutils literal notranslate"><span class="pre">--fencing-cmd</span></code> and <code class="docutils literal notranslate"><span class="pre">--yes</span></code> are mutually exclusive; one of them is required.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pitr</span></code>: <code class="docutils literal notranslate"><span class="pre">--lsn</span></code>, <code class="docutils literal notranslate"><span class="pre">--time</span></code>, and <code class="docutils literal notranslate"><span class="pre">--xid</span></code> are mutually exclusive; exactly one is required.</p></li>
 </ul>
 </section>
 <section id="output">
@@ -732,6 +914,34 @@
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#uninstall-an-application">Uninstall an application</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#show-server-topology">Show server topology</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#partition-route-query">Partition route query</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-plane-commands-tcp">Data plane commands (TCP)</a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#run-a-sql-query-or-command">Run a SQL query or command</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#put-a-key-value-item">Put a key-value item</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#get-a-key">Get a key</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#scan-a-key-range">Scan a key range</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#invoke-a-procedure-with-a-raw-request">Invoke a procedure with a raw request</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#replication-administration">Replication administration</a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#add-a-node-to-the-raft-group">Add a node to the raft group</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#remove-a-node-from-the-raft-group">Remove a node from the raft group</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#promote-a-learner-to-voter">Promote a learner to voter</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#promote-this-node-to-stream-primary">Promote this node to stream primary</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#follow-a-new-stream-primary">Follow a new stream primary</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#show-replication-status">Show replication status</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#backup-and-restore">Backup and restore</a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#take-a-base-backup">Take a base backup</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#list-base-backups">List base backups</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#verify-a-base-backup">Verify a base backup</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#delete-a-base-backup">Delete a base backup</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#restore-a-base-backup-offline">Restore a base backup (offline)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#point-in-time-recovery-offline">Point-in-time recovery (offline)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#take-a-logical-dump">Take a logical dump</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#restore-a-logical-dump">Restore a logical dump</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#argument-constraints">Argument constraints</a></li>

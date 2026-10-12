@@ -55,8 +55,8 @@
     <link rel="icon" href="../_static/favicon.svg"/>
     <link rel="index" title="索引" href="../genindex.html" />
     <link rel="search" title="搜索" href="../search.html" />
-    <link rel="next" title="分区与工作线程映射" href="partitioning.html" />
-    <link rel="prev" title="过程运行时" href="procedure-runtime.html" />
+    <link rel="next" title="分区" href="partitioning.html" />
+    <link rel="prev" title="可挂起的过程执行" href="suspendable-execution.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="zh-cn"/>
   <meta name="docsearch:version" content="v0.1" />
@@ -475,21 +475,29 @@
 <li class="toctree-l2"><a class="reference internal" href="../administration/client.html">客户端</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../administration/server.html">服务端管理</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../administration/configuration.html">配置参考</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../administration/replication.html">复制与 Raft 容错</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../administration/packages.html">应用包</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../administration/toolchain.html">工具链</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../administration/backup.html">备份与恢复</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../programming/index.html">编程</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../programming/mudu_procedure.html">Mudu 过程</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../programming/sdk.html">SDK 与执行模式</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../programming/filesystem.html">文件系统对象类型</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../programming/churcuring.html">Churcuring 与 CQL</a></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../programming/syscalls.html">系统调用</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/open.html">open</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/close.html">close</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/read.html">read</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/write.html">write</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/range-scan.html">range-scan</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/batch.html">batch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/query.html">query</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/command.html">command</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/batch.html">batch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/get.html">get</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/put.html">put</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/delete.html">delete</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/range.html">range</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/fs.html">fs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/relation.html">Relation 系统调用</a></li>
 </ul>
 </details></li>
 </ul>
@@ -498,9 +506,11 @@
 <li class="toctree-l2"><a class="reference internal" href="kernel.html">内核</a></li>
 <li class="toctree-l2"><a class="reference internal" href="adapter.html">适配器</a></li>
 <li class="toctree-l2"><a class="reference internal" href="procedure-runtime.html">过程运行时</a></li>
+<li class="toctree-l2"><a class="reference internal" href="suspendable-execution.html">可挂起的过程执行</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">WebAssembly 集成</a></li>
-<li class="toctree-l2"><a class="reference internal" href="partitioning.html">分区与工作线程映射</a></li>
-<li class="toctree-l2"><a class="reference internal" href="per_core_worker.html">每核心工作线程模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="partitioning.html">分区</a></li>
+<li class="toctree-l2"><a class="reference internal" href="per_core_worker.html">每核 Worker 模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="replication.html">复制架构</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../reference/index.html">参考资料</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -602,7 +612,7 @@
 <section id="id1">
 <h2>组件模型<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
 <p>MuduDB 过程被编译为面向 <code class="docutils literal notranslate"><span class="pre">wasm32-wasip2</span></code> 平台的 WebAssembly 组件。该组件导入少量宿主编译的系统调用，并导出标记为 <code class="docutils literal notranslate"><span class="pre">/**mudu-proc**/</span></code> 的过程函数。</p>
-<p>打包前，客户组件会与 MuduDB 宿主组件组合，使最终模块具备运行时加载器期望的导入/导出签名。</p>
+<p>构建时，<code class="docutils literal notranslate"><span class="pre">mtp</span></code> 转译器生成组件的导入/导出接口：组件导入宿主系统调用接口（同步 world 为 <code class="docutils literal notranslate"><span class="pre">mududb:api/system</span></code>，异步 world 为 <code class="docutils literal notranslate"><span class="pre">mududb:async-api/system</span></code>），并为每个过程导出一个 <code class="docutils literal notranslate"><span class="pre">mp2-&lt;name&gt;</span></code> 入口点，与运行时加载器期望的签名相匹配。</p>
 </section>
 <section id="wasi">
 <h2>WASI 沙箱<a class="headerlink" href="#wasi" title="Link to this heading">#</a></h2>
@@ -615,7 +625,7 @@
 </section>
 <section id="id2">
 <h2>语言支持<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
-<p>工具链目前主要支持 Rust 作为过程语言，AssemblyScript 示例也已存在。原则上，任何能生成 WASI 组件的语言未来都可支持。</p>
+<p>运行时托管六种客户语言：Rust（主要过程语言）、AssemblyScript、C#、Python、C 和 Go。原则上，任何能生成 WASI 组件的语言未来都可支持。</p>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>语言</p></th>
@@ -626,11 +636,27 @@
 <tbody>
 <tr class="row-even"><td><p>Rust</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">wasm32-wasip2</span></code></p></td>
-<td><p>主要支持语言；<code class="docutils literal notranslate"><span class="pre">mudu_wasm</span></code> crate 提供绑定。</p></td>
+<td><p>主要支持语言；通过 <code class="docutils literal notranslate"><span class="pre">sys_interface</span></code> 与 <code class="docutils literal notranslate"><span class="pre">mududb</span></code> SDK 提供绑定。</p></td>
 </tr>
 <tr class="row-odd"><td><p>AssemblyScript</p></td>
 <td><p>WASI 组件</p></td>
-<td><p>通过 AssemblyScript 转译器与 shim 支持。</p></td>
+<td><p>通过 <code class="docutils literal notranslate"><span class="pre">mtp</span> <span class="pre">assembly-script</span></code> 转译器前端与 shim 支持。</p></td>
+</tr>
+<tr class="row-even"><td><p>C#</p></td>
+<td><p>WASI 组件</p></td>
+<td><p>使用 componentize-dotnet（.NET wasi-wasm 目标）构建。</p></td>
+</tr>
+<tr class="row-odd"><td><p>Python</p></td>
+<td><p>WASI 组件</p></td>
+<td><p>使用 componentize-py 构建；<code class="docutils literal notranslate"><span class="pre">mtp</span> <span class="pre">python</span></code> 前端。</p></td>
+</tr>
+<tr class="row-even"><td><p>C</p></td>
+<td><p>WASI 组件</p></td>
+<td><p>使用 wasi-sdk 的 clang 工具链构建。</p></td>
+</tr>
+<tr class="row-odd"><td><p>Go</p></td>
+<td><p>WASI 组件</p></td>
+<td><p>使用 TinyGo 构建。</p></td>
 </tr>
 </tbody>
 </table>
@@ -638,22 +664,24 @@
 </section>
 <section id="id3">
 <h2>客户绑定<a class="headerlink" href="#id3" title="Link to this heading">#</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">mudu_wasm</span></code> crate（以 Cargo 包名 <code class="docutils literal notranslate"><span class="pre">mod_0</span></code> 发布）提供生成的客户绑定与宿主端转译辅助。它由 <code class="docutils literal notranslate"><span class="pre">mudu_binding/wit/</span></code> 中的 WIT 接口定义生成。</p>
+<p>客户绑定由 <code class="docutils literal notranslate"><span class="pre">mgen</span></code> 根据 <code class="docutils literal notranslate"><span class="pre">mudu_binding/wit/</span></code> 中的 WIT 接口定义生成，该目录是客户/宿主 ABI 的唯一事实来源。仓库内的 Rust 过程通过 <code class="docutils literal notranslate"><span class="pre">sys_interface</span></code> 与 <code class="docutils literal notranslate"><span class="pre">mududb</span></code> SDK 门面使用这些绑定；每种客户语言各自携带生成的编解码器。</p>
 </section>
 <section id="id4">
 <h2>运行时限制<a class="headerlink" href="#id4" title="Link to this heading">#</a></h2>
 <p>运行时可对每次过程调用强制执行以下限制：</p>
 <ul class="simple">
 <li><p>内存使用；</p></li>
-<li><p>CPU 时间；</p></li>
-<li><p>系统调用次数；</p></li>
-<li><p>嵌套调用深度。</p></li>
+<li><p>CPU 预算（fuel）与墙上时钟超时；</p></li>
+<li><p>宿主调用（系统调用）次数；</p></li>
+<li><p>输入与输出大小；</p></li>
+<li><p>并发调用数（全局及每个应用）。</p></li>
 </ul>
 <p>这些限制有助于将用户代码与内核及其他过程隔离。</p>
 </section>
 <section id="id5">
 <h2>包格式<a class="headerlink" href="#id5" title="Link to this heading">#</a></h2>
 <p>编译后的组件与 DDL、描述符及可选初始化数据一起打包为 <code class="docutils literal notranslate"><span class="pre">.mpk</span></code> 归档。详见<a class="reference internal" href="../administration/packages.html"><span class="std std-doc">应用包</span></a>与 <a class="reference internal" href="../reference/contracts/mpk_manifest_v1.html"><span class="std std-doc">MPK 清单契约</span></a>。</p>
+<p>配置解析器接受 <code class="docutils literal notranslate"><span class="pre">p3</span></code>，但当前过程导出名选择对 P3 返回 <code class="docutils literal notranslate"><span class="pre">NotImplemented</span></code>。本文的过程调用路径应使用 <code class="docutils literal notranslate"><span class="pre">component_target</span> <span class="pre">=</span> <span class="pre">&quot;p2&quot;</span></code>。</p>
 </section>
 </section>
 
@@ -669,12 +697,12 @@
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="procedure-runtime.html"
+       href="suspendable-execution.html"
        title="上一页">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">上一页</p>
-        <p class="prev-next-title">过程运行时</p>
+        <p class="prev-next-title">可挂起的过程执行</p>
       </div>
     </a>
     <a class="right-next"
@@ -682,7 +710,7 @@
        title="下一页">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">下一页</p>
-        <p class="prev-next-title">分区与工作线程映射</p>
+        <p class="prev-next-title">分区</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

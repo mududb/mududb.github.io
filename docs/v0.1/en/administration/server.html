@@ -475,21 +475,29 @@
 <li class="toctree-l2"><a class="reference internal" href="client.html">Client</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">Server Management</a></li>
 <li class="toctree-l2"><a class="reference internal" href="configuration.html">Configuration Reference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="replication.html">Replication and Raft Fault Tolerance</a></li>
 <li class="toctree-l2"><a class="reference internal" href="packages.html">Application Packages</a></li>
 <li class="toctree-l2"><a class="reference internal" href="toolchain.html">Toolchain</a></li>
+<li class="toctree-l2"><a class="reference internal" href="backup.html">Backup and Restore</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../programming/index.html">Programming</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../programming/mudu_procedure.html">Mudu Procedure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../programming/sdk.html">SDKs and Execution Modes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../programming/filesystem.html">Filesystem Object Types</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../programming/churcuring.html">Churcuring and CQL</a></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../programming/syscalls.html">Syscalls</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/open.html">open</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/close.html">close</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/read.html">read</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/write.html">write</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/range-scan.html">range-scan</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/batch.html">batch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/query.html">query</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/command.html">command</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/batch.html">batch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/get.html">get</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/put.html">put</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/delete.html">delete</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/range.html">range</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/fs.html">fs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/relation.html">Relation Syscalls</a></li>
 </ul>
 </details></li>
 </ul>
@@ -498,9 +506,11 @@
 <li class="toctree-l2"><a class="reference internal" href="../internal/kernel.html">Kernel</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../internal/adapter.html">Adapters</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../internal/procedure-runtime.html">Procedure Runtime</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../internal/suspendable-execution.html">Suspendable Procedure Execution</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../internal/wasm.html">WebAssembly Integration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../internal/partitioning.html">Partitioning and Worker Mapping</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../internal/partitioning.html">Partitioning</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../internal/per_core_worker.html">Per-core Worker Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../internal/replication.html">Replication Architecture</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../reference/index.html">Reference</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -583,7 +593,7 @@
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#starting-the-server">Starting the server</a><ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#default-start">Default start</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#start-with-a-custom-config">Start with a custom config</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-to-expect">What to expect</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#listeners">Listeners</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stopping-the-server">Stopping the server</a></li>
@@ -603,13 +613,13 @@
                   
   <section id="server-management">
 <h1>Server Management<a class="headerlink" href="#server-management" title="Link to this heading">#</a></h1>
-<p><code class="docutils literal notranslate"><span class="pre">mudud</span></code> is the MuduDB server process. It hosts the database kernel, runs installed MPK packages, and exposes three listeners: a TCP protocol endpoint, an HTTP management endpoint, and a PostgreSQL-compatible wire protocol port.</p>
+<p><code class="docutils literal notranslate"><span class="pre">mudud</span></code> hosts the database and installed MPK applications. Listeners depend on <code class="docutils literal notranslate"><span class="pre">server_mode</span></code>: the default <code class="docutils literal notranslate"><span class="pre">Tokio</span></code> and Linux <code class="docutils literal notranslate"><span class="pre">IOUring</span></code> backends expose kernel TCP and HTTP management; <code class="docutils literal notranslate"><span class="pre">Legacy</span></code> registers HTTP and PostgreSQL wire services. The kernel modes do not start a PostgreSQL listener merely because <code class="docutils literal notranslate"><span class="pre">pg_listen_port</span></code> is configured.</p>
 <section id="prerequisites">
 <h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading">#</a></h2>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">mudud</span></code> and <code class="docutils literal notranslate"><span class="pre">mcli</span></code> are installed and in <code class="docutils literal notranslate"><span class="pre">PATH</span></code>.</p></li>
 <li><p>A configuration file exists at <code class="docutils literal notranslate"><span class="pre">./mudud.cfg</span></code>, <code class="docutils literal notranslate"><span class="pre">~/.mududb/mudud.cfg</span></code>, or a path passed with <code class="docutils literal notranslate"><span class="pre">--cfg</span></code>.</p></li>
-<li><p>On Linux, <code class="docutils literal notranslate"><span class="pre">io_uring</span></code> mode requires <code class="docutils literal notranslate"><span class="pre">liburing-dev</span></code> at runtime.</p></li>
+<li><p>On Linux, <code class="docutils literal notranslate"><span class="pre">IOUring</span></code> requires kernel and process permissions that allow io_uring; <code class="docutils literal notranslate"><span class="pre">liburing-dev</span></code> is a build dependency.</p></li>
 <li><p>The process should be started with a high file-descriptor limit (<code class="docutils literal notranslate"><span class="pre">ulimit</span> <span class="pre">-n</span> <span class="pre">65535</span></code> is a practical baseline).</p></li>
 </ul>
 </section>
@@ -633,14 +643,31 @@ mudud<span class="w"> </span>serve<span class="w"> </span>--cfg<span class="w"> 
 </pre></div>
 </div>
 </section>
-<section id="what-to-expect">
-<h3>What to expect<a class="headerlink" href="#what-to-expect" title="Link to this heading">#</a></h3>
-<p>After starting, <code class="docutils literal notranslate"><span class="pre">mudud</span></code> logs the effective configuration and opens three listeners:</p>
-<ul class="simple">
-<li><p>TCP protocol: <code class="docutils literal notranslate"><span class="pre">listen_ip:tcp_listen_port</span></code> (default <code class="docutils literal notranslate"><span class="pre">127.0.0.1:9527</span></code>)</p></li>
-<li><p>HTTP management: <code class="docutils literal notranslate"><span class="pre">listen_ip:http_listen_port</span></code> (default <code class="docutils literal notranslate"><span class="pre">127.0.0.1:8300</span></code>)</p></li>
-<li><p>PostgreSQL wire protocol: <code class="docutils literal notranslate"><span class="pre">listen_ip:pg_listen_port</span></code> (default <code class="docutils literal notranslate"><span class="pre">127.0.0.1:5432</span></code>)</p></li>
-</ul>
+<section id="listeners">
+<h3>Listeners<a class="headerlink" href="#listeners" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Mode</p></th>
+<th class="head"><p>TCP data plane</p></th>
+<th class="head"><p>HTTP management</p></th>
+<th class="head"><p>PostgreSQL wire</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Tokio</span></code> / <code class="docutils literal notranslate"><span class="pre">IOUring</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">tcp_listen_port</span></code> (9527)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">http_listen_port</span></code> (8300)</p></td>
+<td><p>Not started</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Legacy</span></code></p></td>
+<td><p>No kernel TCP listener</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">http_listen_port</span></code> (8300)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">pg_listen_port</span></code> (5432)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>With multiple kernel workers, the backend enables consecutive worker TCP ports; <code class="docutils literal notranslate"><span class="pre">server-topology</span></code> reports the actual endpoints. Bind addresses use <code class="docutils literal notranslate"><span class="pre">listen_ip</span></code>, default <code class="docutils literal notranslate"><span class="pre">127.0.0.1</span></code>.</p>
 </section>
 </section>
 <section id="stopping-the-server">
@@ -666,13 +693,13 @@ mcli<span class="w"> </span>--http-addr<span class="w"> </span><span class="m">1
 </thead>
 <tbody>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Legacy</span></code></p></td>
-<td><p>Maximum compatibility; single TCP/PG serving model.</p></td>
+<td><p>Legacy HTTP/PostgreSQL serving path; no kernel TCP endpoint.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">IOUring</span></code></p></td>
-<td><p>High-performance async I/O on Linux (recommended on Linux).</p></td>
+<td><p>Linux io_uring kernel backend; replication is unavailable.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Tokio</span></code></p></td>
-<td><p>Portable async runtime when <code class="docutils literal notranslate"><span class="pre">io_uring</span></code> is unavailable.</p></td>
+<td><p>Default kernel backend; required for replication.</p></td>
 </tr>
 </tbody>
 </table>
@@ -684,7 +711,7 @@ mcli<span class="w"> </span>--http-addr<span class="w"> </span><span class="m">1
 <li><p><strong>Address already in use</strong>: another process is using one of the configured ports. Change the conflicting port in <code class="docutils literal notranslate"><span class="pre">mudud.cfg</span></code>.</p></li>
 <li><p><strong>Permission denied</strong>: you may not have permission to bind to the configured <code class="docutils literal notranslate"><span class="pre">listen_ip</span></code> or port. Use <code class="docutils literal notranslate"><span class="pre">127.0.0.1</span></code> and ports above <code class="docutils literal notranslate"><span class="pre">1024</span></code> for local development.</p></li>
 <li><p><strong>Too many open files</strong>: raise the file descriptor limit with <code class="docutils literal notranslate"><span class="pre">ulimit</span> <span class="pre">-n</span> <span class="pre">65535</span></code> before starting.</p></li>
-<li><p><strong>io_uring not available</strong>: if you are not on Linux or <code class="docutils literal notranslate"><span class="pre">liburing-dev</span></code> is missing, switch <code class="docutils literal notranslate"><span class="pre">server_mode</span></code> to <code class="docutils literal notranslate"><span class="pre">Tokio</span></code>.</p></li>
+<li><p><strong>io_uring not available</strong>: if the kernel or process environment does not allow io_uring, switch <code class="docutils literal notranslate"><span class="pre">server_mode</span></code> to <code class="docutils literal notranslate"><span class="pre">Tokio</span></code>.</p></li>
 </ul>
 <p>See the <a class="reference internal" href="configuration.html"><span class="std std-doc">Configuration Reference</span></a> for all available options.</p>
 </section>
@@ -741,7 +768,7 @@ mcli<span class="w"> </span>--http-addr<span class="w"> </span><span class="m">1
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#starting-the-server">Starting the server</a><ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#default-start">Default start</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#start-with-a-custom-config">Start with a custom config</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-to-expect">What to expect</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#listeners">Listeners</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stopping-the-server">Stopping the server</a></li>

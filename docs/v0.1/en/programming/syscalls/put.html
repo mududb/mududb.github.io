@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>write &#8212; MuduDB v0.1</title>
+    <title>put &#8212; MuduDB v0.1</title>
   
   
   
@@ -49,14 +49,14 @@
     <script src="../../_static/copybutton.js?v=f281be69"></script>
     <script src="../../_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
     <script src="../../_static/design-tabs.js?v=f930bc37"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'programming/syscalls/write';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'programming/syscalls/put';</script>
     <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <script src="../../_static/doc-switcher.js?v=437d132c"></script>
     <link rel="icon" href="../../_static/favicon.svg"/>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="range-scan" href="range-scan.html" />
-    <link rel="prev" title="read" href="read.html" />
+    <link rel="next" title="delete" href="delete.html" />
+    <link rel="prev" title="get" href="get.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="v0.1" />
@@ -475,21 +475,29 @@
 <li class="toctree-l2"><a class="reference internal" href="../../administration/client.html">Client</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../administration/server.html">Server Management</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../administration/configuration.html">Configuration Reference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../administration/replication.html">Replication and Raft Fault Tolerance</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../administration/packages.html">Application Packages</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../administration/toolchain.html">Toolchain</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../administration/backup.html">Backup and Restore</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../index.html">Programming</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../mudu_procedure.html">Mudu Procedure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sdk.html">SDKs and Execution Modes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../filesystem.html">Filesystem Object Types</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../churcuring.html">Churcuring and CQL</a></li>
 <li class="toctree-l2 current active has-children"><a class="reference internal" href="../syscalls.html">Syscalls</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="open.html">open</a></li>
 <li class="toctree-l3"><a class="reference internal" href="close.html">close</a></li>
-<li class="toctree-l3"><a class="reference internal" href="read.html">read</a></li>
-<li class="toctree-l3 current active"><a class="current reference internal" href="#">write</a></li>
-<li class="toctree-l3"><a class="reference internal" href="range-scan.html">range-scan</a></li>
-<li class="toctree-l3"><a class="reference internal" href="batch.html">batch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="query.html">query</a></li>
 <li class="toctree-l3"><a class="reference internal" href="command.html">command</a></li>
+<li class="toctree-l3"><a class="reference internal" href="batch.html">batch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="get.html">get</a></li>
+<li class="toctree-l3 current active"><a class="current reference internal" href="#">put</a></li>
+<li class="toctree-l3"><a class="reference internal" href="delete.html">delete</a></li>
+<li class="toctree-l3"><a class="reference internal" href="range.html">range</a></li>
+<li class="toctree-l3"><a class="reference internal" href="fs.html">fs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="relation.html">Relation Syscalls</a></li>
 </ul>
 </details></li>
 </ul>
@@ -498,9 +506,11 @@
 <li class="toctree-l2"><a class="reference internal" href="../../internal/kernel.html">Kernel</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../internal/adapter.html">Adapters</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../internal/procedure-runtime.html">Procedure Runtime</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../internal/suspendable-execution.html">Suspendable Procedure Execution</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../internal/wasm.html">WebAssembly Integration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../internal/partitioning.html">Partitioning and Worker Mapping</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../internal/partitioning.html">Partitioning</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../internal/per_core_worker.html">Per-core Worker Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../internal/replication.html">Replication Architecture</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../reference/index.html">Reference</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -569,7 +579,7 @@
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>write</h1>
+    <h1>put</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -580,14 +590,11 @@
             <nav aria-label="Page">
                 <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rust-api">Rust API</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conceptual-signature">Conceptual signature</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parameters">Parameters</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#behavior">Behavior</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#return-value">Return value</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#errors">Errors</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#transaction-semantics">Transaction semantics</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example">Example</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#best-practices">Best practices</a></li>
 </ul>
             </nav>
         </div>
@@ -599,9 +606,9 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="write">
-<h1>write<a class="headerlink" href="#write" title="Link to this heading">#</a></h1>
-<p>Insert, update, or delete a record in a table or key-value store.</p>
+  <section id="put">
+<h1>put<a class="headerlink" href="#put" title="Link to this heading">#</a></h1>
+<p>Write a key-value pair into the current system session’s key-value store. The underlying syscall name is <code class="docutils literal notranslate"><span class="pre">mudu_put</span></code>.</p>
 <section id="rust-api">
 <h2>Rust API<a class="headerlink" href="#rust-api" title="Link to this heading">#</a></h2>
 <div class="highlight-rust notranslate"><div class="highlight"><pre><span></span><span class="c1">// sync_api</span>
@@ -616,67 +623,37 @@
 </pre></div>
 </div>
 </section>
-<section id="conceptual-signature">
-<h2>Conceptual signature<a class="headerlink" href="#conceptual-signature" title="Link to this heading">#</a></h2>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>write(table: string, op: { type: 'insert' | 'update' | 'delete', row?: Row, key?: KeyExpr, patch?: Partial&lt;Row&gt; }) -&gt; WriteResult
-</pre></div>
-</div>
-</section>
 <section id="parameters">
 <h2>Parameters<a class="headerlink" href="#parameters" title="Link to this heading">#</a></h2>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">table</span></code> — target table name.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">op.type</span></code> — one of <code class="docutils literal notranslate"><span class="pre">insert</span></code>, <code class="docutils literal notranslate"><span class="pre">update</span></code>, or <code class="docutils literal notranslate"><span class="pre">delete</span></code>.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">op.row</span></code> — full row payload for inserts.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">op.key</span></code> — primary key selector for updates/deletes.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">op.patch</span></code> — partial fields to apply for updates.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">session_id</span></code> — session ID returned by <code class="docutils literal notranslate"><span class="pre">mudu_open</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">key</span></code> — raw key bytes.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">value</span></code> — raw value bytes.</p></li>
 </ul>
 </section>
 <section id="behavior">
 <h2>Behavior<a class="headerlink" href="#behavior" title="Link to this heading">#</a></h2>
 <ul class="simple">
-<li><p>Mutations are staged in the current transaction and become visible on commit.</p></li>
-<li><p>The host enforces schema, types, and constraint checks at write time.</p></li>
+<li><p>Writes or overwrites a key-value pair in the session-level key-value store.</p></li>
 </ul>
 </section>
 <section id="return-value">
 <h2>Return value<a class="headerlink" href="#return-value" title="Link to this heading">#</a></h2>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">WriteResult</span></code> contains status, affected row count, and generated keys when applicable.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">RS&lt;()&gt;</span></code> — empty on success.</p></li>
 </ul>
 </section>
 <section id="errors">
 <h2>Errors<a class="headerlink" href="#errors" title="Link to this heading">#</a></h2>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">ConstraintViolation</span></code> — schema or uniqueness violation.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">NotFound</span></code> — update/delete on a non-existing key may return <code class="docutils literal notranslate"><span class="pre">NotFound</span></code> depending on op mode.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">SerializationError</span></code> or <code class="docutils literal notranslate"><span class="pre">Conflict</span></code> — transaction conflicts requiring retry.</p></li>
-</ul>
-</section>
-<section id="transaction-semantics">
-<h2>Transaction semantics<a class="headerlink" href="#transaction-semantics" title="Link to this heading">#</a></h2>
-<ul class="simple">
-<li><p>Writes must be performed within a transaction for atomic multi-step updates.</p></li>
-<li><p>Outside a transaction, behavior is host-defined (autocommit or reject).</p></li>
+<li><p>Invalid sessions or host/backend failures are returned as <code class="docutils literal notranslate"><span class="pre">MuduError</span></code>; raw KV values are not validated against a table schema.</p></li>
 </ul>
 </section>
 <section id="example">
 <h2>Example<a class="headerlink" href="#example" title="Link to this heading">#</a></h2>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>-- insert
-write('accounts', { type: 'insert', row: { id: 5, owner: 'Carol', balance: 1000 } });
-
--- update
-write('accounts', { type: 'update', key: 5, patch: { balance: 1200 } });
+<div class="highlight-rust notranslate"><div class="highlight"><pre><span></span><span class="n">mudu_put</span><span class="p">(</span><span class="n">oid</span><span class="p">,</span><span class="w"> </span><span class="s">b"accounts:42"</span><span class="p">,</span><span class="w"> </span><span class="s">b"{</span><span class="se">\"</span><span class="s">balance</span><span class="se">\"</span><span class="s">:1000}"</span><span class="p">)</span><span class="o">?</span><span class="p">;</span>
 </pre></div>
 </div>
-</section>
-<section id="best-practices">
-<h2>Best practices<a class="headerlink" href="#best-practices" title="Link to this heading">#</a></h2>
-<ul class="simple">
-<li><p>Use transactions for multi-statement updates to ensure atomicity.</p></li>
-<li><p>Validate inputs at the procedure boundary to avoid constraint errors.</p></li>
-<li><p>Prefer idempotent operations when procedures may be retried.</p></li>
-</ul>
 </section>
 </section>
 
@@ -692,20 +669,20 @@ write('accounts', { type: 'update', key: 5, patch: { balance: 1200 } });
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="read.html"
+       href="get.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">read</p>
+        <p class="prev-next-title">get</p>
       </div>
     </a>
     <a class="right-next"
-       href="range-scan.html"
+       href="delete.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">range-scan</p>
+        <p class="prev-next-title">delete</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -728,14 +705,11 @@ write('accounts', { type: 'update', key: 5, patch: { balance: 1200 } });
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rust-api">Rust API</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conceptual-signature">Conceptual signature</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parameters">Parameters</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#behavior">Behavior</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#return-value">Return value</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#errors">Errors</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#transaction-semantics">Transaction semantics</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example">Example</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#best-practices">Best practices</a></li>
 </ul>
   </nav></div>
 

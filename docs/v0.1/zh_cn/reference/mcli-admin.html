@@ -474,21 +474,29 @@
 <li class="toctree-l2"><a class="reference internal" href="../administration/client.html">客户端</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../administration/server.html">服务端管理</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../administration/configuration.html">配置参考</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../administration/replication.html">复制与 Raft 容错</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../administration/packages.html">应用包</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../administration/toolchain.html">工具链</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../administration/backup.html">备份与恢复</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../programming/index.html">编程</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../programming/mudu_procedure.html">Mudu 过程</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../programming/sdk.html">SDK 与执行模式</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../programming/filesystem.html">文件系统对象类型</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../programming/churcuring.html">Churcuring 与 CQL</a></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../programming/syscalls.html">系统调用</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/open.html">open</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/close.html">close</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/read.html">read</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/write.html">write</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/range-scan.html">range-scan</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/batch.html">batch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/query.html">query</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/command.html">command</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/batch.html">batch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/get.html">get</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/put.html">put</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/delete.html">delete</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/range.html">range</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/fs.html">fs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/relation.html">Relation 系统调用</a></li>
 </ul>
 </details></li>
 </ul>
@@ -497,9 +505,11 @@
 <li class="toctree-l2"><a class="reference internal" href="../internal/kernel.html">内核</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../internal/adapter.html">适配器</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../internal/procedure-runtime.html">过程运行时</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../internal/suspendable-execution.html">可挂起的过程执行</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../internal/wasm.html">WebAssembly 集成</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../internal/partitioning.html">分区与工作线程映射</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../internal/per_core_worker.html">每核心工作线程模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../internal/partitioning.html">分区</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../internal/per_core_worker.html">每核 Worker 模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../internal/replication.html">复制架构</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">参考资料</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
@@ -589,8 +599,36 @@
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">分区路由查询</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">参数约束</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">返回结果</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tcp">数据面命令（TCP）</a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sql">执行 SQL 查询或命令</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">写入键值项</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">读取键</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id12">扫描键范围</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id13">以原始请求调用过程</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id14">复制管理</a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#raft">向 raft 组添加节点</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id15">从 raft 组移除节点</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#learner-voter">将 learner 提升为 voter</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#primary">将本节点提升为流复制 primary</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id16">跟随新的流复制 primary</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id17">查看复制状态</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id18">备份与恢复</a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id19">执行基础备份</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id20">列出基础备份</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id21">校验基础备份</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id22">删除基础备份</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id23">恢复基础备份（离线）</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id24">时间点恢复（离线）</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id25">执行逻辑导出</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id26">执行逻辑导入</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id27">参数约束</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id28">返回结果</a></li>
 </ul>
             </nav>
         </div>
@@ -604,7 +642,7 @@
                   
   <section id="mcli-http">
 <h1>mcli 管理接口（HTTP）<a class="headerlink" href="#mcli-http" title="Link to this heading">#</a></h1>
-<p>本页介绍通过 <code class="docutils literal notranslate"><span class="pre">mcli</span></code> 的 HTTP 管理命令完成应用生命周期管理与分区路由查询。</p>
+<p>本页介绍通过 <code class="docutils literal notranslate"><span class="pre">mcli</span></code> 的 HTTP 管理命令完成应用生命周期管理与分区路由查询，以及复制与备份管理命令和 TCP 数据面命令。</p>
 <section id="id1">
 <h2>前置条件<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
 <ul class="simple">
@@ -668,15 +706,159 @@
 </div>
 </section>
 </section>
+<section id="tcp">
+<h2>数据面命令（TCP）<a class="headerlink" href="#tcp" title="Link to this heading">#</a></h2>
+<p>这些命令连接 TCP 协议端点（<code class="docutils literal notranslate"><span class="pre">--addr</span></code>，默认 <code class="docutils literal notranslate"><span class="pre">127.0.0.1:9527</span></code>）。请求体可以用内联 JSON（<code class="docutils literal notranslate"><span class="pre">--json</span></code>）或 JSON 文件（<code class="docutils literal notranslate"><span class="pre">--json-file</span></code>；用 <code class="docutils literal notranslate"><span class="pre">-</span></code> 从 stdin 读取）提供。</p>
+<p>SQL 示例假定已安装含 <code class="docutils literal notranslate"><span class="pre">users(id)</span></code> 表的 <code class="docutils literal notranslate"><span class="pre">demo</span></code> 应用。原始 KV 请求必须提供有效会话 OID：<code class="docutils literal notranslate"><span class="pre">{</span> <span class="pre">&quot;h&quot;:</span> <span class="pre">高64位,</span> <span class="pre">&quot;l&quot;:</span> <span class="pre">低64位</span> <span class="pre">}</span></code>；原始 <code class="docutils literal notranslate"><span class="pre">invoke</span></code> 必须提供 <code class="docutils literal notranslate"><span class="pre">session_id</span></code>（u64 数字或十进制 u128 字符串）及编码后的过程参数。下列 ID 与负载是占位示例，不会创建会话。通常应使用 <code class="docutils literal notranslate"><span class="pre">app-invoke</span></code> 自动建立会话并按描述符转换参数。</p>
+<section id="sql">
+<h3>执行 SQL 查询或命令<a class="headerlink" href="#sql" title="Link to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mcli<span class="w"> </span>--addr<span class="w"> </span><span class="m">127</span>.0.0.1:9527<span class="w"> </span><span class="nb">command</span><span class="w"> </span>--json<span class="w"> </span><span class="s1">'{"app_name":"demo","sql":"SELECT id FROM users"}'</span>
+</pre></div>
+</div>
+</section>
 <section id="id10">
-<h2>参数约束<a class="headerlink" href="#id10" title="Link to this heading">#</a></h2>
+<h3>写入键值项<a class="headerlink" href="#id10" title="Link to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mcli<span class="w"> </span>--addr<span class="w"> </span><span class="m">127</span>.0.0.1:9527<span class="w"> </span>put<span class="w"> </span>--json<span class="w"> </span><span class="s1">'{"oid":{"h":0,"l":1},"key":"k","value":"v"}'</span>
+</pre></div>
+</div>
+</section>
+<section id="id11">
+<h3>读取键<a class="headerlink" href="#id11" title="Link to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mcli<span class="w"> </span>--addr<span class="w"> </span><span class="m">127</span>.0.0.1:9527<span class="w"> </span>get<span class="w"> </span>--json<span class="w"> </span><span class="s1">'{"oid":{"h":0,"l":1},"key":"k"}'</span>
+</pre></div>
+</div>
+</section>
+<section id="id12">
+<h3>扫描键范围<a class="headerlink" href="#id12" title="Link to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mcli<span class="w"> </span>--addr<span class="w"> </span><span class="m">127</span>.0.0.1:9527<span class="w"> </span>range<span class="w"> </span>--json<span class="w"> </span><span class="s1">'{"oid":{"h":0,"l":1},"start_key":"a","end_key":"z"}'</span>
+</pre></div>
+</div>
+</section>
+<section id="id13">
+<h3>以原始请求调用过程<a class="headerlink" href="#id13" title="Link to this heading">#</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">invoke</span></code> 通过 TCP 发送原始过程请求。带类型的变体是 <code class="docutils literal notranslate"><span class="pre">app-invoke</span></code>（见<a class="reference internal" href="../administration/client.html"><span class="std std-doc">客户端</span></a>），它先通过 HTTP 获取过程描述符，再通过 TCP 调用。</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mcli<span class="w"> </span>--addr<span class="w"> </span><span class="m">127</span>.0.0.1:9527<span class="w"> </span>invoke<span class="w"> </span>--json<span class="w"> </span><span class="s1">'{"session_id":"1","procedure_name":"app/mod/proc","procedure_parameters":{}}'</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="id14">
+<h2>复制管理<a class="headerlink" href="#id14" title="Link to this heading">#</a></h2>
+<p>Raft 成员管理与主从故障切换命令。它们作用于目标节点的 HTTP 管理端点。</p>
+<section id="raft">
+<h3>向 raft 组添加节点<a class="headerlink" href="#raft" title="Link to this heading">#</a></h3>
+<p>节点默认以 voter 加入；添加 <code class="docutils literal notranslate"><span class="pre">--learner</span></code> 以 learner 加入（只复制不投票；之后用 <code class="docutils literal notranslate"><span class="pre">promote-learner</span></code> 提升）。</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mcli<span class="w"> </span>--http-addr<span class="w"> </span><span class="m">127</span>.0.0.1:8300<span class="w"> </span>repl<span class="w"> </span>add-node<span class="w"> </span>--node-id<span class="w"> </span><span class="m">4</span><span class="w"> </span>--host<span class="w"> </span><span class="m">10</span>.0.0.4<span class="w"> </span>--port<span class="w"> </span><span class="m">19530</span>
+mcli<span class="w"> </span>--http-addr<span class="w"> </span><span class="m">127</span>.0.0.1:8300<span class="w"> </span>repl<span class="w"> </span>add-node<span class="w"> </span>--node-id<span class="w"> </span><span class="m">4</span><span class="w"> </span>--host<span class="w"> </span><span class="m">10</span>.0.0.4<span class="w"> </span>--port<span class="w"> </span><span class="m">19530</span><span class="w"> </span>--learner
+</pre></div>
+</div>
+</section>
+<section id="id15">
+<h3>从 raft 组移除节点<a class="headerlink" href="#id15" title="Link to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mcli<span class="w"> </span>--http-addr<span class="w"> </span><span class="m">127</span>.0.0.1:8300<span class="w"> </span>repl<span class="w"> </span>remove-node<span class="w"> </span>--node-id<span class="w"> </span><span class="m">4</span>
+</pre></div>
+</div>
+</section>
+<section id="learner-voter">
+<h3>将 learner 提升为 voter<a class="headerlink" href="#learner-voter" title="Link to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mcli<span class="w"> </span>--http-addr<span class="w"> </span><span class="m">127</span>.0.0.1:8300<span class="w"> </span>repl<span class="w"> </span>promote-learner<span class="w"> </span>--node-id<span class="w"> </span><span class="m">4</span>
+</pre></div>
+</div>
+</section>
+<section id="primary">
+<h3>将本节点提升为流复制 primary<a class="headerlink" href="#primary" title="Link to this heading">#</a></h3>
+<p>提升要求提供 fencing 证明：<code class="docutils literal notranslate"><span class="pre">--fencing-cmd</span> <span class="pre">&lt;命令&gt;</span></code> 会先在本地执行（经 <code class="docutils literal notranslate"><span class="pre">sh</span> <span class="pre">-c</span></code>），失败则中止提升且不接触服务器；或者用 <code class="docutils literal notranslate"><span class="pre">--yes</span></code> 显式确认旧 primary 已被 fence。两个选项互斥。</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mcli<span class="w"> </span>--http-addr<span class="w"> </span><span class="m">127</span>.0.0.1:8301<span class="w"> </span>repl<span class="w"> </span>promote<span class="w"> </span>--fencing-cmd<span class="w"> </span>./fence-old-primary.sh
+mcli<span class="w"> </span>--http-addr<span class="w"> </span><span class="m">127</span>.0.0.1:8301<span class="w"> </span>repl<span class="w"> </span>promote<span class="w"> </span>--yes
+</pre></div>
+</div>
+</section>
+<section id="id16">
+<h3>跟随新的流复制 primary<a class="headerlink" href="#id16" title="Link to this heading">#</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">--primary</span></code> 是新 primary 的复制地址（<code class="docutils literal notranslate"><span class="pre">host:port</span></code>）。</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mcli<span class="w"> </span>--http-addr<span class="w"> </span><span class="m">127</span>.0.0.1:8300<span class="w"> </span>repl<span class="w"> </span>follow<span class="w"> </span>--primary<span class="w"> </span><span class="m">10</span>.0.0.2:19527<span class="w"> </span>--primary-node-id<span class="w"> </span><span class="m">2</span>
+</pre></div>
+</div>
+</section>
+<section id="id17">
+<h3>查看复制状态<a class="headerlink" href="#id17" title="Link to this heading">#</a></h3>
+<p>默认输出 JSON；<code class="docutils literal notranslate"><span class="pre">--table</span></code> 渲染为分节表格。</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mcli<span class="w"> </span>--http-addr<span class="w"> </span><span class="m">127</span>.0.0.1:8300<span class="w"> </span>repl<span class="w"> </span>status
+mcli<span class="w"> </span>--http-addr<span class="w"> </span><span class="m">127</span>.0.0.1:8300<span class="w"> </span>repl<span class="w"> </span>status<span class="w"> </span>--table
+</pre></div>
+</div>
+</section>
+</section>
+<section id="id18">
+<h2>备份与恢复<a class="headerlink" href="#id18" title="Link to this heading">#</a></h2>
+<p>基础备份与逻辑导出通过 HTTP 管理端点在运行中的服务器上执行；<code class="docutils literal notranslate"><span class="pre">restore</span></code> 与 <code class="docutils literal notranslate"><span class="pre">pitr</span></code> 为离线命令，不接触服务器。<code class="docutils literal notranslate"><span class="pre">[backup]</span></code> 配置与磁盘布局见<a class="reference internal" href="../administration/backup.html"><span class="std std-doc">备份与恢复</span></a>。</p>
+<section id="id19">
+<h3>执行基础备份<a class="headerlink" href="#id19" title="Link to this heading">#</a></h3>
+<p>要求服务器配置 <code class="docutils literal notranslate"><span class="pre">[backup]</span> <span class="pre">backup_dir</span></code>。</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mcli<span class="w"> </span>--http-addr<span class="w"> </span><span class="m">127</span>.0.0.1:8300<span class="w"> </span>backup<span class="w"> </span>create<span class="w"> </span>--label<span class="w"> </span>daily-1
+</pre></div>
+</div>
+</section>
+<section id="id20">
+<h3>列出基础备份<a class="headerlink" href="#id20" title="Link to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mcli<span class="w"> </span>--http-addr<span class="w"> </span><span class="m">127</span>.0.0.1:8300<span class="w"> </span>backup<span class="w"> </span>list
+</pre></div>
+</div>
+</section>
+<section id="id21">
+<h3>校验基础备份<a class="headerlink" href="#id21" title="Link to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mcli<span class="w"> </span>--http-addr<span class="w"> </span><span class="m">127</span>.0.0.1:8300<span class="w"> </span>backup<span class="w"> </span>verify<span class="w"> </span>--label<span class="w"> </span>daily-1
+</pre></div>
+</div>
+</section>
+<section id="id22">
+<h3>删除基础备份<a class="headerlink" href="#id22" title="Link to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mcli<span class="w"> </span>--http-addr<span class="w"> </span><span class="m">127</span>.0.0.1:8300<span class="w"> </span>backup<span class="w"> </span>delete<span class="w"> </span>--label<span class="w"> </span>daily-1
+</pre></div>
+</div>
+</section>
+<section id="id23">
+<h3>恢复基础备份（离线）<a class="headerlink" href="#id23" title="Link to this heading">#</a></h3>
+<p>将基础备份加归档 WAL 重放到 <code class="docutils literal notranslate"><span class="pre">--target-dir</span></code>，直至归档末尾。</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mcli<span class="w"> </span>restore<span class="w"> </span>--label<span class="w"> </span>daily-1<span class="w"> </span>--backup-dir<span class="w"> </span>/backups<span class="w"> </span>--archive-dir<span class="w"> </span>/wal-archive<span class="w"> </span>--target-dir<span class="w"> </span>/restored
+</pre></div>
+</div>
+</section>
+<section id="id24">
+<h3>时间点恢复（离线）<a class="headerlink" href="#id24" title="Link to this heading">#</a></h3>
+<p>与 <code class="docutils literal notranslate"><span class="pre">restore</span></code> 类似，但在目标点停止。<code class="docutils literal notranslate"><span class="pre">--lsn</span></code>、<code class="docutils literal notranslate"><span class="pre">--time</span></code>、<code class="docutils literal notranslate"><span class="pre">--xid</span></code> 必须且只能提供一个。</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mcli<span class="w"> </span>pitr<span class="w"> </span>--label<span class="w"> </span>daily-1<span class="w"> </span>--backup-dir<span class="w"> </span>/backups<span class="w"> </span>--archive-dir<span class="w"> </span>/wal-archive<span class="w"> </span>--target-dir<span class="w"> </span>/recovered<span class="w"> </span>--time<span class="w"> </span><span class="m">1700000000000</span>
+</pre></div>
+</div>
+</section>
+<section id="id25">
+<h3>执行逻辑导出<a class="headerlink" href="#id25" title="Link to this heading">#</a></h3>
+<p>在服务器上写出 <code class="docutils literal notranslate"><span class="pre">&lt;dir&gt;/&lt;label&gt;.zip</span></code>（<code class="docutils literal notranslate"><span class="pre">--dir</span></code> 是服务器端路径）。</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mcli<span class="w"> </span>--http-addr<span class="w"> </span><span class="m">127</span>.0.0.1:8300<span class="w"> </span>dump<span class="w"> </span>--label<span class="w"> </span>daily-1<span class="w"> </span>--dir<span class="w"> </span>/dumps
+</pre></div>
+</div>
+</section>
+<section id="id26">
+<h3>执行逻辑导入<a class="headerlink" href="#id26" title="Link to this heading">#</a></h3>
+<p>默认跳过已存在的同名表；传入 <code class="docutils literal notranslate"><span class="pre">--drop</span></code> 则删除并重建同名表。</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mcli<span class="w"> </span>--http-addr<span class="w"> </span><span class="m">127</span>.0.0.1:8300<span class="w"> </span>restore-logical<span class="w"> </span>--label<span class="w"> </span>daily-1<span class="w"> </span>--dir<span class="w"> </span>/dumps
+mcli<span class="w"> </span>--http-addr<span class="w"> </span><span class="m">127</span>.0.0.1:8300<span class="w"> </span>restore-logical<span class="w"> </span>--label<span class="w"> </span>daily-1<span class="w"> </span>--dir<span class="w"> </span>/dumps<span class="w"> </span>--drop
+</pre></div>
+</div>
+</section>
+</section>
+<section id="id27">
+<h2>参数约束<a class="headerlink" href="#id27" title="Link to this heading">#</a></h2>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">app-detail</span></code>：<code class="docutils literal notranslate"><span class="pre">--proc</span></code> 必须与 <code class="docutils literal notranslate"><span class="pre">--module</span></code> 一起使用。</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">partition-route</span></code>：<code class="docutils literal notranslate"><span class="pre">--key</span></code> 与 <code class="docutils literal notranslate"><span class="pre">--start/--end</span></code> 二选一，不可同时使用。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">command</span></code> / <code class="docutils literal notranslate"><span class="pre">put</span></code> / <code class="docutils literal notranslate"><span class="pre">get</span></code> / <code class="docutils literal notranslate"><span class="pre">range</span></code> / <code class="docutils literal notranslate"><span class="pre">invoke</span></code> / <code class="docutils literal notranslate"><span class="pre">app-invoke</span></code>：<code class="docutils literal notranslate"><span class="pre">--json</span></code> 与 <code class="docutils literal notranslate"><span class="pre">--json-file</span></code> 必须且只能提供一个。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">repl</span> <span class="pre">promote</span></code>：<code class="docutils literal notranslate"><span class="pre">--fencing-cmd</span></code> 与 <code class="docutils literal notranslate"><span class="pre">--yes</span></code> 互斥；必须提供其一。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pitr</span></code>：<code class="docutils literal notranslate"><span class="pre">--lsn</span></code>、<code class="docutils literal notranslate"><span class="pre">--time</span></code>、<code class="docutils literal notranslate"><span class="pre">--xid</span></code> 互斥；必须且只能提供一个。</p></li>
 </ul>
 </section>
-<section id="id11">
-<h2>返回结果<a class="headerlink" href="#id11" title="Link to this heading">#</a></h2>
+<section id="id28">
+<h2>返回结果<a class="headerlink" href="#id28" title="Link to this heading">#</a></h2>
 <ul class="simple">
 <li><p>默认输出格式化 JSON。</p></li>
 <li><p>添加 <code class="docutils literal notranslate"><span class="pre">--compact</span></code> 输出紧凑 JSON。</p></li>
@@ -734,8 +916,36 @@
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">分区路由查询</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">参数约束</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">返回结果</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tcp">数据面命令（TCP）</a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sql">执行 SQL 查询或命令</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">写入键值项</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">读取键</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id12">扫描键范围</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id13">以原始请求调用过程</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id14">复制管理</a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#raft">向 raft 组添加节点</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id15">从 raft 组移除节点</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#learner-voter">将 learner 提升为 voter</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#primary">将本节点提升为流复制 primary</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id16">跟随新的流复制 primary</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id17">查看复制状态</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id18">备份与恢复</a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id19">执行基础备份</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id20">列出基础备份</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id21">校验基础备份</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id22">删除基础备份</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id23">恢复基础备份（离线）</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id24">时间点恢复（离线）</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id25">执行逻辑导出</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id26">执行逻辑导入</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id27">参数约束</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id28">返回结果</a></li>
 </ul>
   </nav></div>
 

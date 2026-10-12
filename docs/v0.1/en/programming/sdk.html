@@ -1,0 +1,834 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>SDKs and Execution Modes &#8212; MuduDB v0.1</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=4418a689" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=eb49b5eb" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../_static/scripts/fontawesome.js?digest=90905a2f556bf617f1a9"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
+
+    <script src="../_static/documentation_options.js?v=bf5e005e"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'programming/sdk';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <script src="../_static/doc-switcher.js?v=437d132c"></script>
+    <link rel="icon" href="../_static/favicon.svg"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Filesystem Object Types" href="filesystem.html" />
+    <link rel="prev" title="Mudu Procedure" href="mudu_procedure.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="v0.1" />
+  
+    
+    <script src="../_static/searchtools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+<aside class="bd-header-announcement" aria-label="Announcement">
+  <div class="bd-header-announcement__content"><div class="mududb-announcement" data-current-version="v0.1" data-current-language="en"><span class="mududb-announcement-title">MuduDB documentation</span><label class="mududb-doc-switch-group"><span class="mududb-doc-switch-label">Version</span><select class="mududb-doc-switcher" data-switch-kind="version"><option value="v0.1" data-language="en" selected>v0.1</option></select></label><label class="mududb-doc-switch-group"><span class="mududb-doc-switch-label">Language</span><select class="mududb-doc-switcher" data-switch-kind="language"><option value="en" data-version="v0.1" selected>English</option><option value="zh_cn" data-version="v0.1">简体中文</option></select></label></div></div>
+</aside>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/mudu_logo.png" class="logo__image only-light" alt="MuduDB v0.1 - Home"/>
+    <img src="../_static/mudu_logo.png" class="logo__image only-dark pst-js-only" alt="MuduDB v0.1 - Home"/>
+  
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../preface/index.html">
+    Preface
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../tutorial/index.html">
+    Tutorial
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../sql-language/index.html">
+    The SQL Language
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../administration/index.html">
+    Administration
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    Programming
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../internal/index.html">
+    Internal
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../reference/index.html">
+    Reference
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scuptio/mududb" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../preface/index.html">
+    Preface
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../tutorial/index.html">
+    Tutorial
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../sql-language/index.html">
+    The SQL Language
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../administration/index.html">
+    Administration
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    Programming
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../internal/index.html">
+    Internal
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../reference/index.html">
+    Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scuptio/mududb" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../index.html">
+                    MuduDB Documentation
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../preface/index.html">Preface</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../preface/overview.html">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../preface/data-model.html">Data Model</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../preface/release-notes/index.html">Release Notes</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../preface/release-notes/v0.1.html">v0.1 Release Notes</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../tutorial/index.html">Tutorial</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../tutorial/getting-started/index.html">Getting Started</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../tutorial/getting-started/install.html">Installation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../tutorial/getting-started/first-session.html">First Session</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../tutorial/tutorials/index.html">Tutorials</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../tutorial/tutorials/sql-crud.html">SQL CRUD Tutorial</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../tutorial/tutorials/wallet.html">Wallet Example</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../sql-language/index.html">The SQL Language</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../sql-language/ddl/index.html">Data Definition</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../sql-language/ddl/columns.html">Columns</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sql-language/ddl/create-table.html">Create Table</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sql-language/ddl/primary-key.html">Primary Key</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sql-language/ddl/drop-table.html">Drop Table</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../sql-language/dml/index.html">Data Manipulation</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../sql-language/dml/insert.html">Insert</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sql-language/dml/update.html">Update</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sql-language/dml/delete.html">Delete</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="../sql-language/query.html">Query</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../sql-language/data_types/index.html">Data Types</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../sql-language/data_types/integer.html">Integer Types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sql-language/data_types/floating-point.html">Floating-Point Types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sql-language/data_types/fixed-point.html">Fixed-Point Types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sql-language/data_types/string.html">String Types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sql-language/data_types/temporal.html">Temporal Types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sql-language/data_types/other.html">Other Types</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../administration/index.html">Administration</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../administration/client.html">Client</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../administration/server.html">Server Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../administration/configuration.html">Configuration Reference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../administration/replication.html">Replication and Raft Fault Tolerance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../administration/packages.html">Application Packages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../administration/toolchain.html">Toolchain</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../administration/backup.html">Backup and Restore</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">Programming</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="mudu_procedure.html">Mudu Procedure</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">SDKs and Execution Modes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filesystem.html">Filesystem Object Types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="churcuring.html">Churcuring and CQL</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="syscalls.html">Syscalls</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="syscalls/open.html">open</a></li>
+<li class="toctree-l3"><a class="reference internal" href="syscalls/close.html">close</a></li>
+<li class="toctree-l3"><a class="reference internal" href="syscalls/query.html">query</a></li>
+<li class="toctree-l3"><a class="reference internal" href="syscalls/command.html">command</a></li>
+<li class="toctree-l3"><a class="reference internal" href="syscalls/batch.html">batch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="syscalls/get.html">get</a></li>
+<li class="toctree-l3"><a class="reference internal" href="syscalls/put.html">put</a></li>
+<li class="toctree-l3"><a class="reference internal" href="syscalls/delete.html">delete</a></li>
+<li class="toctree-l3"><a class="reference internal" href="syscalls/range.html">range</a></li>
+<li class="toctree-l3"><a class="reference internal" href="syscalls/fs.html">fs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="syscalls/relation.html">Relation Syscalls</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../internal/index.html">Internal</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../internal/kernel.html">Kernel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../internal/adapter.html">Adapters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../internal/procedure-runtime.html">Procedure Runtime</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../internal/suspendable-execution.html">Suspendable Procedure Execution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../internal/wasm.html">WebAssembly Integration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../internal/partitioning.html">Partitioning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../internal/per_core_worker.html">Per-core Worker Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../internal/replication.html">Replication Architecture</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../reference/index.html">Reference</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../reference/contracts/index.html">MuduDB Format and Protocol Contracts</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/page_header_v1.html">Page Header Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/tuple_binary_v1.html">Tuple Binary Format Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/log_frame_v1.html">Log Frame Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/protocol_frame_v1.html">TCP Protocol Frame Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/mpk_manifest_v1.html">MPK Package Manifest Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/mudud_cfg_v1.html">MuduDB Server Configuration Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/file_layout_v1.html">MuduDB File Layout Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/syscall_payload_v1.html">Guest→Host Syscall Payload Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/how_to_add_format_upgrade.html">How to Add a Format Upgrade</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/mcli-admin.html">mcli Management Interface (HTTP)</a></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item"><nav class="sidebar-indices-items" aria-labelledby="pst-indices-navigation-heading-2">
+  <p id="pst-indices-navigation-heading-2" class="sidebar-indices-items__title" role="heading" aria-level="1">Indices</p>
+  <ul class="indices-link">
+        <li class="toctree-l1">
+          <a class="reference internal"
+             href="../genindex.html"
+             accesskey="I">General Index</a>
+        </li>
+  </ul>
+</nav></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item"><button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>SDKs and Execution Modes</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#language-entry-points">Language entry points</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#build-sdk-distributions">Build SDK distributions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#extra-example-toolchains">Extra example toolchains</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="sdks-and-execution-modes">
+<h1>SDKs and Execution Modes<a class="headerlink" href="#sdks-and-execution-modes" title="Link to this heading">#</a></h1>
+<p>MuduDB has bindings for Rust, AssemblyScript, Python, C#, Go and C. Choose the execution mode explicitly:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Mode</p></th>
+<th class="head"><p>Where business logic runs</p></th>
+<th class="head"><p>Requirements</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>MPK guest</p></td>
+<td><p>A WebAssembly component hosted by <code class="docutils literal notranslate"><span class="pre">mudud</span></code></p></td>
+<td><p>Build and install an <code class="docutils literal notranslate"><span class="pre">.mpk</span></code>; invoke with <code class="docutils literal notranslate"><span class="pre">mcli</span> <span class="pre">app-invoke</span></code> or a client.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Native adapter</p></td>
+<td><p>In the local application process</p></td>
+<td><p>Select the adapter in the language API and load the separately built native runtime.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">MUDU_CONNECTION</span></code> selects the adapter’s database backend; it does not turn a local application into a server-side procedure. Native mode supports SQLite, PostgreSQL, MySQL and remote Mudud, with backend-specific SQL and transaction behavior. The Wallet examples demonstrate calls, not production accounting guarantees.</p>
+<section id="language-entry-points">
+<h2>Language entry points<a class="headerlink" href="#language-entry-points" title="Link to this heading">#</a></h2>
+<p>Paths below are relative to the MuduDB source repository.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Language</p></th>
+<th class="head"><p>MPK example</p></th>
+<th class="head"><p>Native adapter entry</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>AssemblyScript</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">example/mpk/wallet-as</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">crates/sdk/bindings/assemblyscript/adapter/</span></code> (Node.js)</p></td>
+</tr>
+<tr class="row-odd"><td><p>Python</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">example/mpk/wallet-py</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">mududb.adapter</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>C#</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">example/mpk/wallet-cs</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">NativeAdapter</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>Go</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">example/mpk/wallet-go</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">github.com/mududb/mududb-go/adapter</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>C</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">example/mpk/wallet-c</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">mududb/adapter/</span></code> headers</p></td>
+</tr>
+<tr class="row-odd"><td><p>Rust</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">example/mpk/wallet</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">mudu_api_rust::adapter</span></code> in the standalone SDK</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The in-repository Rust <code class="docutils literal notranslate"><span class="pre">mududb</span></code> facade and the exported <code class="docutils literal notranslate"><span class="pre">mudu_api_rust</span></code> SDK are separate packages. A consumer may rename the latter to <code class="docutils literal notranslate"><span class="pre">mududb</span></code> in Cargo. C and Go type/codec bindings alone are not a complete guest database facade: their MPK examples also supply host-call bridges. API coverage is not identical across languages.</p>
+</section>
+<section id="build-sdk-distributions">
+<h2>Build SDK distributions<a class="headerlink" href="#build-sdk-distributions" title="Link to this heading">#</a></h2>
+<p>Run in the MuduDB repository root:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cargo<span class="w"> </span>make<span class="w"> </span>build-sdk
+<span class="nv">SDK_LANGS</span><span class="o">=</span>py,go<span class="w"> </span>cargo<span class="w"> </span>make<span class="w"> </span>build-sdk
+cargo<span class="w"> </span>make<span class="w"> </span>build-sdk<span class="w"> </span>--with-adapter-runtime
+<span class="nv">SDK_LANGS</span><span class="o">=</span>py,go<span class="w"> </span>cargo<span class="w"> </span>make<span class="w"> </span>build-sdk<span class="w"> </span>--with-examples
+cargo<span class="w"> </span>make<span class="w"> </span>build-sdk<span class="w"> </span>--with-examples<span class="w"> </span>--example-mode<span class="w"> </span>adapter
+</pre></div>
+</div>
+<p>The default builds all six SDKs and requires all selected toolchains. Common requirements are Python 3.11+, Git, the pinned Rust toolchain, cargo-make and a native C/C++ compiler. Language requirements include Node.js 22/npm (AS), Python <code class="docutils literal notranslate"><span class="pre">build</span></code> (Python), .NET 8 SDK and runtime (C# SDK tests), Go 1.24+ (Go), Clang/Clang++ ©, and <code class="docutils literal notranslate"><span class="pre">wasm32-wasip2</span></code> (Rust).</p>
+<p>Output defaults to <code class="docutils literal notranslate"><span class="pre">target/sdk-dist/</span></code>; <code class="docutils literal notranslate"><span class="pre">SDK_OUTPUT_DIR</span></code>, <code class="docutils literal notranslate"><span class="pre">SDK_PYTHON</span></code> and <code class="docutils literal notranslate"><span class="pre">CARGO_TARGET_DIR</span></code> can override locations and interpreter. Each language has <code class="docutils literal notranslate"><span class="pre">repo/</span></code> and <code class="docutils literal notranslate"><span class="pre">artifacts/</span></code>; a successful batch writes <code class="docutils literal notranslate"><span class="pre">manifest.json</span></code> with source revision and validation results. This command builds distributions; publication is a separate manual workflow.</p>
+<p>Every exported SDK includes Wallet sources under <code class="docutils literal notranslate"><span class="pre">examples/wallet/mpk/</span></code> and <code class="docutils literal notranslate"><span class="pre">examples/wallet/adapter/</span></code>. In that Wallet directory, <code class="docutils literal notranslate"><span class="pre">mpm</span> <span class="pre">build</span></code> reads <code class="docutils literal notranslate"><span class="pre">mpm.toml</span></code> and produces <code class="docutils literal notranslate"><span class="pre">target/wallet-&lt;language&gt;.mpk</span></code>. This differs from the in-repository Rust Wallet’s <code class="docutils literal notranslate"><span class="pre">cargo</span> <span class="pre">make</span> <span class="pre">package</span></code> path. <code class="docutils literal notranslate"><span class="pre">mpm</span> <span class="pre">build</span> <span class="pre">--manifest-path</span> <span class="pre">PATH</span> <span class="pre">--python</span> <span class="pre">PYTHON</span></code> selects a manifest and interpreter.</p>
+</section>
+<section id="extra-example-toolchains">
+<h2>Extra example toolchains<a class="headerlink" href="#extra-example-toolchains" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Component</p></th>
+<th class="head"><p>Required tools</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Native adapter runtime</p></td>
+<td><p>Rust, native C/C++, CMake, Node.js, Clang</p></td>
+</tr>
+<tr class="row-odd"><td><p>MPK guests</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">wasm-tools</span></code> 1.252.0</p></td>
+</tr>
+<tr class="row-even"><td><p>Python guest</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">componentize-py</span></code> 0.25.1</p></td>
+</tr>
+<tr class="row-odd"><td><p>Go guest</p></td>
+<td><p>TinyGo 0.42.0 and compatible Go</p></td>
+</tr>
+<tr class="row-even"><td><p>C guest</p></td>
+<td><p>wasi-sdk 29, selected with <code class="docutils literal notranslate"><span class="pre">WASI_SDK</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>C# guest</p></td>
+<td><p>.NET 10; the complete guest matrix currently targets Linux x64</p></td>
+</tr>
+<tr class="row-even"><td><p>C# native adapter</p></td>
+<td><p>.NET 8</p></td>
+</tr>
+<tr class="row-odd"><td><p>Go native adapter</p></td>
+<td><p>cgo and a C compiler</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Extract the adapter runtime archive for your host and set <code class="docutils literal notranslate"><span class="pre">MUDU_ADAPTER_LIBRARY</span></code> to the library’s absolute path. For AS keep <code class="docutils literal notranslate"><span class="pre">mudu_adapter.node</span></code> beside it. Ordinary SDK source exports contain no native runtime binary. Set the connection before process startup, for example:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span><span class="w"> </span><span class="nv">MUDU_CONNECTION</span><span class="o">=</span><span class="s1">'sqlite://wallet.db'</span>
+<span class="c1"># Or connect the local application to an existing Mudud application/schema:</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">MUDU_CONNECTION</span><span class="o">=</span><span class="s1">'mudud://127.0.0.1:9527/wallet-py?http_addr=127.0.0.1:8300'</span>
+</pre></div>
+</div>
+<p>For the Mudud Wallet adapter, first build/install its MPK to create the schema, then run the adapter’s <code class="docutils literal notranslate"><span class="pre">scenario</span></code> without its <code class="docutils literal notranslate"><span class="pre">init</span></code> step. Use separate databases when validating each execution mode.</p>
+<p>Implementation and full build requirements: <code class="docutils literal notranslate"><span class="pre">doc/dev/sdk_distribution.md</span></code>, <code class="docutils literal notranslate"><span class="pre">script/sdk/config.json</span></code>, <code class="docutils literal notranslate"><span class="pre">script/sdk/sdk_build.py</span></code> and the per-language examples in the MuduDB repository.</p>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="mudu_procedure.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Mudu Procedure</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="filesystem.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Filesystem Object Types</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#language-entry-points">Language entry points</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#build-sdk-distributions">Build SDK distributions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#extra-example-toolchains">Extra example toolchains</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By MuduDB contributors
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026, MuduDB contributors.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

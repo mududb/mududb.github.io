@@ -56,7 +56,7 @@
     <link rel="index" title="索引" href="../genindex.html" />
     <link rel="search" title="搜索" href="../search.html" />
     <link rel="next" title="工具链" href="toolchain.html" />
-    <link rel="prev" title="配置参考" href="configuration.html" />
+    <link rel="prev" title="复制与 Raft 容错" href="replication.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="zh-cn"/>
   <meta name="docsearch:version" content="v0.1" />
@@ -475,21 +475,29 @@
 <li class="toctree-l2"><a class="reference internal" href="client.html">客户端</a></li>
 <li class="toctree-l2"><a class="reference internal" href="server.html">服务端管理</a></li>
 <li class="toctree-l2"><a class="reference internal" href="configuration.html">配置参考</a></li>
+<li class="toctree-l2"><a class="reference internal" href="replication.html">复制与 Raft 容错</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">应用包</a></li>
 <li class="toctree-l2"><a class="reference internal" href="toolchain.html">工具链</a></li>
+<li class="toctree-l2"><a class="reference internal" href="backup.html">备份与恢复</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../programming/index.html">编程</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../programming/mudu_procedure.html">Mudu 过程</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../programming/sdk.html">SDK 与执行模式</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../programming/filesystem.html">文件系统对象类型</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../programming/churcuring.html">Churcuring 与 CQL</a></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../programming/syscalls.html">系统调用</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/open.html">open</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/close.html">close</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/read.html">read</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/write.html">write</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/range-scan.html">range-scan</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/batch.html">batch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/query.html">query</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/command.html">command</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/batch.html">batch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/get.html">get</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/put.html">put</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/delete.html">delete</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/range.html">range</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/fs.html">fs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/relation.html">Relation 系统调用</a></li>
 </ul>
 </details></li>
 </ul>
@@ -498,9 +506,11 @@
 <li class="toctree-l2"><a class="reference internal" href="../internal/kernel.html">内核</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../internal/adapter.html">适配器</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../internal/procedure-runtime.html">过程运行时</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../internal/suspendable-execution.html">可挂起的过程执行</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../internal/wasm.html">WebAssembly 集成</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../internal/partitioning.html">分区与工作线程映射</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../internal/per_core_worker.html">每核心工作线程模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../internal/partitioning.html">分区</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../internal/per_core_worker.html">每核 Worker 模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../internal/replication.html">复制架构</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../reference/index.html">参考资料</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -643,7 +653,13 @@
 <section id="id3">
 <h2>构建包<a class="headerlink" href="#id3" title="Link to this heading">#</a></h2>
 <p>在应用目录下使用 <code class="docutils literal notranslate"><span class="pre">mpm-build</span></code>：</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mpm-build<span class="w"> </span>create<span class="w"> </span>--cfg<span class="w"> </span>package.cfg.json
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mpm-build<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--package-cfg<span class="w"> </span>package.cfg.json<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--package-desc<span class="w"> </span>package.desc.json<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--ddl-sql<span class="w"> </span>ddl.sql<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--initdb-sql<span class="w"> </span>initdb.sql<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--wasm-files<span class="w"> </span>wallet.wasm<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--output<span class="w"> </span>wallet.mpk
 </pre></div>
 </div>
 <p>输出为一个 <code class="docutils literal notranslate"><span class="pre">.mpk</span></code> 文件，可安装到运行中的 <code class="docutils literal notranslate"><span class="pre">mudud</span></code> 服务器。</p>
@@ -704,12 +720,12 @@
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="configuration.html"
+       href="replication.html"
        title="上一页">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">上一页</p>
-        <p class="prev-next-title">配置参考</p>
+        <p class="prev-next-title">复制与 Raft 容错</p>
       </div>
     </a>
     <a class="right-next"

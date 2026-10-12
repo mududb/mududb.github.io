@@ -1,0 +1,855 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Backup and Restore &#8212; MuduDB v0.1</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=4418a689" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=eb49b5eb" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../_static/scripts/fontawesome.js?digest=90905a2f556bf617f1a9"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
+
+    <script src="../_static/documentation_options.js?v=bf5e005e"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'administration/backup';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <script src="../_static/doc-switcher.js?v=437d132c"></script>
+    <link rel="icon" href="../_static/favicon.svg"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Programming" href="../programming/index.html" />
+    <link rel="prev" title="Toolchain" href="toolchain.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="v0.1" />
+  
+    
+    <script src="../_static/searchtools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+<aside class="bd-header-announcement" aria-label="Announcement">
+  <div class="bd-header-announcement__content"><div class="mududb-announcement" data-current-version="v0.1" data-current-language="en"><span class="mududb-announcement-title">MuduDB documentation</span><label class="mududb-doc-switch-group"><span class="mududb-doc-switch-label">Version</span><select class="mududb-doc-switcher" data-switch-kind="version"><option value="v0.1" data-language="en" selected>v0.1</option></select></label><label class="mududb-doc-switch-group"><span class="mududb-doc-switch-label">Language</span><select class="mududb-doc-switcher" data-switch-kind="language"><option value="en" data-version="v0.1" selected>English</option><option value="zh_cn" data-version="v0.1">简体中文</option></select></label></div></div>
+</aside>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/mudu_logo.png" class="logo__image only-light" alt="MuduDB v0.1 - Home"/>
+    <img src="../_static/mudu_logo.png" class="logo__image only-dark pst-js-only" alt="MuduDB v0.1 - Home"/>
+  
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../preface/index.html">
+    Preface
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../tutorial/index.html">
+    Tutorial
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../sql-language/index.html">
+    The SQL Language
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    Administration
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../programming/index.html">
+    Programming
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../internal/index.html">
+    Internal
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../reference/index.html">
+    Reference
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scuptio/mududb" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../preface/index.html">
+    Preface
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../tutorial/index.html">
+    Tutorial
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../sql-language/index.html">
+    The SQL Language
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    Administration
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../programming/index.html">
+    Programming
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../internal/index.html">
+    Internal
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../reference/index.html">
+    Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scuptio/mududb" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../index.html">
+                    MuduDB Documentation
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../preface/index.html">Preface</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../preface/overview.html">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../preface/data-model.html">Data Model</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../preface/release-notes/index.html">Release Notes</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../preface/release-notes/v0.1.html">v0.1 Release Notes</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../tutorial/index.html">Tutorial</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../tutorial/getting-started/index.html">Getting Started</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../tutorial/getting-started/install.html">Installation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../tutorial/getting-started/first-session.html">First Session</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../tutorial/tutorials/index.html">Tutorials</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../tutorial/tutorials/sql-crud.html">SQL CRUD Tutorial</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../tutorial/tutorials/wallet.html">Wallet Example</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../sql-language/index.html">The SQL Language</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../sql-language/ddl/index.html">Data Definition</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../sql-language/ddl/columns.html">Columns</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sql-language/ddl/create-table.html">Create Table</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sql-language/ddl/primary-key.html">Primary Key</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sql-language/ddl/drop-table.html">Drop Table</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../sql-language/dml/index.html">Data Manipulation</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../sql-language/dml/insert.html">Insert</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sql-language/dml/update.html">Update</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sql-language/dml/delete.html">Delete</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="../sql-language/query.html">Query</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../sql-language/data_types/index.html">Data Types</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../sql-language/data_types/integer.html">Integer Types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sql-language/data_types/floating-point.html">Floating-Point Types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sql-language/data_types/fixed-point.html">Fixed-Point Types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sql-language/data_types/string.html">String Types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sql-language/data_types/temporal.html">Temporal Types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sql-language/data_types/other.html">Other Types</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">Administration</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="client.html">Client</a></li>
+<li class="toctree-l2"><a class="reference internal" href="server.html">Server Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration.html">Configuration Reference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="replication.html">Replication and Raft Fault Tolerance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="packages.html">Application Packages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="toolchain.html">Toolchain</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Backup and Restore</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../programming/index.html">Programming</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../programming/mudu_procedure.html">Mudu Procedure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../programming/sdk.html">SDKs and Execution Modes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../programming/filesystem.html">Filesystem Object Types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../programming/churcuring.html">Churcuring and CQL</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../programming/syscalls.html">Syscalls</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/open.html">open</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/close.html">close</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/query.html">query</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/command.html">command</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/batch.html">batch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/get.html">get</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/put.html">put</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/delete.html">delete</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/range.html">range</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/fs.html">fs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../programming/syscalls/relation.html">Relation Syscalls</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../internal/index.html">Internal</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../internal/kernel.html">Kernel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../internal/adapter.html">Adapters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../internal/procedure-runtime.html">Procedure Runtime</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../internal/suspendable-execution.html">Suspendable Procedure Execution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../internal/wasm.html">WebAssembly Integration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../internal/partitioning.html">Partitioning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../internal/per_core_worker.html">Per-core Worker Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../internal/replication.html">Replication Architecture</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../reference/index.html">Reference</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../reference/contracts/index.html">MuduDB Format and Protocol Contracts</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/page_header_v1.html">Page Header Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/tuple_binary_v1.html">Tuple Binary Format Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/log_frame_v1.html">Log Frame Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/protocol_frame_v1.html">TCP Protocol Frame Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/mpk_manifest_v1.html">MPK Package Manifest Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/mudud_cfg_v1.html">MuduDB Server Configuration Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/file_layout_v1.html">MuduDB File Layout Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/syscall_payload_v1.html">Guest→Host Syscall Payload Contract v1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/contracts/how_to_add_format_upgrade.html">How to Add a Format Upgrade</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/mcli-admin.html">mcli Management Interface (HTTP)</a></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item"><nav class="sidebar-indices-items" aria-labelledby="pst-indices-navigation-heading-2">
+  <p id="pst-indices-navigation-heading-2" class="sidebar-indices-items__title" role="heading" aria-level="1">Indices</p>
+  <ul class="indices-link">
+        <li class="toctree-l1">
+          <a class="reference internal"
+             href="../genindex.html"
+             accesskey="I">General Index</a>
+        </li>
+  </ul>
+</nav></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item"><button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Backup and Restore</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#configuration">Configuration</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#taking-a-base-backup">Taking a base backup</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#restoring-a-base-backup-offline">Restoring a base backup (offline)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#point-in-time-recovery-offline">Point-in-time recovery (offline)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#logical-dump-and-restore">Logical dump and restore</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#http-endpoints">HTTP endpoints</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#limitations">Limitations</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="backup-and-restore">
+<h1>Backup and Restore<a class="headerlink" href="#backup-and-restore" title="Link to this heading">#</a></h1>
+<p>MuduDB provides two backup mechanisms:</p>
+<ul class="simple">
+<li><p><strong>Base backup + WAL archiving</strong> — physical snapshots of every worker at a committed point, plus continuously archived WAL chunks for point-in-time recovery (PITR).</p></li>
+<li><p><strong>Logical dump</strong> — a portable full-database export (schema plus per-table CSV) packaged as a ZIP archive.</p></li>
+</ul>
+<p>Base backups and logical dumps run on the live server through the HTTP management endpoint. <code class="docutils literal notranslate"><span class="pre">restore</span></code> and <code class="docutils literal notranslate"><span class="pre">pitr</span></code> are offline commands that build a new data directory locally without contacting the server.</p>
+<section id="configuration">
+<h2>Configuration<a class="headerlink" href="#configuration" title="Link to this heading">#</a></h2>
+<p>Backup is configured through the optional <code class="docutils literal notranslate"><span class="pre">[backup]</span></code> section of <code class="docutils literal notranslate"><span class="pre">mudud.cfg</span></code>. When the section is absent the server runs backup-free: WAL prefix GC reclaims chunks without archiving them.</p>
+<div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="k">[backup]</span>
+<span class="n">backup_dir</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"./backup"</span><span class="w">         </span><span class="c1"># base backups are written here</span>
+<span class="n">archive_dir</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"./wal-archive"</span><span class="w">   </span><span class="c1"># sealed WAL chunks are archived here</span>
+<span class="n">archive_mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"on"</span><span class="w">             </span><span class="c1"># "off", "on" (default), or "always"</span>
+</pre></div>
+</div>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Field</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">backup_dir</span></code></p></td>
+<td><p>string</p></td>
+<td><p>unset</p></td>
+<td><p>Directory base backups are written to; required by the <code class="docutils literal notranslate"><span class="pre">mcli</span> <span class="pre">backup</span></code> commands.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">archive_dir</span></code></p></td>
+<td><p>string</p></td>
+<td><p>unset</p></td>
+<td><p>Directory sealed WAL chunks are continuously archived to.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">archive_mode</span></code></p></td>
+<td><p>string</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&quot;on&quot;</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&quot;off&quot;</span></code> disables archiving; <code class="docutils literal notranslate"><span class="pre">&quot;on&quot;</span></code> archives sealed chunks on a periodic cadence; <code class="docutils literal notranslate"><span class="pre">&quot;always&quot;</span></code> requires the archive copy to be durable before a commit is acknowledged (not yet wired into the commit path). Archiving is active only when <code class="docutils literal notranslate"><span class="pre">archive_dir</span></code> is set and the mode is not <code class="docutils literal notranslate"><span class="pre">&quot;off&quot;</span></code>; an unknown mode fails startup.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>When archiving is active, WAL prefix GC only reclaims a chunk after it has been durably archived. Archiving runs independently of replication, so single-node deployments archive too.</p>
+</section>
+<section id="taking-a-base-backup">
+<h2>Taking a base backup<a class="headerlink" href="#taking-a-base-backup" title="Link to this heading">#</a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mcli<span class="w"> </span>--http-addr<span class="w"> </span><span class="m">127</span>.0.0.1:8300<span class="w"> </span>backup<span class="w"> </span>create<span class="w"> </span>--label<span class="w"> </span>daily-1
+</pre></div>
+</div>
+<p>The server force-flushes each worker’s WAL, snapshots every worker at its committed point, and copies the snapshots under <code class="docutils literal notranslate"><span class="pre">&lt;backup_dir&gt;/&lt;label&gt;/</span></code>. The <code class="docutils literal notranslate"><span class="pre">BACKUP_LABEL</span></code> file is written last: a backup counts as valid only once its label decodes and every referenced snapshot is complete.</p>
+<p>List, verify, and delete backups:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mcli<span class="w"> </span>--http-addr<span class="w"> </span><span class="m">127</span>.0.0.1:8300<span class="w"> </span>backup<span class="w"> </span>list
+mcli<span class="w"> </span>--http-addr<span class="w"> </span><span class="m">127</span>.0.0.1:8300<span class="w"> </span>backup<span class="w"> </span>verify<span class="w"> </span>--label<span class="w"> </span>daily-1
+mcli<span class="w"> </span>--http-addr<span class="w"> </span><span class="m">127</span>.0.0.1:8300<span class="w"> </span>backup<span class="w"> </span>delete<span class="w"> </span>--label<span class="w"> </span>daily-1
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">backup</span> <span class="pre">list</span></code> returns the labels of every valid backup under <code class="docutils literal notranslate"><span class="pre">backup_dir</span></code>. <code class="docutils literal notranslate"><span class="pre">backup</span> <span class="pre">verify</span></code> decodes the label and checks every referenced snapshot file against its manifest (length and CRC64); a missing or corrupt backup fails with an error. <code class="docutils literal notranslate"><span class="pre">backup</span> <span class="pre">delete</span></code> removes <code class="docutils literal notranslate"><span class="pre">&lt;backup_dir&gt;/&lt;label&gt;/</span></code>.</p>
+<p>All four commands require <code class="docutils literal notranslate"><span class="pre">[backup]</span> <span class="pre">backup_dir</span></code>; without it the server answers <code class="docutils literal notranslate"><span class="pre">backup</span> <span class="pre">is</span> <span class="pre">not</span> <span class="pre">configured:</span> <span class="pre">[backup]</span> <span class="pre">backup_dir</span> <span class="pre">is</span> <span class="pre">missing</span></code>.</p>
+</section>
+<section id="restoring-a-base-backup-offline">
+<h2>Restoring a base backup (offline)<a class="headerlink" href="#restoring-a-base-backup-offline" title="Link to this heading">#</a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mcli<span class="w"> </span>restore<span class="w"> </span>--label<span class="w"> </span>daily-1<span class="w"> </span>--backup-dir<span class="w"> </span>./backup<span class="w"> </span>--archive-dir<span class="w"> </span>./wal-archive<span class="w"> </span>--target-dir<span class="w"> </span>./restored
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">restore</span></code> rebuilds a complete data directory under <code class="docutils literal notranslate"><span class="pre">--target-dir</span></code>: it installs the base backup’s relation files and key/value state, then replays the archived WAL forward to the end of the archive. <code class="docutils literal notranslate"><span class="pre">--backup-dir</span></code> and <code class="docutils literal notranslate"><span class="pre">--archive-dir</span></code> are the directories <code class="docutils literal notranslate"><span class="pre">[backup]</span> <span class="pre">backup_dir</span></code> and <code class="docutils literal notranslate"><span class="pre">archive_dir</span></code> were configured with. A server can then be started with <code class="docutils literal notranslate"><span class="pre">db_path</span></code> pointing at the target directory.</p>
+</section>
+<section id="point-in-time-recovery-offline">
+<h2>Point-in-time recovery (offline)<a class="headerlink" href="#point-in-time-recovery-offline" title="Link to this heading">#</a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mcli<span class="w"> </span>pitr<span class="w"> </span>--label<span class="w"> </span>daily-1<span class="w"> </span>--backup-dir<span class="w"> </span>./backup<span class="w"> </span>--archive-dir<span class="w"> </span>./wal-archive<span class="w"> </span>--target-dir<span class="w"> </span>./recovered<span class="w"> </span>--time<span class="w"> </span><span class="m">1700000000000</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">pitr</span></code> works like <code class="docutils literal notranslate"><span class="pre">restore</span></code> but stops at a target point. Exactly one of the following is required:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">--lsn</span> <span class="pre">&lt;N&gt;</span></code> — stop before the given LSN.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--time</span> <span class="pre">&lt;ms&gt;</span></code> — stop after the last commit whose timestamp is at or before the given milliseconds since the epoch.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--xid</span> <span class="pre">&lt;N&gt;</span></code> — stop after the commit of the given transaction id.</p></li>
+</ul>
+<p>If no commit in the archive satisfies a <code class="docutils literal notranslate"><span class="pre">--time</span></code> or <code class="docutils literal notranslate"><span class="pre">--xid</span></code> target, the command fails with <code class="docutils literal notranslate"><span class="pre">no</span> <span class="pre">commit</span> <span class="pre">in</span> <span class="pre">the</span> <span class="pre">archive</span> <span class="pre">satisfies</span> <span class="pre">the</span> <span class="pre">recovery</span> <span class="pre">target</span></code>.</p>
+</section>
+<section id="logical-dump-and-restore">
+<h2>Logical dump and restore<a class="headerlink" href="#logical-dump-and-restore" title="Link to this heading">#</a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mcli<span class="w"> </span>--http-addr<span class="w"> </span><span class="m">127</span>.0.0.1:8300<span class="w"> </span>dump<span class="w"> </span>--label<span class="w"> </span>daily-1<span class="w"> </span>--dir<span class="w"> </span>/dumps
+</pre></div>
+</div>
+<p>Writes a self-contained ZIP archive <code class="docutils literal notranslate"><span class="pre">&lt;dir&gt;/&lt;label&gt;.zip</span></code> on the server (<code class="docutils literal notranslate"><span class="pre">--dir</span></code> is a server-side path). The archive contains the catalog metadata (<code class="docutils literal notranslate"><span class="pre">manifest.mp</span></code>, <code class="docutils literal notranslate"><span class="pre">schema.mp</span></code>), a human-readable <code class="docutils literal notranslate"><span class="pre">schema.sql</span></code>, and one CSV per table under <code class="docutils literal notranslate"><span class="pre">data/</span></code> (CSV encoding is identical to the SQL <code class="docutils literal notranslate"><span class="pre">COPY</span></code> surface). Partitioned tables contribute metadata only; their data is not dumped.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mcli<span class="w"> </span>--http-addr<span class="w"> </span><span class="m">127</span>.0.0.1:8300<span class="w"> </span>restore-logical<span class="w"> </span>--label<span class="w"> </span>daily-1<span class="w"> </span>--dir<span class="w"> </span>/dumps
+mcli<span class="w"> </span>--http-addr<span class="w"> </span><span class="m">127</span>.0.0.1:8300<span class="w"> </span>restore-logical<span class="w"> </span>--label<span class="w"> </span>daily-1<span class="w"> </span>--dir<span class="w"> </span>/dumps<span class="w"> </span>--drop
+</pre></div>
+</div>
+<p>Restores the schema and reloads the data on the live server. Tables that already exist are skipped by default; pass <code class="docutils literal notranslate"><span class="pre">--drop</span></code> to drop and recreate same-named tables.</p>
+</section>
+<section id="http-endpoints">
+<h2>HTTP endpoints<a class="headerlink" href="#http-endpoints" title="Link to this heading">#</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">mcli</span></code> commands map to these HTTP management endpoints:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Command</p></th>
+<th class="head"><p>Endpoint</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">mcli</span> <span class="pre">backup</span> <span class="pre">create</span> <span class="pre">--label</span> <span class="pre">L</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/mudu/backup</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">mcli</span> <span class="pre">backup</span> <span class="pre">list</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/mudu/backup/list</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">mcli</span> <span class="pre">backup</span> <span class="pre">verify</span> <span class="pre">--label</span> <span class="pre">L</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/mudu/backup/verify</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">mcli</span> <span class="pre">backup</span> <span class="pre">delete</span> <span class="pre">--label</span> <span class="pre">L</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/mudu/backup/delete</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">mcli</span> <span class="pre">dump</span> <span class="pre">--label</span> <span class="pre">L</span> <span class="pre">--dir</span> <span class="pre">D</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/mudu/dump</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">mcli</span> <span class="pre">restore-logical</span> <span class="pre">--label</span> <span class="pre">L</span> <span class="pre">--dir</span> <span class="pre">D</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/mudu/restore-logical</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="limitations">
+<h2>Limitations<a class="headerlink" href="#limitations" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Base backup and logical dump require a kernel server mode (<code class="docutils literal notranslate"><span class="pre">Tokio</span></code> or <code class="docutils literal notranslate"><span class="pre">IOUring</span></code>). On a <code class="docutils literal notranslate"><span class="pre">Legacy</span></code> server the endpoints report errors such as <code class="docutils literal notranslate"><span class="pre">base</span> <span class="pre">backup</span> <span class="pre">is</span> <span class="pre">not</span> <span class="pre">supported</span></code>.</p></li>
+<li><p>A base backup covers one server. <code class="docutils literal notranslate"><span class="pre">restore</span></code> and <code class="docutils literal notranslate"><span class="pre">pitr</span></code> run locally against its <code class="docutils literal notranslate"><span class="pre">backup_dir</span></code> and <code class="docutils literal notranslate"><span class="pre">archive_dir</span></code> and do not need a running server.</p></li>
+</ul>
+<p>See the <a class="reference internal" href="configuration.html"><span class="std std-doc">Configuration Reference</span></a> for all <code class="docutils literal notranslate"><span class="pre">[backup]</span></code> fields and <a class="reference internal" href="../reference/mcli-admin.html"><span class="std std-doc">mcli Management Interface (HTTP)</span></a> for the full command reference.</p>
+<p>WAL archiving from <code class="docutils literal notranslate"><span class="pre">[backup]</span></code> is wired into the <code class="docutils literal notranslate"><span class="pre">Tokio</span></code> backend’s worker configuration. The current <code class="docutils literal notranslate"><span class="pre">IOUring</span></code> startup path does not pass that configuration to workers: its base-backup and logical-dump management endpoints do not imply continuous WAL archiving. Use <code class="docutils literal notranslate"><span class="pre">Tokio</span></code> for the documented archive/PITR workflow. <code class="docutils literal notranslate"><span class="pre">archive_mode</span> <span class="pre">=</span> <span class="pre">&quot;always&quot;</span></code> currently does not gate commit acknowledgements on archive durability.</p>
+<p>Filesystem content is stored outside WAL. The current worker snapshot copies relation <code class="docutils literal notranslate"><span class="pre">.dat</span></code> files and KV state, not the <code class="docutils literal notranslate"><span class="pre">fs/</span></code> generation files; logical dumps contain schema and table CSV rather than object-content files. These mechanisms alone therefore do not provide complete replication or recovery of filesystem object content. Preserve and validate that content separately when using FS columns.</p>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="toolchain.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Toolchain</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../programming/index.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Programming</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#configuration">Configuration</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#taking-a-base-backup">Taking a base backup</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#restoring-a-base-backup-offline">Restoring a base backup (offline)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#point-in-time-recovery-offline">Point-in-time recovery (offline)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#logical-dump-and-restore">Logical dump and restore</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#http-endpoints">HTTP endpoints</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#limitations">Limitations</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By MuduDB contributors
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026, MuduDB contributors.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

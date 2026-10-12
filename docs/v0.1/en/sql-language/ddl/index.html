@@ -475,21 +475,29 @@
 <li class="toctree-l2"><a class="reference internal" href="../../administration/client.html">Client</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../administration/server.html">Server Management</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../administration/configuration.html">Configuration Reference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../administration/replication.html">Replication and Raft Fault Tolerance</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../administration/packages.html">Application Packages</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../administration/toolchain.html">Toolchain</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../administration/backup.html">Backup and Restore</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../programming/index.html">Programming</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../programming/mudu_procedure.html">Mudu Procedure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../programming/sdk.html">SDKs and Execution Modes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../programming/filesystem.html">Filesystem Object Types</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../programming/churcuring.html">Churcuring and CQL</a></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../programming/syscalls.html">Syscalls</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/open.html">open</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/close.html">close</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/read.html">read</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/write.html">write</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/range-scan.html">range-scan</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/batch.html">batch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/query.html">query</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/command.html">command</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/batch.html">batch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/get.html">get</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/put.html">put</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/delete.html">delete</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/range.html">range</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/fs.html">fs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/relation.html">Relation Syscalls</a></li>
 </ul>
 </details></li>
 </ul>
@@ -498,9 +506,11 @@
 <li class="toctree-l2"><a class="reference internal" href="../../internal/kernel.html">Kernel</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../internal/adapter.html">Adapters</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../internal/procedure-runtime.html">Procedure Runtime</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../internal/suspendable-execution.html">Suspendable Procedure Execution</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../internal/wasm.html">WebAssembly Integration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../internal/partitioning.html">Partitioning and Worker Mapping</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../internal/partitioning.html">Partitioning</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../internal/per_core_worker.html">Per-core Worker Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../internal/replication.html">Replication Architecture</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../reference/index.html">Reference</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -580,6 +590,7 @@
             <nav aria-label="Page">
                 <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#table-basics">Table Basics</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#filesystem-types">Filesystem Types</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unsupported-ddl">Unsupported DDL</a></li>
 </ul>
             </nav>
@@ -599,6 +610,7 @@
 <h2>Table Basics<a class="headerlink" href="#table-basics" title="Link to this heading">#</a></h2>
 <p>A table in MuduDB is a named collection of rows. Each row has the same set of columns defined at creation time. MuduDB does not support <code class="docutils literal notranslate"><span class="pre">ALTER</span> <span class="pre">TABLE</span></code> in the current release; the schema is fixed after <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">TABLE</span></code> succeeds.</p>
 <p>Tables are created within the default database context of the current session. There is no <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">DATABASE</span></code> or <code class="docutils literal notranslate"><span class="pre">USE</span> <span class="pre">database</span></code> syntax; the session itself determines the logical database scope.</p>
+<p>Except for <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">TABLE</span></code>, which only accepts a bare table name, table names in any statement may be written in schema-qualified form <code class="docutils literal notranslate"><span class="pre">schema.table</span></code> (e.g. <code class="docutils literal notranslate"><span class="pre">shop.users</span></code>). An unqualified reference resolves against the session’s current schema first and falls back to the default schema <code class="docutils literal notranslate"><span class="pre">mududb</span></code>; a <code class="docutils literal notranslate"><span class="pre">schema.table</span></code> reference matches exactly and never falls back. <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">TABLE</span></code> always creates the new table in the session’s current schema.</p>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="columns.html">Columns</a></li>
@@ -607,6 +619,16 @@
 <li class="toctree-l1"><a class="reference internal" href="drop-table.html">Drop Table</a></li>
 </ul>
 </div>
+</section>
+<section id="filesystem-types">
+<h2>Filesystem Types<a class="headerlink" href="#filesystem-types" title="Link to this heading">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">TYPE</span> <span class="pre">FILESYSTEM</span></code> registers a named filesystem type that can then be used as a column type in <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">TABLE</span></code>; the column physically stores a 128-bit object identifier (<code class="docutils literal notranslate"><span class="pre">U128</span></code>) referring to a file or directory object.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">TYPE</span><span class="w"> </span><span class="n">FILESYSTEM</span><span class="w"> </span><span class="n">FILE</span><span class="w"> </span><span class="n">photo_fs</span><span class="p">;</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TYPE</span><span class="w"> </span><span class="n">FILESYSTEM</span><span class="w"> </span><span class="n">DIRECTORY</span><span class="w"> </span><span class="n">dir_fs</span><span class="p">;</span>
+<span class="k">DROP</span><span class="w"> </span><span class="k">TYPE</span><span class="w"> </span><span class="n">photo_fs</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Type names may contain only letters, digits, and underscores, and must not start with a digit. See <a class="reference internal" href="../../programming/filesystem.html"><span class="doc">Filesystem Object Types</span></a> for the file and directory access interfaces.</p>
 </section>
 <section id="unsupported-ddl">
 <h2>Unsupported DDL<a class="headerlink" href="#unsupported-ddl" title="Link to this heading">#</a></h2>
@@ -671,6 +693,7 @@
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#table-basics">Table Basics</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#filesystem-types">Filesystem Types</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unsupported-ddl">Unsupported DDL</a></li>
 </ul>
   </nav></div>

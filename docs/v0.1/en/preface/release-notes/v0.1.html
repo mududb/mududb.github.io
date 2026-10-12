@@ -475,21 +475,29 @@
 <li class="toctree-l2"><a class="reference internal" href="../../administration/client.html">Client</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../administration/server.html">Server Management</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../administration/configuration.html">Configuration Reference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../administration/replication.html">Replication and Raft Fault Tolerance</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../administration/packages.html">Application Packages</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../administration/toolchain.html">Toolchain</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../administration/backup.html">Backup and Restore</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../programming/index.html">Programming</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../programming/mudu_procedure.html">Mudu Procedure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../programming/sdk.html">SDKs and Execution Modes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../programming/filesystem.html">Filesystem Object Types</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../programming/churcuring.html">Churcuring and CQL</a></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../programming/syscalls.html">Syscalls</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/open.html">open</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/close.html">close</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/read.html">read</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/write.html">write</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/range-scan.html">range-scan</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/batch.html">batch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/query.html">query</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/command.html">command</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/batch.html">batch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/get.html">get</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/put.html">put</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/delete.html">delete</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/range.html">range</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/fs.html">fs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/relation.html">Relation Syscalls</a></li>
 </ul>
 </details></li>
 </ul>
@@ -498,9 +506,11 @@
 <li class="toctree-l2"><a class="reference internal" href="../../internal/kernel.html">Kernel</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../internal/adapter.html">Adapters</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../internal/procedure-runtime.html">Procedure Runtime</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../internal/suspendable-execution.html">Suspendable Procedure Execution</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../internal/wasm.html">WebAssembly Integration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../internal/partitioning.html">Partitioning and Worker Mapping</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../internal/partitioning.html">Partitioning</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../internal/per_core_worker.html">Per-core Worker Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../internal/replication.html">Replication Architecture</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../reference/index.html">Reference</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -597,26 +607,34 @@
   <section id="v0-1-release-notes">
 <h1>v0.1 Release Notes<a class="headerlink" href="#v0-1-release-notes" title="Link to this heading">#</a></h1>
 <p><code class="docutils literal notranslate"><span class="pre">v0.1</span></code> is the initial documentation release for MuduDB. It covers installation, SQL usage, procedure development, package deployment, and architecture.</p>
+<p>Documentation synchronized on 2026-10-12 against MuduDB source commit <code class="docutils literal notranslate"><span class="pre">614413db</span></code>, using <code class="docutils literal notranslate"><span class="pre">scuptio/mududb.document</span></code> commit <code class="docutils literal notranslate"><span class="pre">c9451e7</span></code> as a reference. These are implementation notes for that checkout, not a claim that all features have been published in a binary release.</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../administration/backup.html"><span class="std std-doc">Backup and PITR</span></a></p></li>
+<li><p><a class="reference internal" href="../../programming/filesystem.html"><span class="std std-doc">Filesystem object types</span></a></p></li>
+<li><p><a class="reference internal" href="../../programming/sdk.html"><span class="std std-doc">SDKs and execution modes</span></a></p></li>
+<li><p><a class="reference internal" href="../../programming/syscalls/relation.html"><span class="std std-doc">Relation syscalls</span></a></p></li>
+</ul>
 <section id="new-features">
 <h2>New features<a class="headerlink" href="#new-features" title="Link to this heading">#</a></h2>
 <ul class="simple">
 <li><p><strong>SQL CRUD support</strong>: <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">TABLE</span></code>, <code class="docutils literal notranslate"><span class="pre">INSERT</span></code>, <code class="docutils literal notranslate"><span class="pre">UPDATE</span></code>, <code class="docutils literal notranslate"><span class="pre">DELETE</span></code>, and <code class="docutils literal notranslate"><span class="pre">SELECT</span></code> with predicates and expressions.</p></li>
-<li><p><strong>Mudu Procedure model</strong>: write stored procedures in Rust (and experimentally AssemblyScript), deploy them as <code class="docutils literal notranslate"><span class="pre">.mpk</span></code> packages, and invoke them through <code class="docutils literal notranslate"><span class="pre">mcli</span></code>.</p></li>
+<li><p><strong>Mudu Procedure model</strong>: write stored procedures in Rust, AssemblyScript, C, C#, Go, or Python, deploy them as <code class="docutils literal notranslate"><span class="pre">.mpk</span></code> packages, and invoke them through <code class="docutils literal notranslate"><span class="pre">mcli</span></code>.</p></li>
 <li><p><strong>MPK packaging</strong>: package WebAssembly components, DDL, descriptors, and initialization data into a ZIP-based <code class="docutils literal notranslate"><span class="pre">.mpk</span></code> archive.</p></li>
 <li><p><strong>Multi-mode server backends</strong>: choose between <code class="docutils literal notranslate"><span class="pre">Legacy</span></code>, <code class="docutils literal notranslate"><span class="pre">IOUring</span></code>, and <code class="docutils literal notranslate"><span class="pre">Tokio</span></code> execution modes in <code class="docutils literal notranslate"><span class="pre">mudud.cfg</span></code>.</p></li>
 <li><p><strong>Per-core worker model</strong>: kernel-managed workers with partition-local ownership for reduced cross-core contention.</p></li>
 <li><p><strong>Range partitioning</strong>: define global partition rules, bind tables to them, and place partitions on specific workers.</p></li>
 <li><p><strong>Format contracts</strong>: formal specifications for page header, tuple binary format, log frame, protocol frame, MPK manifest, server config, file layout, and syscall payload.</p></li>
 <li><p><strong>HTTP management API</strong>: install, list, and uninstall applications and query topology through <code class="docutils literal notranslate"><span class="pre">mcli</span> <span class="pre">--http-addr</span></code>.</p></li>
+<li><p><strong>Replication and Raft fault tolerance</strong>: three deployment shapes — single node, primary-replica streaming (<code class="docutils literal notranslate"><span class="pre">stream</span></code>), and Raft consensus (<code class="docutils literal notranslate"><span class="pre">raft</span></code>); shared replication channel, snapshots and WAL GC, online membership changes (learner two-step), <code class="docutils literal notranslate"><span class="pre">mcli</span> <span class="pre">repl</span></code> tooled failover with epoch fencing, and the <code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/mudu/server/replication</span></code> observability endpoint. See <a class="reference internal" href="../../administration/replication.html"><span class="doc">Replication and Raft Fault Tolerance</span></a>.</p></li>
 </ul>
 </section>
 <section id="known-limitations">
 <h2>Known limitations<a class="headerlink" href="#known-limitations" title="Link to this heading">#</a></h2>
 <ul class="simple">
-<li><p>SQL support on the <code class="docutils literal notranslate"><span class="pre">IOUring</span></code> backend path is not yet implemented; the KV-oriented path is the current usable direction on that backend.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">IOUring</span></code> backend path is KV-first in design orientation; this is a design orientation, not a capability limitation — both SQL and KV run on that backend today.</p></li>
 <li><p>Distributed two-phase commit across multiple workers is not implemented. Cross-worker writes are forwarded and executed remotely, but full atomic commit across workers is not yet supported.</p></li>
 <li><p>Secondary indexes are not supported; queries rely on primary key and range scans.</p></li>
-<li><p>The <code class="docutils literal notranslate"><span class="pre">mudup</span></code> release installer is not yet stable; source builds are recommended for development.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">mudup</span></code> release installer is a planned design proposal and is not implemented yet; build from source for development.</p></li>
 </ul>
 </section>
 <section id="migration-and-compatibility">

@@ -475,21 +475,29 @@
 <li class="toctree-l2"><a class="reference internal" href="../../administration/client.html">客户端</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../administration/server.html">服务端管理</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../administration/configuration.html">配置参考</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../administration/replication.html">复制与 Raft 容错</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../administration/packages.html">应用包</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../administration/toolchain.html">工具链</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../administration/backup.html">备份与恢复</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../programming/index.html">编程</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../programming/mudu_procedure.html">Mudu 过程</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../programming/sdk.html">SDK 与执行模式</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../programming/filesystem.html">文件系统对象类型</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../programming/churcuring.html">Churcuring 与 CQL</a></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../programming/syscalls.html">系统调用</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/open.html">open</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/close.html">close</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/read.html">read</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/write.html">write</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/range-scan.html">range-scan</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/batch.html">batch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/query.html">query</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/command.html">command</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/batch.html">batch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/get.html">get</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/put.html">put</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/delete.html">delete</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/range.html">range</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/fs.html">fs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../programming/syscalls/relation.html">Relation 系统调用</a></li>
 </ul>
 </details></li>
 </ul>
@@ -498,9 +506,11 @@
 <li class="toctree-l2"><a class="reference internal" href="../../internal/kernel.html">内核</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../internal/adapter.html">适配器</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../internal/procedure-runtime.html">过程运行时</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../internal/suspendable-execution.html">可挂起的过程执行</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../internal/wasm.html">WebAssembly 集成</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../internal/partitioning.html">分区与工作线程映射</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../internal/per_core_worker.html">每核心工作线程模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../internal/partitioning.html">分区</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../internal/per_core_worker.html">每核 Worker 模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../internal/replication.html">复制架构</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../reference/index.html">参考资料</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -625,17 +635,17 @@
 <td><p><code class="docutils literal notranslate"><span class="pre">I128</span></code></p></td>
 <td><p>128 位有符号整数</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">FLOAT</span></code>, <code class="docutils literal notranslate"><span class="pre">REAL</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">FLOAT</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">F32</span></code></p></td>
 <td><p>32 位 IEEE-754 浮点数</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">DOUBLE</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">DOUBLE</span></code>, <code class="docutils literal notranslate"><span class="pre">REAL</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">F64</span></code></p></td>
 <td><p>64 位 IEEE-754 浮点数</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">NUMERIC(p,s)</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">Numeric</span></code></p></td>
-<td><p>任意精度小数</p></td>
+<td><p>定点十进制数（精度最大 38 位）</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">DECIMAL(p,s)</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">Numeric</span></code></p></td>
@@ -643,7 +653,7 @@
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">CHAR(n)</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">String</span></code></p></td>
-<td><p>定长字符串（填充）</p></td>
+<td><p>带声明长度的字符串（不填充、不强制截断）</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">VARCHAR(n)</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">String</span></code></p></td>
@@ -668,18 +678,6 @@
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">TIMESTAMPTZ(p)</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">TimestampTz</span></code></p></td>
 <td><p>带时区的日期+时间</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ARRAY</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">Array</span></code></p></td>
-<td><p>元素的有序集合</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">RECORD</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">Record</span></code></p></td>
-<td><p>具有命名字段的结构化对象</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">BINARY</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">Binary</span></code></p></td>
-<td><p>原始字节序列</p></td>
 </tr>
 </tbody>
 </table>
@@ -711,7 +709,6 @@
 <p>以下类型已被语法识别，但尚未在 SQL 解析器中实现：</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">BOOLEAN</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">INTEGER</span></code>（请使用 <code class="docutils literal notranslate"><span class="pre">INT</span></code>）</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">SMALLINT</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">TINYINT</span></code></p></li>
 </ul>

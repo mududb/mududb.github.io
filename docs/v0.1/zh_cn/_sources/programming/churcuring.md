@@ -1,5 +1,10 @@
 # Churcuring 与 CQL
 
+```{note}
+本章描述外部语言项目及设计资料，不属于 MuduDB 已实现的安装流程或 API 契约。当前 MuduDB 工作区不提供 `cqlc`，可运行示例应使用本文档的 MPK/SDK 路径。本次文档更新未重新验证外部编译器的开发状态。
+```
+
+
 ## 1. 概述
 
 Churcuring 是一个面向 MuduDB 的声明式编程工具链，其核心语言为 **CQL（Churcuring Query
