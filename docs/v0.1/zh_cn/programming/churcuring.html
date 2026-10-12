@@ -27,20 +27,20 @@
   </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
-<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+  <link href="../_static/styles/theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=4418a689" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
     <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=eb49b5eb" />
   
   <!-- So that users can add custom icons -->
-  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <script defer src="../_static/scripts/fontawesome.js?digest=90905a2f556bf617f1a9"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
-<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
 
     <script src="../_static/documentation_options.js?v=585cbfb4"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
@@ -50,6 +50,7 @@
     <script src="../_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
     <script src="../_static/design-tabs.js?v=f930bc37"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'programming/churcuring';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <script src="../_static/doc-switcher.js?v=437d132c"></script>
     <link rel="icon" href="../_static/favicon.svg"/>
     <link rel="index" title="索引" href="../genindex.html" />
@@ -59,20 +60,26 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="zh-cn"/>
   <meta name="docsearch:version" content="v0.1" />
+  
+    
+    <script src="../_static/searchtools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../searchindex.js"></script>
+  
   </head>
-  
-  
-  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
-
+  <body data-default-mode="">
   
   
   <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">跳转至主要内容</a></div>
+
   
   <div id="pst-scroll-pixel-helper"></div>
   
   <button type="button" class="btn rounded-pill" id="pst-back-to-top">
     <i class="fa-solid fa-arrow-up"></i>回到顶部</button>
-
+  
+  
+  
   
   <dialog id="pst-search-dialog">
     
@@ -101,7 +108,7 @@
 </aside>
 
   
-    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
 <div class="bd-header__inner bd-page-width">
   <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="网页导航">
     <span class="fa-solid fa-bars"></span>
@@ -209,14 +216,31 @@
     
     <div class="navbar-header-items__end">
       
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">搜索</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
       
         <div class="navbar-item">
 
-<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
-  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="亮色"></i>
-  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="暗色"></i>
-  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
-</button></div>
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="亮色"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="暗色"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>亮色</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>暗色</button></li>
+  </ul>
+</div></div>
       
         <div class="navbar-item"><ul class="navbar-icon-links"
     aria-label="Icon Links">
@@ -229,8 +253,7 @@
           
           
           
-          <a href="https://github.com/scuptio/mududb" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
-            <span class="sr-only">GitHub</span></a>
+          <a href="https://github.com/scuptio/mududb" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
         </li>
 </ul></div>
       
@@ -238,6 +261,15 @@
     
   </div>
   
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">搜索</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
   
 
   
@@ -331,11 +363,18 @@
         
           <div class="navbar-item">
 
-<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
-  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="亮色"></i>
-  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="暗色"></i>
-  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
-</button></div>
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="亮色"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="暗色"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>亮色</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>暗色</button></li>
+  </ul>
+</div></div>
         
           <div class="navbar-item"><ul class="navbar-icon-links"
     aria-label="Icon Links">
@@ -348,8 +387,7 @@
           
           
           
-          <a href="https://github.com/scuptio/mududb" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
-            <span class="sr-only">GitHub</span></a>
+          <a href="https://github.com/scuptio/mududb" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
         </li>
 </ul></div>
         
@@ -540,10 +578,10 @@
                 <h2> 目录 </h2>
             </div>
             <nav aria-label="Page">
-                <ul class="visible nav section-nav flex-column">
+                <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">1. 概述</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">2. 开发状态</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">3. 语法概览</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">3. 语法概览</a><ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">3.1 模块与工程</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">3.2 类型</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">3.3 声明速览</a></li>
@@ -552,13 +590,13 @@
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">3.6 终止性</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">4. 编译与工具链</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">4. 编译与工具链</a><ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">4.1 构建工具链</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cqlc">4.2 cqlc 子命令</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cql-toml">4.3 cql.toml</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id12">5. 测试与验证</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id12">5. 测试与验证</a><ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#test">5.1 test 块</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cqlc-verify">5.2 模型检查（cqlc verify）</a></li>
 </ul>
@@ -649,7 +687,7 @@ query/action 须放在同一模块）。</p>
 vector&lt;int&gt;                     // 有序序列，[1, 2, 3]
 set&lt;string&gt;                     // 无序去重；set {1, 2}
 bag&lt;float&gt;                      // 多重集；bag {1.0, 2.0, 2.0}
-map&lt;string, int&gt;                // 纯关联值；map { &quot;a&quot;: 1 }
+map&lt;string, int&gt;                // 纯关联值；map { "a": 1 }
 (int, string)                   // 元组；投影 t.0 / t.1
 { id: int, name: string }       // 记录类型
 int -&gt; int                      // 纯函数类型（右结合）
@@ -681,7 +719,7 @@ invariant non_negative on orders == \A o \in orders : o.amount &gt;= 0.0
 property balance_ok == [](total_balance() = 10000)     // 时态性质
 
 test transfer_basic {                                  // 测试块
-    fixture accounts == [record { id: 1, owner: &quot;a&quot;, balance: 6000 }];
+    fixture accounts == [record { id: 1, owner: "a", balance: 6000 }];
     expect total_balance() == 6000;
 }
 </pre></div>
@@ -728,7 +766,7 @@ write_op 集合并入，原子性只在顶层）。反向调用是编译错误�
 
 -- if / match（表达式；match 穷尽性静态检查）
 if f.balance &gt;= amt then set { ... } else set {}
-match lookup(users, id) { some(v) =&gt; v.name, none =&gt; &quot;unknown&quot; }
+match lookup(users, id) { some(v) =&gt; v.name, none =&gt; "unknown" }
 
 -- 集合推导（两形式，结果为 set&lt;T&gt; 去重）
 set { x \in users if x.active }                        -- 过滤式
@@ -736,7 +774,7 @@ set { (o.order_id, u.name) : o \in orders, u \in lookup(users, o.user_id) }  -- 
 
 -- 量词
 \A o \in orders : o.amount &gt;= 0.0
-\E u \in users : u.city = &quot;x&quot;
+\E u \in users : u.city = "x"
 
 -- lambda：捕获列表必须显式列出引用的外层局部绑定
 lambda [new_city](v) { record { v with city: new_city } }
@@ -820,17 +858,17 @@ cargo crate；<code class="docutils literal notranslate"><span class="pre">mudud
 <section id="cql-toml">
 <h3>4.3 cql.toml<a class="headerlink" href="#cql-toml" title="Link to this heading">#</a></h3>
 <div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="k">[package]</span>
-<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;shop&quot;</span><span class="w">            </span><span class="c1"># 必填；也用作生成 crate 的包名</span>
-<span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;0.1.0&quot;</span><span class="w">        </span><span class="c1"># 可选，默认 &quot;0.1.0&quot;</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"shop"</span><span class="w">            </span><span class="c1"># 必填；也用作生成 crate 的包名</span>
+<span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"0.1.0"</span><span class="w">        </span><span class="c1"># 可选，默认 "0.1.0"</span>
 
 <span class="k">[build]</span>
-<span class="n">source_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;src&quot;</span><span class="w">        </span><span class="c1"># 源码根目录，默认 &quot;src&quot;</span>
-<span class="n">out_dir</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;target/cql&quot;</span><span class="w">     </span><span class="c1"># 生成代码目录，默认 &quot;target/cql&quot;</span>
-<span class="n">backend</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;rust&quot;</span><span class="w">           </span><span class="c1"># &quot;rust&quot;（默认）| &quot;mududb&quot;（提案态占位）</span>
+<span class="n">source_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"src"</span><span class="w">        </span><span class="c1"># 源码根目录，默认 "src"</span>
+<span class="n">out_dir</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"target/cql"</span><span class="w">     </span><span class="c1"># 生成代码目录，默认 "target/cql"</span>
+<span class="n">backend</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"rust"</span><span class="w">           </span><span class="c1"># "rust"（默认）| "mududb"（提案态占位）</span>
 
-<span class="k">[mududb]</span><span class="w">                   </span><span class="c1"># backend = &quot;mududb&quot; 时使用（草案）</span>
-<span class="n">app</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;shop&quot;</span>
-<span class="n">sql_adapter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;off&quot;</span><span class="w">        </span><span class="c1"># &quot;off&quot;（默认）| &quot;sqlite&quot; | &quot;postgres&quot; | &quot;mysql&quot;</span>
+<span class="k">[mududb]</span><span class="w">                   </span><span class="c1"># backend = "mududb" 时使用（草案）</span>
+<span class="n">app</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"shop"</span>
+<span class="n">sql_adapter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"off"</span><span class="w">        </span><span class="c1"># "off"（默认）| "sqlite" | "postgres" | "mysql"</span>
 </pre></div>
 </div>
 </section>
@@ -842,7 +880,7 @@ cargo crate；<code class="docutils literal notranslate"><span class="pre">mudud
 <p>CQL 源文件中可写 <code class="docutils literal notranslate"><span class="pre">test</span></code> 块：<code class="docutils literal notranslate"><span class="pre">fixture</span></code> 按主键构造内存表，<code class="docutils literal notranslate"><span class="pre">expect</span></code> 用谓词相等比较。
 <code class="docutils literal notranslate"><span class="pre">cqlc</span> <span class="pre">test</span></code> 将其编译为 Rust <code class="docutils literal notranslate"><span class="pre">#[test]</span></code> 并执行 <code class="docutils literal notranslate"><span class="pre">cargo</span> <span class="pre">test</span></code>：</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>test transfer_basic {
-    fixture accounts == [record { id: 1, owner: &quot;a&quot;, balance: 6000 }];
+    fixture accounts == [record { id: 1, owner: "a", balance: 6000 }];
     expect total_balance() == 6000;
 }
 </pre></div>
@@ -876,7 +914,7 @@ result: all 2 propert(ies) hold within the bounds
 <span class="n">subordinates</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">16</span><span class="w">     </span><span class="c1"># 按算子名覆盖</span>
 
 <span class="k">[domain]</span>
-<span class="n">accounts</span><span class="p">.</span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;1..2&quot;</span><span class="w">              </span><span class="c1"># 键/字段域：区间串</span>
+<span class="n">accounts</span><span class="p">.</span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"1..2"</span><span class="w">              </span><span class="c1"># 键/字段域：区间串</span>
 <span class="n">accounts</span><span class="p">.</span><span class="n">balance</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">6000</span><span class="p">,</span><span class="w"> </span><span class="mi">4000</span><span class="p">]</span><span class="w">  </span><span class="c1"># 或显式值集合（仅整数值）</span>
 
 <span class="k">[trace]</span>
@@ -994,10 +1032,10 @@ result: all 2 propert(ies) hold within the bounds
     <i class="fa-solid fa-list"></i> 目录
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
-    <ul class="visible nav section-nav flex-column">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">1. 概述</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">2. 开发状态</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">3. 语法概览</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">3. 语法概览</a><ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">3.1 模块与工程</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">3.2 类型</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">3.3 声明速览</a></li>
@@ -1006,13 +1044,13 @@ result: all 2 propert(ies) hold within the bounds
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">3.6 终止性</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">4. 编译与工具链</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">4. 编译与工具链</a><ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">4.1 构建工具链</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cqlc">4.2 cqlc 子命令</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cql-toml">4.3 cql.toml</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id12">5. 测试与验证</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id12">5. 测试与验证</a><ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#test">5.1 test 块</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cqlc-verify">5.2 模型检查（cqlc verify）</a></li>
 </ul>
@@ -1067,8 +1105,8 @@ result: all 2 propert(ies) hold within the bounds
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
-<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+  <script defer src="../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9"></script>
 
   <footer class="bd-footer">
   </footer>
